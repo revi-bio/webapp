@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 
+
 </script>
 
 <template>
-  <header>nav</header>
-
+  <header class="">nav</header>
+  <Logo type="revi"></Logo>
   <RouterView />
 </template>
 
