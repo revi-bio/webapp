@@ -21,8 +21,8 @@ import Icon from '@/components/Icon.vue';
 
     <div class="flex flex-col w-full justify-center content-center h-full items-center gap-5">
       <h3 class="text-2xl font-light text-zinc-50">A place to unfold</h3>
-      <h3 class="text-8xl text-zinc-200">Supercharge</h3>
-      <h3 class="text-8xl text-zinc-400">your online identity</h3>
+      <h3 class="text-8xl text-zinc-200 animate-pulse animate-infinite animate-duration-[3000ms]">Supercharge</h3>
+      <h3 class="text-8xl text-zinc-400 animate-pulse animate-infinite animate-duration-[3000ms]">your online identity</h3>
       <Logo type="revibio"></Logo>
       <span class="flex flex-row justify-center content-center items-center gap-5">
         <Button text="Start your journey" size="normal" rank="primary" icon-position="none"></Button>
@@ -32,7 +32,7 @@ import Icon from '@/components/Icon.vue';
   </main>
 
   <!--Learn more section-->
-  <section class="flex flex-col w-full justify-center content-center items-center p-5">
+  <section class="flex flex-col w-full justify-center content-center items-center p-5 snap-y">
     <!--SVGs-->
     <svg width="808" height="811" viewBox="0 0 808 811" fill="none" xmlns="http://www.w3.org/2000/svg" class="rightWave z-0">
     <path d="M783.036 40.7627C779.833 6.3474 832.352 -14.6125 850.22 14.9751L1018.67 293.912C1025.37 305.014 1024.18 319.167 1015.72 328.995L701.714 693.686C701.156 694.334 700.696 694.911 700.186 695.597C688.394 711.462 528.252 920.739 420.622 733.726C343.901 600.419 248.226 681.79 195.742 745.974C179.282 766.104 144.128 761.5 136.209 736.733L2.4521 318.379C-7.56684 287.042 34.6824 263.351 57.9075 286.652C197.273 426.476 296.242 440.416 435.933 252.689C443.011 243.177 455.147 238.369 466.786 240.628C699.633 285.815 803.192 257.333 783.036 40.7627Z" fill="url(#paint0_linear_626_1167)"/>
@@ -94,7 +94,7 @@ import Icon from '@/components/Icon.vue';
 
 
     <!--Pros-->
-    <div class="flex flex-col w-full justify-center content-center items-center gap-5 h-[500px]">
+    <div class="flex flex-col w-full justify-center content-center items-center gap-5 h-[500px] snap-center">
       <h3 class="text-4xl text-rose-500">Free to use.</h3>
       <h3 class="text-4xl text-zinc-200">Easy to handle.</h3>
       <h3 class="text-4xl text-zinc-300">Made for inviduals like you.</h3>
@@ -102,43 +102,42 @@ import Icon from '@/components/Icon.vue';
     </div>
 
     <!--Our goal-->
-    <div class="flex flex-col w-full justify-center content-end items-end gap-5 h-[800px]">
+    <div class="flex flex-col w-full justify-center content-end items-end gap-5 h-[800px] snap-center">
       <h3 class="text-4xl text-rose-600">Our goal</h3>
       <p class="text-2xl text-right text-rose-100 w-3/5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Et distinctio ex rem illum dolorum unde non molestiae ducimus dolorem tempora ut quis obcaecati nobis impedit aperiam, facere enim dignissimos illo! Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
     </div>
 
     <!--Emerge-->
-    <div class="flex flex-col w-full justify-center content-start items-start gap-5 h-[400px]">
+    <div class="flex flex-col w-full justify-center content-start items-start gap-5 h-[400px] snap-center">
       <h3 class="text-6xl text-zinc-100">Discover your creativity.</h3>
       <h3 class="text-6xl text-zinc-400">Emerge from social media.</h3>
     </div>
 
     <!--Creating-->
-    <div class="flex flex-col w-full justify-center content-end items-end gap-5 h-[600px] z-10 ">
+    <div class="flex flex-col w-full justify-center content-end items-end gap-5 h-[600px] z-10 snap-center">
       <h3 class="text-4xl text-rose-500">Creating a bio site</h3>
       <p class="text-2xl text-right text-rose-100 w-3/4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Et distinctio ex rem illum dolorum unde non molestiae ducimus dolorem tempora ut quis obcaecati nobis impedit aperiam, facere enim dignissimos illo! Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum tempora excepturi voluptates reiciendis repellat a nihil consectetur. Fuga sapiente expedita doloremque alias unde consequatur velit. Vel odit eveniet fugiat quasi.</p>
     </div>
 
     <!--Option-->
-    <div class="flex flex-col w-full justify-center content-start items-start gap-5 h-[500px]">
+    <div class="flex flex-col w-full justify-center content-start items-start gap-5 h-[500px] snap-center">
       <h3 class="text-6xl text-zinc-200">It is not just an option,</h3>
       <h3 class="text-6xl text-zinc-400">but a solution.</h3>
     </div>
 
     <!--Explore-->
-    <div class="flex flex-col w-full justify-center content-end items-end gap-5 h-[800px]">
+    <div class="flex flex-col w-full justify-center content-end items-end gap-5 h-[800px] snap-center">
       <h3 class="text-4xl text-rose-400">Explore our services</h3>
       <p class="text-2xl text-right text-rose-50 w-3/4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Et distinctio ex rem illum dolorum unde non molestiae ducimus dolorem tempora ut quis obcaecati nobis impedit aperiam, facere enim dignissimos illo! Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum tempora excepturi voluptates reiciendis repellat a nihil consectetur. Fuga sapiente expedita doloremque alias unde consequatur velit. Vel odit eveniet fugiat quasi.</p>
     </div>
 
-    <div class="flex flex-col w-full justify-center content-center items-center gap-5 h-[400px]">
+    <div class="flex flex-col w-full justify-center content-center items-center gap-5 h-[400px] snap-center">
       <h3 class="text-4xl"><span class="text-rose-500">Revi</span><span class="text-zinc-200">sion</span></h3>
       <h3 class="text-4xl text-zinc-200">You are not just a user.</h3>
       <h3 class="text-4xl text-zinc-400">But a <span class="text-rose-500">true invidual.</span></h3>
       <Button text="Start your journey" size="normal" rank="primary" icon-position="none"></Button>
     </div>
   </section>
-
 
 
 </template>

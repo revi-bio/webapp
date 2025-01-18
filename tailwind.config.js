@@ -2,7 +2,14 @@
 export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      scrollSnapType:{
+        y: 'y-mandatory'
+      },
+      scrollSnapAlign:{
+        center: 'center'
+      }
+    },
   },
   plugins: [
     require('tailwindcss-animated')
