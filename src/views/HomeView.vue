@@ -108,7 +108,7 @@ import Icon from '@/components/Icon.vue';
     </div>
 
     <!--Emerge-->
-    <div class="flex flex-col w-full justify-center content-start items-start gap-5 h-[400px] snap-center">
+    <div class="flex flex-col w-full justify-center content-start items-start gap-5 h-[400px] snap-center z-30">
       <h3 class="text-6xl text-zinc-100">Discover your creativity.</h3>
       <h3 class="text-6xl text-zinc-400">Emerge from social media.</h3>
     </div>
