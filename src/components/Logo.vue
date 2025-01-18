@@ -3,7 +3,7 @@
     type: 'revi' | 'revibio';
   }>();
 
-  const logoType = ['revi', 'revibio'];
+
 </script>
 
 <template>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import Logo from '@/components/Logo.vue';
 import { RouterLink } from 'vue-router';
+import Button from '@/components/Button.vue';
+import Icon from '@/components/Icon.vue';
 </script>
 
 <template>
@@ -23,8 +25,8 @@ import { RouterLink } from 'vue-router';
       <h3 class="text-8xl text-zinc-400">your online identity</h3>
       <Logo type="revibio"></Logo>
       <span class="flex flex-row justify-center content-center items-center gap-5">
-        <h3>start</h3>
-        <h3>more</h3>
+        <Button text="Start your journey" size="normal" rank="primary" icon-position="none"></Button>
+        <Button text="Learn more" size="normal" rank="secondary" icon-position="none"></Button>
       </span>
     </div>
   </main>
@@ -133,7 +135,7 @@ import { RouterLink } from 'vue-router';
       <h3 class="text-4xl"><span class="text-rose-500">Revi</span><span class="text-zinc-200">sion</span></h3>
       <h3 class="text-4xl text-zinc-200">You are not just a user.</h3>
       <h3 class="text-4xl text-zinc-400">But a <span class="text-rose-500">true invidual.</span></h3>
-      <h3>Start your journey</h3>
+      <Button text="Start your journey" size="normal" rank="primary" icon-position="none"></Button>
     </div>
   </section>
 
