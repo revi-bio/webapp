@@ -1,42 +1,33 @@
 <script setup lang="ts">
 import Icon from './Icon.vue';
 
+const text = defineModel()
 
 defineProps<{
-  type: string;
   placeholder?: string;
-  rank: 'primary' | 'secondary';
+  disabled?: boolean;
   icon?: string;
 }>();
 </script>
 
 <template>
-  <input :type="type" :class="rank">
+  <span class="input">
     <template v-if="icon">
-      <Icon v-if="icon" :type="icon" />
-      <span>{{ placeholder }}</span>
+      <span class="relative aspect-square px-1">
+        <Icon class="absolute left-2 -top-2.5" :type="icon"/>
+      </span>
     </template>
-    <template v-else>
-      <span>{{ placeholder }}</span>
-    </template>
-  </input>
-
+    <input :placeholder="placeholder" type="text" v-model="text" :disabled="disabled">
+  </span>
 </template>
 
 <style>
-input {
-  @apply rounded-md flex items-center gap-2;
+.input {
+  @apply rounded-md flex flex-row justify-between content-center items-center relative gap-2 border-2 border-[#18181b80] bg-[#27272a] rounded w-full text-zinc-400 placeholder-zinc-500 focus:border-[#18181b80] ;
 }
-.primary {
-  @apply bg-rose-500 text-white hover:bg-rose-400 active:bg-rose-600 ;
+
+input{
+  @apply bg-[#27272a] order-2 w-full h-full px-4 py-2
 }
-.primary:hover{
-  transition: 0.2s ease-in;
-}
-.secondary {
-  @apply bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-800 ;
-}
-.secondary:hover{
-  transition: 0.2s ease-in-out;
-}
+
 </style>
