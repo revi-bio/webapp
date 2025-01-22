@@ -15,8 +15,8 @@ import Icon from '@/components/Icon.vue';
       <Logo type="revi"></Logo>
       <div  class="flex flex-row justify-center content-center items-center gap-10">
         <!--RouterLinks-->
-        <span>Log In</span>
-        <span>Register</span>
+        <RouterLink to="login">Log In</RouterLink>
+        <RouterLink to="register">Register</RouterLink>
       </div>
     </nav>
 
