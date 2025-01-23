@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import Logo from '@/components/Logo.vue';
+import Logo from '@/components/global/Logo.vue';
 import { RouterLink } from 'vue-router';
-import Button from '@/components/Button.vue';
-import Icon from '@/components/Icon.vue';
+import Button from '@/components/global/Button.vue';
+import Icon from '@/components/global/Icon.vue';
 </script>
 
 <template>
