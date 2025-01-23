@@ -10,7 +10,7 @@
     <div class="w-2/5 h-full ">
 
       <div class="w-full h-full flex flex-col justify-center content-center items-center gap-[3rem] p-[7rem] relative">
-        <Logo type="revibio" class="absolute top-4 left-4"></Logo>
+        <RouterLink to="/"><Logo type="revibio" class="absolute top-4 left-4"></Logo></RouterLink>
         <div class="w-full flex flex-col justify-center content-center items-start gap-3">
           <h3 class="text-6xl">Welcome back!</h3>
           <p class="text-[#52525B]">Let’s continue where you left off. Forgot your password? Click here to start the password reset process.</p>
@@ -21,7 +21,7 @@
         </form>
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
           <Button text="Log in" rank="primary" size="normal" icon-position="none"></Button>
-          <p class="text-[#71717A]">- or Create an account</p>
+          <p class="text-[#71717A]"><RouterLink to="register">- or Create an account</RouterLink></p>
         </div>
 
       </div>

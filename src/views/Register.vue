@@ -10,7 +10,7 @@
     <div class="w-2/5 h-full ">
 
       <div class="w-full h-full flex flex-col justify-center content-center items-center gap-[3rem] p-[7rem] relative">
-        <Logo type="revibio" class="absolute top-4 left-4"></Logo>
+        <RouterLink to="/"><Logo type="revibio" class="absolute top-4 left-4"></Logo></RouterLink>
         <div class="w-full flex flex-col justify-center content-center items-start gap-3">
           <h3 class="text-6xl">Create an account</h3>
           <p class="text-[#52525B]">Welcome to revi.bio! You can start by completing the form below to register your account.</p>
@@ -24,7 +24,7 @@
         </form>
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
           <Button text="Register" rank="primary" size="normal" icon-position="none"></Button>
-          <p class="text-[#71717A]">- or Log in</p>
+          <p class="text-[#71717A]"><RouterLink to="login">- or Log in</RouterLink></p>
         </div>
 
       </div>
