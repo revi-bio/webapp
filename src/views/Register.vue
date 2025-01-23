@@ -8,10 +8,10 @@
 </script>
 <template>
   <div class="flex flex-row w-full h-full p-5">
-    <div class="w-2/5 h-full ">
+    <div class="w-2/5 h-full flex flex-row justify-center content-center items-center relative">
+      <RouterLink to="/"><Logo type="revibio" class="absolute top-4 left-4"></Logo></RouterLink>
+      <div class="w-3/4 h-full flex flex-col justify-center content-center items-center gap-[3rem]">
 
-      <div class="w-full h-full flex flex-col justify-center content-center items-center gap-[3rem] p-[7rem] relative">
-        <RouterLink to="/"><Logo type="revibio" class="absolute top-4 left-4"></Logo></RouterLink>
         <div class="w-full flex flex-col justify-center content-center items-start gap-3">
           <h3 class="text-6xl">Create an account</h3>
           <p class="text-[#52525B]">Welcome to revi.bio! You can start by completing the form below to register your account.</p>
