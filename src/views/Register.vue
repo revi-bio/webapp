@@ -3,6 +3,7 @@
   import Input from '@/components/global/Input.vue';
   import Button from '@/components/global/Button.vue';
   import Logo from '@/components/global/Logo.vue';
+  import Checkbox from '@/components/global/Checkbox.vue';
   import { RouterLink } from 'vue-router';
 </script>
 <template>
@@ -15,12 +16,12 @@
           <h3 class="text-6xl">Create an account</h3>
           <p class="text-[#52525B]">Welcome to revi.bio! You can start by completing the form below to register your account.</p>
         </div>
-        <form class="w-full flex flex-col justify-start content-center items-center gap-3">
+        <form class="w-full flex flex-col justify-center content-start items-start gap-3">
           <Input placeholder="Display name"></Input>
           <Input placeholder="Email"></Input>
           <Input placeholder="Password"></Input>
           <Input placeholder="Confirm password"></Input>
-          <input type="checkbox">
+          <Checkbox text="I agree to sell my insides to revi.bio"></Checkbox>
         </form>
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
           <Button text="Register" rank="primary" size="normal" icon-position="none"></Button>
