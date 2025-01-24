@@ -3,6 +3,8 @@ import Logo from '@/components/global/Logo.vue';
 import { RouterLink } from 'vue-router';
 import Button from '@/components/global/Button.vue';
 import Icon from '@/components/global/Icon.vue';
+import Footer from '@/components/global/Footer.vue';
+
 </script>
 
 <template>
@@ -141,6 +143,9 @@ import Icon from '@/components/global/Icon.vue';
       <Button text="Start your journey" size="normal" rank="primary" icon-position="none"></Button>
     </div>
   </section>
+  <Footer></Footer>
+
+
 </div>
 
 </template>
