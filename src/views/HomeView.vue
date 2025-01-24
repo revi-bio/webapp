@@ -88,14 +88,14 @@ import Footer from '@/components/global/Footer.vue';
       <h3 class="text-8xl text-zinc-400 animate-pulse animate-infinite animate-duration-[3000ms]">your online identity</h3>
       <Logo type="revibio"></Logo>
       <span class="flex flex-row justify-center content-center items-center gap-5">
-        <Button text="Start your journey" size="normal" rank="primary" icon-position="none"></Button>
-        <Button text="Learn more" size="normal" rank="secondary" icon-position="none"></Button>
+       <RouterLink to="register"><Button text="Start your journey" size="normal" rank="primary" icon-position="none"></Button></RouterLink>
+        <a href="#more"><Button text="Learn more" size="normal" rank="secondary" icon-position="none"></Button></a>
       </span>
     </div>
   </main>
 
 <!--Learn more section-->
-  <section class="flex flex-col w-full justify-center content-center items-center p-5">
+  <section class="flex flex-col w-full justify-center content-center items-center p-5" id="more">
 
 
     <!--Pros-->
@@ -140,7 +140,7 @@ import Footer from '@/components/global/Footer.vue';
       <h3 class="text-4xl"><span class="text-rose-500">Revi</span><span class="text-zinc-200">sion</span></h3>
       <h3 class="text-4xl text-zinc-200">You are not just a user.</h3>
       <h3 class="text-4xl text-zinc-400">But a <span class="text-rose-500">true invidual.</span></h3>
-      <Button text="Start your journey" size="normal" rank="primary" icon-position="none"></Button>
+      <RouterLink to="register"><Button text="Start your journey" size="normal" rank="primary" icon-position="none"></Button></RouterLink>
     </div>
   </section>
   <Footer></Footer>
