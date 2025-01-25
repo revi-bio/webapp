@@ -18,10 +18,11 @@ import Icon from './Icon.vue';
         <RouterLink to="register" class="px-10">Register</RouterLink>
         <RouterLink to="/" class="px-10">Home</RouterLink>
       </div>
-      <div class="flex flex-col items-center w-full text-4xl">
-        <h3 class="text-zinc-400">Made by us,</h3>
-        <h3 class="text-zinc-300">For you to finish</h3>
-        <Logo type="revibio"></Logo>
+      <div class="flex flex-col items-center w-full text-4xl relative">
+        <h3 class="text-zinc-400 z-30">Made by us,</h3>
+        <h3 class="text-zinc-300 z-30">For you to finish</h3>
+        <Logo type="revibio" class="z-30"></Logo>
+        <span class="bBrighter"></span>
       </div>
       <div class="flex flex-col items-center w-full space-y-4 text-lg">
         <p class="underline">Contact us</p>
@@ -43,5 +44,9 @@ import Icon from './Icon.vue';
 </template>
 
 <style>
+
+.bBrighter{
+  @apply absolute w-64 h-64 rounded-full bg-zinc-900 blur-[80px] z-0 -top-10
+}
 
 </style>
