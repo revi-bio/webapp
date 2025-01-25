@@ -18,7 +18,7 @@ import Icon from './Icon.vue';
         <RouterLink to="register" class="px-10">Register</RouterLink>
         <RouterLink to="/" class="px-10">Home</RouterLink>
       </div>
-      <div class="flex flex-col items-center w-full text-4xl relative">
+      <div class="flex flex-col items-center w-full text-4xl space-y-1 relative">
         <h3 class="text-zinc-400 z-30">Made by us,</h3>
         <h3 class="text-zinc-300 z-30">For you to finish</h3>
         <Logo type="revibio" class="z-30"></Logo>
@@ -26,7 +26,7 @@ import Icon from './Icon.vue';
       </div>
       <div class="flex flex-col items-center w-full space-y-4 text-lg">
         <p class="underline">Contact us</p>
-        <p class="underline"><span class="text-rose-500">revi</span><span class="text-zinc-700">bio</span>@gmail.com</p>
+        <p><span class="text-rose-500">revi</span><span class="text-zinc-700">bio</span>@gmail.com</p>
         <span class="w-full h-0.5 rounded-full bg-zinc-500"></span>
         <p class="text-zinc-500 text-xs"><span class="text-rose-500">Copyright©2025.</span> All right reserved</p>
       </div>
@@ -46,7 +46,7 @@ import Icon from './Icon.vue';
 <style>
 
 .bBrighter{
-  @apply absolute w-64 h-64 rounded-full bg-zinc-900 blur-[80px] z-0 -top-10
+  @apply absolute w-64 h-64 rounded-full bg-zinc-900 blur-[100px] z-0 -top-[60px]
 }
 
 </style>
