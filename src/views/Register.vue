@@ -5,6 +5,45 @@
   import Logo from '@/components/global/Logo.vue';
   import Checkbox from '@/components/global/Checkbox.vue';
   import { RouterLink } from 'vue-router';
+  import { ApiWrapper } from '@/composables/ApiWrapper';
+  import { useUserStore } from '@/stores/user';
+  import { ref } from 'vue'
+
+  const userStore = useUserStore();
+  const displayName = ref('');
+  const email = ref('');
+  const password = ref('');
+  
+  const onSignUp = async () => {
+  try{
+    const res = await ApiWrapper.post('auth/register', {
+    displayName: displayName.value,
+    email: email.value,
+    password: password.value
+  });
+  if (res.type == 'success') {
+    const userReq = async () => {
+      const userRes = await ApiWrapper.post<{ token: string }>('auth/login', {
+        email: email.value,
+        password: passwd.value
+      });
+
+      if (userRes.type == 'success') {
+        userStore.setJwt(userRes.data.token);
+        router.push('Overview');
+      }else{
+        console.log(error);
+      }
+      
+    };
+  }
+  }catch(error: any){
+    console.log(error);
+    
+  }
+
+};
+
 </script>
 <template>
   <div class="flex flex-row w-full h-full p-5">

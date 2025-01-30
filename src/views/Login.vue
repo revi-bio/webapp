@@ -4,6 +4,33 @@
   import Button from '@/components/global/Button.vue';
   import Logo from '@/components/global/Logo.vue';
   import { RouterLink } from 'vue-router';
+  import axios, { AxiosError } from 'axios';
+  import { useUserStore } from '@/stores/user';
+  import { ApiWrapper } from '@/composables/ApiWrapper';
+  import { ref } from 'vue';
+
+  const userStore = useUserStore();
+  const email = ref('');
+  const password = ref('');
+
+  const onLogIn = async () => {
+  try {
+    const res = await ApiWrapper.post<{ token: string }>('auth/login', {
+      email: email.value,
+      password: password.value
+    });
+
+    if (res.type === 'success') {
+      userStore.setJwt(res.data.token);
+      userStore.setStatus(200);
+      //console.log('Login successful, status:', userStore.getStatus());
+      router.push('Overview');
+    } else {
+      console.log(error)
+    }
+  } catch (error: any) {
+    console.log(error)
+  }}
 </script>
 <template>
   <div class="flex flex-row w-full h-full p-5">
