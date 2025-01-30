@@ -13,6 +13,7 @@
   const displayName = ref('');
   const email = ref('');
   const password = ref('');
+  const confPassword = ref('');
   
   const onSignUp = async () => {
   try{
@@ -56,10 +57,10 @@
           <p class="text-[#52525B]">Welcome to revi.bio! You can start by completing the form below to register your account.</p>
         </div>
         <form class="w-full flex flex-col justify-center content-start items-start gap-3">
-          <Input placeholder="Display name"></Input>
-          <Input placeholder="Email"></Input>
-          <Input placeholder="Password"></Input>
-          <Input placeholder="Confirm password"></Input>
+          <Input placeholder="Display name" v-model="displayName"></Input>
+          <Input placeholder="Email" v-model="email"></Input>
+          <Input placeholder="Password" v-model="password"></Input>
+          <Input placeholder="Confirm password" v-model="confPassword"></Input>
           <Checkbox text="I agree to sell my insides to revi.bio"></Checkbox>
         </form>
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
