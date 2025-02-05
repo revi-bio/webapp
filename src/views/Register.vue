@@ -8,6 +8,7 @@
   import { ApiWrapper } from '@/composables/ApiWrapper';
   import { useUserStore } from '@/stores/user';
   import { ref } from 'vue'
+import router from '@/router';
 
   const userStore = useUserStore();
   const displayName = ref('');
@@ -15,7 +16,7 @@
   const password = ref('');
   const confPassword = ref('');
 
-  const onSignUp = async () => {
+  const onRegister= async () => {
   try{
     const res = await ApiWrapper.post('auth/register', {
     displayName: displayName.value,
@@ -26,14 +27,14 @@
     const userReq = async () => {
       const userRes = await ApiWrapper.post<{ token: string }>('auth/login', {
         email: email.value,
-        password: passwd.value
+        password: password.value
       });
 
       if (userRes.type == 'success') {
         userStore.setJwt(userRes.data.token);
         router.push('Overview');
       }else{
-        console.log(error);
+        console.log("baj");
       }
 
     };
@@ -64,7 +65,7 @@
           <Checkbox text="I agree to sell my insides to revi.bio"></Checkbox>
         </form>
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
-          <Button text="Register" rank="primary" size="normal" icon-position="none"></Button>
+          <Button text="Register" rank="primary" size="normal" icon-position="none" @click="onRegister()"></Button>
           <p class="text-[#71717A]"><RouterLink to="login">- or Log in</RouterLink></p>
         </div>
 

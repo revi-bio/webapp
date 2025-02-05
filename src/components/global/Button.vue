@@ -8,11 +8,12 @@ defineProps<{
   rank: 'primary' | 'secondary';
   iconPosition: 'none' | 'only' | 'left' | 'right';
   iconType?: string;
+  onClick?:()=> void;
 }>();
 </script>
 
 <template>
-  <button :class="[size, rank]">
+  <button :class="[size, rank]" @click="onClick">
     <template v-if="iconPosition === 'left'">
       <Icon v-if="iconType" :type="iconType" />
       <span>{{ text }}</span>
