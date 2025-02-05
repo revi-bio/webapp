@@ -16,29 +16,33 @@ import router from '@/router';
   const password = ref('');
   const confPassword = ref('');
 
-  const onRegister= async () => {
+  const onRegister= async (event: Event) => {
+    event.preventDefault();
   try{
-    const res = await ApiWrapper.post('auth/register', {
-    displayName: displayName.value,
-    email: email.value,
-    password: password.value
-  });
-  if (res.type == 'success') {
-    const userReq = async () => {
+    if(confPassword.value != password.value){
+      alert("Nem egyeznek a megadott jelszavak")
+    }else{
+      const res = await ApiWrapper.post('auth/register', {
+      displayName: displayName.value,
+      email: email.value,
+      password: password.value
+      });
+      if (res.type == 'success') {
+      const userReq = async () => {
       const userRes = await ApiWrapper.post<{ token: string }>('auth/login', {
         email: email.value,
         password: password.value
       });
-
       if (userRes.type == 'success') {
         userStore.setJwt(userRes.data.token);
         router.push('Overview');
       }else{
-        console.log("baj");
+        console.log("Baj van!");
       }
-
     };
   }
+    }
+
   }catch(error: any){
     console.log(error);
 
@@ -65,7 +69,7 @@ import router from '@/router';
           <Checkbox text="I agree to sell my insides to revi.bio"></Checkbox>
         </form>
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
-          <Button text="Register" rank="primary" size="normal" icon-position="none" @click="onRegister()"></Button>
+          <Button text="Register" rank="primary" size="normal" icon-position="none" @click="onRegister"></Button>
           <p class="text-[#71717A]"><RouterLink to="login">- or Log in</RouterLink></p>
         </div>
 
