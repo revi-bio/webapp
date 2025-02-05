@@ -4,21 +4,35 @@ import { RouterLink } from 'vue-router';
 import Button from '@/components/global/Button.vue';
 import Icon from '@/components/global/Icon.vue';
 import Footer from '@/components/global/Footer.vue';
-import { onMounted } from 'vue';
+import { onMounted,ref } from 'vue';
 import { animate, inView, scroll,stagger } from "motion"
+import { useIntersectionObserver } from '@vueuse/core';
 
 onMounted(() => {
+  const elements = document.querySelectorAll(".pros h3, .our-goal h3, .our-goal p, .emerge h3, .emerge p, .creating h3, .creating p, .option h3, .option p, .explore h3, .explore p, .revision h3, .start");
 
-    inView(".pros h3, .our-goal h3, .our-goal p,  .emerge h3, .emerge p, .creating h3, .creating p, .option h3, .option p, .explore h3,.explore p, .revision h3, .start", (items) => {
+  elements.forEach((element) => {
+    const isVisible = ref(false);
 
-      animate(
-        items,
-        { y: ['-50px', '0'], opacity: [0, 1], },
-        { delay: stagger(1.5), duration:2 }
-      );
-    });
-
-
+    useIntersectionObserver(
+      element,
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          isVisible.value = true;
+          animate(
+            element,
+            { y: ['-50px', '0'], opacity: [0, 1] },
+            { duration: 0.8 }
+          );
+        } else {
+          isVisible.value = false;
+        }
+      },
+      {
+        threshold: 0.1,
+      }
+    );
+  });
 });
 
 </script>
