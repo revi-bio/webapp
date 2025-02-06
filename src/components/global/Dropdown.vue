@@ -63,6 +63,37 @@ document.addEventListener('click', closeDropdown);
       </span>
     </div>
   </div>
+  <!--How to use
+    #1
+    If for some reason you wouldn't like to do anything with the items of the dropdown use it like this:
+
+      <Dropdown
+        type="normal"
+        baseText="Choose one"
+        align="end"
+        :items="[
+          { name: 'First' },
+          { name: 'Second' },
+          { name: 'Third' }
+        ]"
+      />
+
+    ----------------------------------------------------------------------------------------------------
+    #2
+    Using it with functions added to the items:
+      <Dropdown
+        type="normal"
+        baseText="Choose one"
+        align="end"
+        :items="[
+          { name: 'First', event:FirstEvent },
+          { name: 'Second', event:SecondEvent },
+          { name: 'Third' , event:ThirdEvent}
+        ]"
+      />
+
+
+  -->
 </template>
 
 <style lang="scss" scoped>
