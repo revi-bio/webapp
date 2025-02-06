@@ -1,58 +1,75 @@
 <script lang="ts" setup>
+import { ref, watch } from 'vue';
 import Icon from './Icon.vue';
 
-
-
-defineProps<{
-  text?: string;
+const props = defineProps<{
+  baseText?: string;
   type: "iconOnly" | "normal";
-  items: [];
-  align: "center" | "left" | "right"
+  items: {
+    name: string;
+    event?: () => void;
+  }[];
+  align: "center" | "start" | "end";
 }>();
+
+const selectedText = ref(props.baseText);
+const isOpen = ref(false);
+
+watch(() => props.baseText, (newValue) => {
+  if (newValue) selectedText.value = newValue;
+});
+
+const triggerItems = () => {
+  isOpen.value = !isOpen.value;
+};
+
+const selectItem = (item: { name: string; event?: () => void }) => {
+  selectedText.value = item.name;
+  isOpen.value = false;
+
+  if (item.event) {
+    item.event();
+  }
+};
+
+const closeDropdown = (event: Event) => {
+  const dropdown = document.querySelector('.dropdown-container');
+  if (dropdown && !dropdown.contains(event.target as Node)) {
+    isOpen.value = false;
+  }
+};
+
+document.addEventListener('click', closeDropdown);
 </script>
 
 <template>
-    <div v-if="align === 'center' " class="flex flex-col justify-center content-center items-center">
-        <span v-if="type === 'iconOnly'" class="dropdown" >
-            
-        </span>
-        <span v-else class="dropdown">
-            <Icon type="arrow_drop_down"></Icon>
-            <h3>{{ text }}</h3>
-        </span>
-        <span class="flex flex-col justify-center content-center items-center ">
-            <!--Items of dropdown-->
-        </span>
-    </div>
-    <div v-else-if="align === 'left' " class="flex flex-col justify-center content-start items-start">
-        <span v-if="type === 'iconOnly'" class="dropdown" >
-            
-        </span>
-        <span v-else class="dropdown">
-            <Icon type="arrow_drop_down"></Icon>
-            <h3>{{ text }}</h3>
-        </span>
-        <span class="flex flex-col justify-center content-center items-center p-2">
-            <!--Items of dropdown-->
-        </span>
-    </div>
-    <div v-else class="flex flex-col justify-center content-end items-end">
-        <span v-if="type === 'iconOnly'" class="dropdown" >
-            
-        </span>
-        <span v-else class="dropdown">
-            <Icon type="arrow_drop_down"></Icon>
-            <h3>{{ text }}</h3>
-        </span>
-        <span class="flex flex-col justify-center content-center items-center p-2">
-            <!--Items of dropdown-->
-        </span>
-    </div>
+  <div class="dropdown-container relative">
+    <div :class="`flex flex-col justify-center content-${align} items-${align} gap-2 relative`">
+      <span v-if="type === 'iconOnly'" class="dropdown" @click="triggerItems">
+      </span>
+      <span v-else class="dropdown" @click="triggerItems">
+        <Icon type="arrow_drop_down"></Icon>
+        <h3>{{ selectedText }}</h3>
+      </span>
 
+      <span v-if="isOpen" class="items flex flex-col justify-center content-center items-center px-3 py-2 gap-2 bg-zinc-600 rounded-md absolute top-16">
+        <h3
+          v-for="item in items"
+          :key="item.name"
+          @click="selectItem(item)"
+        >
+          {{ item.name }}
+        </h3>
+      </span>
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-.dropdown{
-    @apply flex flex-row px-3 justify-between content-center items-center gap-2 bg-zinc-600
+.dropdown {
+  @apply flex flex-row px-3 py-2 justify-between content-center items-center gap-2 bg-zinc-600 rounded-md hover:bg-zinc-500 active:bg-zinc-700 cursor-pointer;
+}
+.items h3 {
+  @apply hover:bg-zinc-500 w-full text-center cursor-pointer px-3 py-2 rounded-md;
 }
 </style>

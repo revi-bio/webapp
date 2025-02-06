@@ -20,7 +20,7 @@ import router from '@/router';
     event.preventDefault();
   try{
     if(confPassword.value != password.value){
-      alert("Nem egyeznek a megadott jelszavak")
+      alert("The given passwords are not the same!")
     }else{
       const res = await ApiWrapper.post('auth/register', {
       displayName: displayName.value,
@@ -37,7 +37,7 @@ import router from '@/router';
         userStore.setJwt(userRes.data.token);
         router.push('Overview');
       }else{
-        console.log("Baj van!");
+        console.log("Hello I'm under the water please help me!");
       }
     };
   }
