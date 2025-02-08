@@ -24,7 +24,7 @@ defineProps<{
 
 <style>
 .input {
-  @apply rounded-md flex flex-row justify-between content-center items-center relative gap-2 border-2 border-zinc-900/80 bg-zinc-800 rounded w-full text-zinc-400 placeholder-zinc-500 focus:border-zinc-900/80 hover:border-zinc-800 transition-colors duration-200;
+  @apply rounded-md flex flex-row justify-between content-center items-center relative gap-2 border-2 border-zinc-900/80 bg-zinc-800 w-full text-zinc-400 placeholder-zinc-500 focus:border-zinc-900/80 hover:border-zinc-800 transition-colors duration-200;
 }
 
 input {

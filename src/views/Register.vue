@@ -17,7 +17,7 @@ import router from '@/router';
   const confPassword = ref('');
 
   const onRegister= async () => {
-  
+
   try{
     if(confPassword.value != password.value){
       alert("The given passwords are not the same!")
