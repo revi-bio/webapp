@@ -19,6 +19,18 @@ const router = createRouter({
       name:'register',
       component: ()=> import ('../views/Register.vue')
     },
+    {
+      path:'/baseDash',
+      name:'baseDash',
+      component: ()=> import ('../views/BaseDashLayout.vue'),
+      children:[
+        {
+          path:'/overview',
+          name:'Overview',
+          component: ()=> import ('../views/Logged_in/Overview.vue')
+        }
+      ]
+    }
   ],
 })
 

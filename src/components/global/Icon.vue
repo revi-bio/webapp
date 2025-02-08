@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{
   type: string;
+  size?: string;
 }>();
 
 const icons: Record<string, string> = {
@@ -24,15 +25,18 @@ const icons: Record<string, string> = {
   more_horiz: 'more_horiz',
   apps: 'apps',
   menu: 'menu',
+  person: 'person',
+  shield_person:'shield_person',
+  mail: "mail"
 };
 </script>
 
 <template>
-  <span v-if="icons[type]" class="material-symbols-outlined">{{ icons[type] }}</span>
+  <span
+    v-if="icons[type]"
+    class="material-symbols-outlined align-middle"
+    :class="size ? `text-${size}` : 'text-lg'"
+  >
+    {{ icons[type] }}
+  </span>
 </template>
-
-<style>
-.material-symbols-outlined {
-  @apply text-lg align-middle;
-}
-</style>

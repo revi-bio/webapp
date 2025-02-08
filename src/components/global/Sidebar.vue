@@ -1,0 +1,42 @@
+<script lang="ts" setup>
+import Logo from './Logo.vue';
+import Icon from './Icon.vue';
+import ProfilePic from './ProfilePic.vue';
+
+</script>
+
+<template>
+<div class="flex flex-col justify-between content-center items-center h-full px-2 w-full text-zinc-400">
+  <div class="flex flex-col justify-center content-center items-center gap-8">
+    <Logo type="revi"></Logo>
+    <span class="bg-zinc-800 rounded-full w-full h-[2px]"><!--Separator--></span>
+    <span class="navItem">
+      <Icon size="3xl"type="house"></Icon>
+    </span>
+    <span class="navItem">
+      <Icon size="3xl"type="person"></Icon>
+    </span>
+    <span class="navItem">
+      <Icon size="3xl"type="shield_person"></Icon>
+    </span>
+  </div>
+  <div class="flex flex-col justify-center content-center items-center gap-8">
+    <span class="navItem">
+      <Icon size="3xl"type="settings"></Icon>
+    </span>
+    <span class="navItem">
+      <Icon size="3xl"type="mail"></Icon>
+    </span class="profilePic">
+    <ProfilePic class="w-full h-[]"></ProfilePic>
+  </div>
+</div>
+</template>
+
+<style lang="scss" scoped>
+
+  .navItem{
+    @apply py-1 px-2 rounded-lg hover:bg-zinc-700/25 transition duration-200 active:bg-zinc-500/25 cursor-pointer;
+
+  }
+
+</style>
