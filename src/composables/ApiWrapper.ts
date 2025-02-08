@@ -1,5 +1,4 @@
-import { useUserStore } from '@/stores/user';
-import axios, { AxiosHeaders } from 'axios';
+import axios from 'axios';
 
 export interface ApiResponse<T> {
   data: T;
@@ -9,26 +8,35 @@ export interface ApiResponse<T> {
 
 export class ApiWrapper {
   private static readonly BACKEND_URL = 'http://65.87.7.245';
-   private static readonly userStore = useUserStore();
+
+  // A store-t itt hozzuk létre, amikor szükség van rá
+  private static getUserStore() {
+    return import('@/stores/user').then(({ useUserStore }) => useUserStore());
+  }
 
   public static async get<T = any>(route: string, data: any, headers = {}): Promise<ApiResponse<T>> {
-    return await this.request<T>('GET', route, data, headers);
+    const store = await this.getUserStore();
+    return await this.request<T>('GET', route, data, headers, store);
   }
 
   public static async post<T = any>(route: string, data: any, headers = {}): Promise<ApiResponse<T>> {
-    return await this.request<T>('POST', route, data, headers);
+    const store = await this.getUserStore();
+    return await this.request<T>('POST', route, data, headers, store);
   }
 
   public static async patch<T = any>(route: string, data: any, headers = {}): Promise<ApiResponse<T>> {
-    return await this.request<T>('PATCH', route, data, headers);
+    const store = await this.getUserStore();
+    return await this.request<T>('PATCH', route, data, headers, store);
   }
 
   public static async put<T = any>(route: string, data: any, headers = {}): Promise<ApiResponse<T>> {
-    return await this.request<T>('PUT', route, data, headers);
+    const store = await this.getUserStore();
+    return await this.request<T>('PUT', route, data, headers, store);
   }
 
   public static async delete<T = any>(route: string, data: any, headers = {}): Promise<ApiResponse<T>> {
-    return await this.request<T>('DELETE', route, data, headers);
+    const store = await this.getUserStore();
+    return await this.request<T>('DELETE', route, data, headers, store);
   }
 
   private static async request<T = any>(
@@ -36,7 +44,7 @@ export class ApiWrapper {
     route: string,
     data: any,
     extraHeaders: object,
-    store: any = useUserStore(),
+    store: any,
   ): Promise<ApiResponse<T>> {
     const res = await axios.request({
       method,

@@ -16,8 +16,8 @@ import router from '@/router';
   const password = ref('');
   const confPassword = ref('');
 
-  const onRegister= async (event: Event) => {
-    event.preventDefault();
+  const onRegister= async () => {
+  
   try{
     if(confPassword.value != password.value){
       alert("The given passwords are not the same!")
@@ -69,7 +69,7 @@ import router from '@/router';
           <Checkbox text="I agree to sell my insides to revi.bio"></Checkbox>
         </form>
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
-          <Button text="Register" rank="primary" size="normal" icon-position="none" @click="onRegister"></Button>
+          <Button text="Register" rank="primary" size="normal" icon-position="none" @click.prevent="onRegister"></Button>
           <p class="text-[#71717A]"><RouterLink to="login">- or Log in</RouterLink></p>
         </div>
 

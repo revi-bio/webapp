@@ -8,6 +8,7 @@
   import { useUserStore } from '@/stores/user';
   import { ApiWrapper } from '@/composables/ApiWrapper';
   import { ref } from 'vue';
+import router from '@/router';
 
   const userStore = useUserStore();
   const email = ref('');
@@ -26,7 +27,7 @@
       //console.log('Login successful, status:', userStore.getStatus());
       router.push('Overview');
     } else {
-      console.log(error)
+      console.log("Hello I'm under the water please help me!")
     }
   } catch (error: any) {
     console.log(error)
