@@ -6,17 +6,17 @@ import { RouterLink } from 'vue-router';
 </script>
 
 <template>
-  <div class="flex flex-col justify-between content-center items-center h-full px-2 w-full text-zinc-400">
+  <div class="flex flex-col justify-between content-center items-center h-full px-2 text-zinc-400">
     <div class="flex flex-col justify-center content-center items-center gap-8">
       <Logo type="revi"></Logo>
       <span class="bg-zinc-800 rounded-full w-full h-[2px]"><!--Separator--></span>
       <RouterLink to="Overview" class="navItem"><span >
         <Icon size="3xl" type="house"></Icon>
       </span></RouterLink>
-      <RouterLink to="hm" class="navItem"><span >
+      <RouterLink to="" class="navItem"><span >
         <Icon size="3xl" type="person"></Icon>
       </span></RouterLink>
-      <RouterLink to="hmm" class="navItem"><span >
+      <RouterLink to="" class="navItem"><span >
         <Icon size="3xl" type="shield_person"></Icon>
       </span></RouterLink>
     </div>
@@ -24,7 +24,7 @@ import { RouterLink } from 'vue-router';
       <RouterLink to="Settings" class="navItem"><span >
         <Icon size="3xl" type="settings"></Icon>
       </span></RouterLink>
-      <RouterLink to="Inbox" class="navItem"><span>
+      <RouterLink to="" class="navItem"><span>
         <Icon size="3xl" type="mail"></Icon>
       </span></RouterLink>
       <ProfilePic class="w-[48px] h-[48px]"></ProfilePic>
