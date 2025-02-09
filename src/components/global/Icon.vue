@@ -27,7 +27,8 @@ const icons: Record<string, string> = {
   menu: 'menu',
   person: 'person',
   shield_person:'shield_person',
-  mail: "mail"
+  mail: "mail",
+  visibility: "visibility"
 };
 </script>
 
