@@ -6,8 +6,8 @@
 
 <template>
   <div class="flex flex-row justify-between w-full rounded-[16px]  p-4 bg-zinc-700/50">
-    <div class="flex flex-row space-x-4">
-
+    <div class="flex flex-row space-x-4 items-center">
+      <ProfilePic class="w-[48px] h-[48px]"></ProfilePic>
       <div class="flex flex-col">
         <h3 class="text-2xl text-zinc-100 w-full">Lakatos Dezso</h3>
         <h3 class="text-md text-zinc-500">@lakatosdezso</h3>
@@ -29,7 +29,7 @@
         </div>
         <div class="dates text-zinc-500">
           <h3 class="font-medium">Last edited at</h3>
-          <h3 class="tex-zinc-600">2025-02-09</h3>
+          <h3 class="text-zinc-600">2025-02-09</h3>
         </div>
       </div>
     </div>
@@ -46,6 +46,6 @@
 }
 
 .dates{
-  @apply flex flex-col items-center  space-x-0 justify-center items-start
+  @apply flex flex-col  space-x-0 justify-center items-start
 }
 </style>
