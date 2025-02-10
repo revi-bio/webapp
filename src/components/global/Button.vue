@@ -49,17 +49,13 @@ button {
   @apply rounded-md flex items-center gap-2;
 }
 .primary {
-  @apply bg-rose-500 text-white hover:bg-rose-400 active:bg-rose-600 ;
+  @apply bg-rose-500 text-white hover:bg-rose-400 active:bg-rose-600 transition  duration-200;
 }
-.primary:hover{
-  transition: 0.2s ease-in;
-}
+
 .secondary {
-  @apply bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-800 ;
+  @apply bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-800 transition duration-200 ;
 }
-.secondary:hover{
-  transition: 0.2s ease-in-out;
-}
+
 .small {
   @apply text-base px-2 py-1;
 }
