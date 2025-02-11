@@ -32,7 +32,24 @@ const router = createRouter({
         {
           path:'/settings',
           name:'Settings',
-          component: ()=> import('../views/Logged_in/Settings.vue')
+          component: ()=> import('../views/Logged_in/Settings.vue'),
+          children:[
+            {
+              path:'/profile',
+              name:'Profile',
+              component: ()=> import('../views/Logged_in/Settings/Profile.vue')
+            },
+            {
+              path:'/account',
+              name:'Account',
+              component: ()=> import('../views/Logged_in/Settings/Account.vue')
+            },
+            {
+              path:'/preferences',
+              name:'Preferences',
+              component: ()=> import('../views/Logged_in/Settings/Preferences.vue')
+            }
+          ]
         }
       ]
     }
