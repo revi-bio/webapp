@@ -52,7 +52,7 @@ document.addEventListener('click', closeDropdown);
         <h3>{{ selectedText }}</h3>
       </span>
 
-      <span v-if="isOpen" class="items flex flex-col justify-center content-center items-center px-3 py-2 gap-2 bg-zinc-600 rounded-md absolute top-16">
+      <span v-if="isOpen" class="items flex flex-col justify-center content-center items-center px-3 py-2 gap-2 bg-zinc-600 rounded-full absolute top-16">
         <h3
           v-for="item in items"
           :key="item.name"
