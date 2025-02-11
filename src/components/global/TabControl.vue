@@ -29,7 +29,7 @@ activeTabIndex.value = 0;
 </script>
 
 <template>
-  <div class="flex flex-row justify-evenly content-center items-center bg-zinc-700 p-2 rounded-lg gap-2">
+  <div class="flex flex-row justify-evenly content-center items-center bg-zinc-700 p-2 rounded-lg gap-3">
 
     <Button
       v-for="(item, index) in props.items"
