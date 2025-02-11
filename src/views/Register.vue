@@ -16,38 +16,31 @@ import router from '@/router';
   const password = ref('');
   const confPassword = ref('');
 
-  const onRegister= async () => {
+  const onRegister = async () => {
+  try {
+    if (confPassword.value !== password.value) {
+      alert("The given passwords are not the same!");
+      return;
+    }
 
-  try{
-    if(confPassword.value != password.value){
-      alert("The given passwords are not the same!")
-    }else{
-      const res = await ApiWrapper.post('auth/register', {
+    console.log(displayName.value, email.value, password.value, confPassword.value);
+
+    const res = await ApiWrapper.post<{ token: string }>('auth/register', {
       displayName: displayName.value,
       email: email.value,
       password: password.value
-      });
-      if (res.type == 'success') {
-      const userReq = async () => {
-      const userRes = await ApiWrapper.post<{ token: string }>('auth/login', {
-        email: email.value,
-        password: password.value
-      });
-      if (userRes.type == 'success') {
-        userStore.setJwt(userRes.data.token);
-        router.push('Overview');
-      }else{
-        console.log("Hello I'm under the water please help me!");
-      }
-    };
-  }
+    });
+
+    if (res.type === 'success' && res.data.token) {
+      userStore.setJwt(res.data.token);
+      router.push('baseDash');
+    } else {
+      console.error("Registration failed:", res);
     }
 
-  }catch(error: any){
-    console.log(error);
-
+  } catch (error) {
+    console.error("Error during registration:", error);
   }
-
 };
 
 </script>
