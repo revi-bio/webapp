@@ -2,34 +2,43 @@
   import Icon from './Icon.vue';
   import ProfilePic from './ProfilePic.vue';
   import Button from '@/components/global/Button.vue';
+
+  const props = defineProps<{
+    name: string;
+    domain: string;
+    views: number;
+    widgets: number;
+    createdat: Date;
+    lastedit: Date;
+  }>();
 </script>
 
 <template>
   <div class="flex flex-row justify-between w-full rounded-[16px]  p-4 bg-zinc-700/50">
     <div class="flex flex-row space-x-4 items-center">
-      <ProfilePic class="w-[48px] h-[48px]"></ProfilePic>
+      <ProfilePic class="w-[64px] h-[64px]"></ProfilePic>
       <div class="flex flex-col">
-        <h3 class="text-2xl text-zinc-100 w-full">Lakatos Dezso</h3>
-        <h3 class="text-md text-zinc-500">@lakatosdezso</h3>
+        <h3 class="text-2xl text-zinc-100 w-full">{{ name }}</h3>
+        <h3 class="text-md text-zinc-500">{{ domain }}</h3>
       </div>
       <div class="flex space-x-1">
         <div class="stats">
           <Icon type="visibility" size="4"></Icon>
-          <h3>420</h3>
+          <h3>{{ views }}</h3>
         </div>
         <div class="stats">
           <Icon type="widgets" size="4"></Icon>
-          <h3>8</h3>
+          <h3>{{ widgets }}</h3>
         </div>
       </div>
       <div class="flex space-x-2 justify-evenly">
         <div class="dates text-zinc-500">
           <h3 class="font-medium">Created at</h3>
-          <h3 class="text-zinc-600">2025-01-69</h3>
+          <h3 class="text-zinc-600">{{ createdat }}</h3>
         </div>
         <div class="dates text-zinc-500">
           <h3 class="font-medium">Last edited at</h3>
-          <h3 class="text-zinc-600">2025-02-09</h3>
+          <h3 class="text-zinc-600">{{ lastedit }}</h3>
         </div>
       </div>
     </div>
