@@ -3,14 +3,21 @@
   import ProfilePic from './ProfilePic.vue';
   import Button from '@/components/global/Button.vue';
 
-  const props = defineProps<{
+  defineProps<{
+    id: string
     name: string;
     domain: string;
     views: number;
     widgets: number;
-    createdat: Date;
-    lastedit: Date;
+    createdat: string;
+    lastedit: string;
   }>();
+
+
+  function dilit(id: string){
+    confirm(id)
+  }
+
 </script>
 
 <template>
@@ -43,7 +50,7 @@
       </div>
     </div>
     <div class="flex space-x-4 py-4">
-      <Button icon-position="left" icon-type="delete" text="Delete" rank="primary" size="small"></Button>
+      <Button icon-position="left" icon-type="delete" text="Delete" rank="primary" size="small" v-on:click="dilit(id)"></Button>
       <Button icon-position="left" icon-type="edit" text="Edit" rank="primary" size="small"></Button>
     </div>
   </div>

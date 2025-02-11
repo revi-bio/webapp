@@ -27,7 +27,7 @@ const router = createRouter({
         {
           path:'/overview',
           name:'Overview',
-          component: ()=> import ('../views/Logged_in/Overview.vue')
+          component: ()=> import ('../views/Logged_in/Bioslist.vue')
         },
         {
           path:'/settings',
