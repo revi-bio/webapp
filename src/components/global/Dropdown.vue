@@ -52,7 +52,7 @@ document.addEventListener('click', closeDropdown);
         <h3>{{ selectedText }}</h3>
       </span>
 
-      <span v-if="isOpen" class="items flex flex-col justify-center content-center items-center px-3 py-2 gap-2 bg-zinc-600 rounded-full absolute top-16">
+      <span v-if="isOpen" class="items flex flex-col justify-center content-center items-center px-3 py-2 gap-2 bg-zinc-600 rounded-md z-100 absolute top-16">
         <h3
           v-for="item in items"
           :key="item.name"
@@ -98,7 +98,7 @@ document.addEventListener('click', closeDropdown);
 
 <style lang="scss" scoped>
 .dropdown {
-  @apply flex flex-row px-3 py-2 justify-between content-center items-center gap-2 bg-zinc-600 rounded-md hover:bg-zinc-500 active:bg-zinc-700 cursor-pointer;
+  @apply flex flex-row px-3 py-2 justify-between content-center items-center gap-2 bg-zinc-600 rounded-full hover:bg-zinc-500 active:bg-zinc-700 cursor-pointer;
 }
 .items h3 {
   @apply hover:bg-zinc-500 w-full text-center cursor-pointer px-3 py-2 rounded-md;
