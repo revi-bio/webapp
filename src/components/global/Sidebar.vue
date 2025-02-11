@@ -13,7 +13,7 @@ import { RouterLink } from 'vue-router';
       <RouterLink to="Overview" class="navItem"><span >
         <Icon size="3xl" type="house"></Icon>
       </span></RouterLink>
-      <RouterLink to="" class="navItem"><span >
+      <RouterLink to="/biolist" class="navItem"><span >
         <Icon size="3xl" type="person"></Icon>
       </span></RouterLink>
       <RouterLink to="" class="navItem"><span >

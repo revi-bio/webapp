@@ -20,7 +20,7 @@
         ease: "easeInOut",
       }
     );
-    router.push("Overview")
+    router.push("/overview")
   });
 </script>
 
