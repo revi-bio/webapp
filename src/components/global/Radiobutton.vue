@@ -1,28 +1,15 @@
 <script setup lang="ts">
-import type { RadioOption } from '@/types/RadioOptions';
 
 //$emit('input', item.value)
 
 defineProps<{
   text: string;
-  options: RadioOption[];
+  options: {key: string, value:string | number}[];
   disabled?: boolean;
   icon?: string;
   direction: "col" | "row";
 }>();
 
-/*
-const radiooptions:RadioOption[] =[
-  {key: "", value: 0 | ""},
-];
-
-const selectedValue = ref<string | null>(null);
-
-function handleSelected(value: string) {
-  selectedValue.value = value;
-}
-
-*/
 </script>
 
 <template>
