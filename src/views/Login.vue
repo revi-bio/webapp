@@ -21,11 +21,11 @@ import router from '@/router';
       password: password.value
     });
 
-    if (res.type === 'success') {
+    if (res.status === 201) {
       userStore.setJwt(res.data.token);
       userStore.setStatus(200);
       //console.log('Login successful, status:', userStore.getStatus());
-      router.push('Overview');
+      router.push('/baseDash');
     } else {
       console.log("Hello I'm under the water please help me!")
     }
@@ -47,7 +47,7 @@ import router from '@/router';
           <Input placeholder="Password" v-model="password" type="password"></Input>
         </form>
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
-          <Button text="Log in" rank="primary" size="normal" icon-position="none"></Button>
+          <Button text="Log in" rank="primary" size="normal" icon-position="none" @click.prevent="onLogIn"></Button>
           <p class="text-[#71717A]"><RouterLink to="register">- or Create an account</RouterLink></p>
         </div>
 
