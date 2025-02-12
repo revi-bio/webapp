@@ -21,7 +21,7 @@ import router from '@/router';
       password: password.value
     });
 
-    if (res.status === 201) {
+    if (res.status === 200) {
       userStore.setJwt(res.data.token);
       userStore.setStatus(200);
       //console.log('Login successful, status:', userStore.getStatus());
