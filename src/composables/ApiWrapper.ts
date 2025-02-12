@@ -1,10 +1,4 @@
-import axios from 'axios';
-
-export interface ApiResponse<T> {
-  data: T;
-  type: 'success' | 'error';
-  status: number;
-}
+import axios, { type AxiosResponse } from 'axios';
 
 export class ApiWrapper {
   private static readonly BACKEND_URL = 'http://65.87.7.245';
@@ -14,27 +8,27 @@ export class ApiWrapper {
     return import('@/stores/user').then(({ useUserStore }) => useUserStore());
   }
 
-  public static async get<T = any>(route: string, data: any, headers = {}): Promise<ApiResponse<T>> {
+  public static async get<T = any>(route: string, data: any, headers = {}): Promise<AxiosResponse<T>> {
     const store = await this.getUserStore();
     return await this.request<T>('GET', route, data, headers, store);
   }
 
-  public static async post<T = any>(route: string, data: any, headers = {}): Promise<ApiResponse<T>> {
+  public static async post<T = any>(route: string, data: any, headers = {}): Promise<AxiosResponse<T>> {
     const store = await this.getUserStore();
     return await this.request<T>('POST', route, data, headers, store);
   }
 
-  public static async patch<T = any>(route: string, data: any, headers = {}): Promise<ApiResponse<T>> {
+  public static async patch<T = any>(route: string, data: any, headers = {}): Promise<AxiosResponse<T>> {
     const store = await this.getUserStore();
     return await this.request<T>('PATCH', route, data, headers, store);
   }
 
-  public static async put<T = any>(route: string, data: any, headers = {}): Promise<ApiResponse<T>> {
+  public static async put<T = any>(route: string, data: any, headers = {}): Promise<AxiosResponse<T>> {
     const store = await this.getUserStore();
     return await this.request<T>('PUT', route, data, headers, store);
   }
 
-  public static async delete<T = any>(route: string, data: any, headers = {}): Promise<ApiResponse<T>> {
+  public static async delete<T = any>(route: string, data: any, headers = {}): Promise<AxiosResponse<T>> {
     const store = await this.getUserStore();
     return await this.request<T>('DELETE', route, data, headers, store);
   }
@@ -45,7 +39,7 @@ export class ApiWrapper {
     data: any,
     extraHeaders: object,
     store: any,
-  ): Promise<ApiResponse<T>> {
+  ): Promise<AxiosResponse<T>> {
     const res = await axios.request({
       method,
       url: route,
@@ -59,7 +53,6 @@ export class ApiWrapper {
         : extraHeaders
     });
 
-    const resData: ApiResponse<T> = res.data;
-    return resData;
+    return res;
   }
 }
