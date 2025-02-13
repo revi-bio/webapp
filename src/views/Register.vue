@@ -25,14 +25,14 @@ import router from '@/router';
 
     console.log(displayName.value, email.value, password.value, confPassword.value);
 
-    const res = await ApiWrapper.post<{ token: string }>('auth/register', {
+    const res = await ApiWrapper.post<{jwt: string }>('auth/register', {
       displayName: displayName.value,
       email: email.value,
       password: password.value
     });
 
-    if (res.type === 'success' && res.data.token) {
-      userStore.setJwt(res.data.token);
+    if (res.status === 200 && res.data.jwt) {
+      userStore.setJwt(res.data.jwt);
       router.push('baseDash');
     } else {
       console.error("Registration failed:", res);

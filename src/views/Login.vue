@@ -16,13 +16,14 @@ import router from '@/router';
 
   const onLogIn = async () => {
   try {
-    const res = await ApiWrapper.post<{ token: string }>('auth/login', {
+    const res = await ApiWrapper.post<{ jwt: string }>('auth/login', {
       email: email.value,
       password: password.value
     });
 
     if (res.status === 200) {
-      userStore.setJwt(res.data.token);
+      
+      userStore.setJwt(res.data.jwt);
       userStore.setStatus(200);
       //console.log('Login successful, status:', userStore.getStatus());
       router.push('/baseDash');

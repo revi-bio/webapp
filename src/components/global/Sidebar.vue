@@ -10,10 +10,10 @@ import { RouterLink } from 'vue-router';
     <div class="flex flex-col justify-center content-center items-center gap-8">
       <Logo type="revi"></Logo>
       <span class="bg-zinc-800 rounded-full w-full h-[2px]"><!--Separator--></span>
-      <RouterLink to="Overview" class="navItem"><span >
+      <RouterLink to="/overview" class="navItem"><span >
         <Icon size="3xl" type="house"></Icon>
       </span></RouterLink>
-      <RouterLink to="/biolist" class="navItem"><span >
+      <RouterLink to="/bios" class="navItem"><span >
         <Icon size="3xl" type="person"></Icon>
       </span></RouterLink>
       <RouterLink to="" class="navItem"><span >
@@ -21,7 +21,7 @@ import { RouterLink } from 'vue-router';
       </span></RouterLink>
     </div>
     <div class="flex flex-col justify-center content-center items-center gap-8">
-      <RouterLink to="Settings" class="navItem"><span >
+      <RouterLink to="/settings" class="navItem"><span >
         <Icon size="3xl" type="settings"></Icon>
       </span></RouterLink>
       <RouterLink to="" class="navItem"><span>

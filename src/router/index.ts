@@ -25,7 +25,7 @@ const router = createRouter({
       component: ()=> import ('../views/BaseDashLayout.vue'),
       children:[
         {
-          path:'/biolist',
+          path:'/bios',
           name:'Bio list',
           component: ()=> import ('../views/Logged_in/Bioslist.vue'),
         },
