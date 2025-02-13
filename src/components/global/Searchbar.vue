@@ -1,28 +1,28 @@
 <script lang="ts" setup>
 import Input from '@/components/global/Input.vue';
-import { ref } from 'vue';
-
-interface Item {
-  name?: string; // Mark `name` as optional with `?`
-  // Add other properties if needed
-}
-
-
+import type { Bio } from '@/types/Bio';
+import { computed, ref } from 'vue';
 
 const search = defineModel<string>();
-const basearray = ref<Item[]>([]); // Most már egy ref!
+const props = defineProps<{
+  basearray:Bio[]
+}>()
 
-const emit = defineEmits<{ (event: 'filtered', value: Item[]): void }>();
+const emit = defineEmits(["filtered"]);
 
-function activateFilter(filter: string | undefined) {
-  const normalizedFilter = filter ?? '';
-  const filtered = basearray.value.filter(item =>
-    item.name?.toLowerCase().includes(normalizedFilter.toLowerCase())
+function activateFilter(filter: string ) {
+  if (filter == "") {
+    emit('filtered', props.basearray)
+  }
+
+  const filtered = props.basearray.filter(item =>
+    item.name.toLowerCase()
+          .replace(/\s+/g, "")
+          .includes(filter.toLowerCase().replace(/\s+/g, ""))
   );
-
+  console.log(filtered)
   emit('filtered', filtered);
 }
-
 
 </script>
 
@@ -30,8 +30,8 @@ function activateFilter(filter: string | undefined) {
   <Input 
     class="input" 
     placeholder="Search" 
-    v-model="search" 
-    @input="activateFilter(search)" 
+    v-model="search"
+    @update:model-value="activateFilter(search!)"
     type="text"
   />
 </template>
