@@ -28,6 +28,7 @@ const icons: Record<string, string> = {
   person: 'person',
   shield_person:'shield_person',
   mail: "mail",
+  opened_mail: "drafts",
   visibility: "visibility"
 };
 </script>

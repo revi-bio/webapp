@@ -2,7 +2,7 @@
   import { ref } from 'vue';
   import Searchbar from '@/components/global/Searchbar.vue';
   import BioListItem from '@/components/global/BioListItem.vue';
-import type { Bio } from '@/types/Bio';
+  import type { Bio } from '@/types/Bio';
   const search = ref('');
 
   const biolists = ref<Bio[]>([
