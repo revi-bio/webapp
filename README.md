@@ -37,3 +37,5 @@ pnpm build
 ```sh
 pnpm lint
 ```
+
+### gh test
