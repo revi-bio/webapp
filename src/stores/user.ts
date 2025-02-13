@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', () => {
 
   function refreshLocalStorage() {
     localStorage.setItem('user', JSON.stringify(currentUser.value || {}));
+    console.log('xd3')
   }
 
   function clearUser() {
@@ -17,13 +18,16 @@ export const useUserStore = defineStore('user', () => {
     localStorage.clear();
   }
 
-  function setJwt(token: string): void {
+  function setJwt(jwt: string): void {
+    console.log('xd1')
     currentUser.value = {
-      jwt: token
+      jwt,
     };
 
-    refreshUserData()
-    .then(refreshLocalStorage);
+    console.log('xd2')
+
+    refreshLocalStorage();
+    refreshUserData();
   }
 
   async function refreshUserData() {

@@ -101,14 +101,14 @@ onMounted(() => {
 
 
 <!--Main content-->
-  <main class="flex flex-col justify-center content-start items-center w-full min-h-full p-5 snap-center">
+  <main class="flex flex-col justify-center content-start items-center w-full min-h-full p-5 snap-center z-50">
 
     <nav class="flex flex-row justify-between content-center items-center w-full">
       <Logo type="revi"></Logo>
       <div  class="flex flex-row justify-center content-center items-center gap-10">
         <!--RouterLinks-->
-        <RouterLink to="login">Log In</RouterLink>
-        <RouterLink to="register">Register</RouterLink>
+        <RouterLink to="/login">Log In</RouterLink>
+        <RouterLink to="/register">Register</RouterLink>
       </div>
     </nav>
 
@@ -119,7 +119,7 @@ onMounted(() => {
 
       <Logo type="revibio"></Logo>
       <span class="flex flex-row justify-center content-center items-center gap-5">
-       <RouterLink to="register"><Button text="Start your journey" size="normal" rank="primary" icon-position="none"></Button></RouterLink>
+       <RouterLink to="/register"><Button text="Start your journey" size="normal" rank="primary" icon-position="none"></Button></RouterLink>
         <a href="#more"><Button text="Learn more" size="normal" rank="secondary" icon-position="none"></Button></a>
       </span>
     </div>
