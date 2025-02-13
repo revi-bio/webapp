@@ -55,7 +55,12 @@ const router = createRouter({
               component: ()=> import('../views/Logged_in/Settings/Preferences.vue')
             }
           ]
-        }
+        },
+        {
+          path:'/inbox',
+          name:'',
+          component: ()=> import ('../views/Logged_in/Inbox.vue'),
+        },
       ]
     }
   ],
