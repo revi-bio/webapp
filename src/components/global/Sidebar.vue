@@ -24,7 +24,7 @@ import { RouterLink } from 'vue-router';
       <RouterLink to="/settings" class="navItem"><span >
         <Icon size="3xl" type="settings"></Icon>
       </span></RouterLink>
-      <RouterLink to="" class="navItem"><span>
+      <RouterLink to="/inbox" class="navItem"><span>
         <Icon size="3xl" type="mail"></Icon>
       </span></RouterLink>
       <ProfilePic class="w-[48px] h-[48px]"></ProfilePic>
