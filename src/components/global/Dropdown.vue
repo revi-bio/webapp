@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 import Icon from './Icon.vue';
+import {animate, inView} from 'motion'
 
 const props = defineProps<{
   baseText?: string;
@@ -19,8 +20,17 @@ watch(() => props.baseText, (newValue) => {
   if (newValue) selectedText.value = newValue;
 });
 
-const triggerItems = () => {
+const triggerItems = async () => {
   isOpen.value = !isOpen.value;
+
+  if (isOpen.value) {
+    await nextTick(); 
+
+    const dropdownItems = document.querySelector('.items');
+    if (dropdownItems) {
+      animate(dropdownItems, { opacity: [0, 1], y: [-10, 0] }, { duration: 0.3 });
+    }
+  }
 };
 
 const selectItem = (item: { name: string; event?: () => void }) => {
