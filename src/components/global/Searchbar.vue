@@ -1,31 +1,43 @@
 <script lang="ts" setup>
-  import Input from '@/components/global/Input.vue';
-  const search = defineModel()
-  const basearray = defineModel<Record<string, unknown>[]>({ default: () => [] });
+import Input from '@/components/global/Input.vue';
+import { ref } from 'vue';
 
-  const emit = defineEmits<{
-    (event: 'filtered', value: { name: string }[]): void
-  }>();
+interface Item {
+  name?: string; // Mark `name` as optional with `?`
+  // Add other properties if needed
+}
 
 
 
-  function activateFilter(filter: string | unknown) {
-  if (!Array.isArray(basearray.value)) return;
+const search = defineModel<string>();
+const basearray = ref<Item[]>([]); // Most már egy ref!
 
-    const filtered = basearray.value.filter(
-      item => item.name?.toLowerCase().includes((filter as string).toLowerCase()) // `?.` elkerüli a hibát, ha nincs `name`
-    );
-    emit('filtered', filtered);
-  }
+const emit = defineEmits<{ (event: 'filtered', value: Item[]): void }>();
+
+function activateFilter(filter: string | undefined) {
+  const normalizedFilter = filter ?? '';
+  const filtered = basearray.value.filter(item =>
+    item.name?.toLowerCase().includes(normalizedFilter.toLowerCase())
+  );
+
+  emit('filtered', filtered);
+}
+
 
 </script>
 
 <template>
-  <Input class="input" placeholder="Search" v-model="search" @change="activateFilter(search)" type="text"></Input>
+  <Input 
+    class="input" 
+    placeholder="Search" 
+    v-model="search" 
+    @input="activateFilter(search)" 
+    type="text"
+  />
 </template>
 
 <style>
-.input{
-  @apply w-80
+.input {
+  width: 20rem;
 }
 </style>

@@ -111,6 +111,6 @@ document.addEventListener('click', closeDropdown);
   @apply flex flex-row px-3 py-2 justify-between content-center items-center gap-2 bg-zinc-600 rounded-full hover:bg-zinc-500 active:bg-zinc-700 cursor-pointer;
 }
 .items h3 {
-  @apply hover:bg-zinc-500 w-full text-center cursor-pointer px-3 py-2 rounded-md;
+  @apply hover:bg-zinc-500 w-full text-center cursor-pointer px-3 py-2 rounded-md transition duration-200;
 }
 </style>

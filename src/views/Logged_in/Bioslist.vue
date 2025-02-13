@@ -3,7 +3,7 @@
   import Searchbar from '@/components/global/Searchbar.vue';
   import BioListItem from '@/components/global/BioListItem.vue';
   const search = ref('');
-  const filteredData = ref<{ name: string, id: string }[]>([]);
+  const filteredData = ref<{ name: string, id: string, domain:string, views:number, widgets:number, createdat:string, lastedit:string}[]>([]);
 
   const biolists = [
     { id: "1", name: "Lakatos Dezso", domain: "@lakatosdezso", views: 420, widgets: 7, createdat: "2025-01-09", lastedit: "2025-02-10" },
@@ -21,7 +21,7 @@
   <div class="w-full rounded-[16px] p-4 bg-zinc-700/50">
     <Searchbar v-model="search" :basearray="biolists"></Searchbar>
   </div>
-  <div v-for="item in biolists">
+  <div v-for="item in filteredData">
     <BioListItem :id="item.id" :name="item.name" :domain="item.domain" :views="item.views" :widgets="item.widgets" :createdat="item.createdat" :lastedit="item.lastedit"></BioListItem>
   </div>
 </div>
