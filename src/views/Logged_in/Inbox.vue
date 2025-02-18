@@ -42,8 +42,10 @@ const countOfUnreaded = msgs.filter((obj) => obj.readed === false).length
       <div class="max-w-[800px] w-full bg-zinc-700 rounded-2xl p-6">{{selectedMsg?.title}}</div>
       <div class="max-w-[800px] w-full bg-zinc-700 rounded-2xl p-6 text-justify">{{selectedMsg?.subject}}</div>
       <div class="max-w-[800px] w-full bg-zinc-700 rounded-2xl p-6">{{selectedMsg?.close}}</div>
-      <div class="text-rose-500 flex justify-between">
-        <span><Logo type="revibio"></Logo></span>
+      <div class="text-rose-500 flex justify-between items-center">
+        <div class="bg-zinc-900 w-[70px] h-[40px] flex items-center rounded-2xl justify-center">
+          <span><Logo type="revibio" width="60"></Logo></span>
+        </div>
         <div class="cursor-pointer" @click="deleteMsg()"><Icon size="text-sm" type="delete"></Icon> Delete this mail</div>
       </div>
     </div>
