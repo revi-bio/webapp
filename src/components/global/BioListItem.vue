@@ -1,7 +1,11 @@
 <script lang="ts" setup>
+  import { ref } from 'vue';
   import Icon from './Icon.vue';
   import ProfilePic from './ProfilePic.vue';
   import Button from '@/components/global/Button.vue';
+  import Modal from './Modal.vue';
+
+  const showModal = ref(false);
 
   defineProps<{
     id: string
@@ -14,8 +18,8 @@
   }>();
 
 
-  function dilit(id: string){
-    confirm(id)
+  function deleteBio(){
+    showModal.value = true;
   }
 
 </script>
@@ -50,10 +54,16 @@
       </div>
     </div>
     <div class="flex space-x-4 py-4">
-      <Button icon-position="left" icon-type="delete" text="Delete" rank="primary" size="small" v-on:click="dilit(id)"></Button>
+      <Button icon-position="left" icon-type="delete" text="Delete" rank="primary" size="small" v-on:click="deleteBio()"></Button>
       <Button icon-position="left" icon-type="edit" text="Edit" rank="primary" size="small"></Button>
     </div>
   </div>
+  <Modal
+      :show="showModal"
+      @close="showModal = false"
+      :primary-msg="`Delete ${name}?`"
+      :secondary-msg="`Are you sure you want to delete ${domain}?`"
+    />
 </template>
 
 <style>
