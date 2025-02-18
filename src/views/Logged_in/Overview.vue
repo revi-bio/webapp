@@ -1,8 +1,51 @@
 <script lang="ts" setup>
+import { onMounted, nextTick, ref } from 'vue';
 import Button from '@/components/global/Button.vue';
 import Dropdown from '@/components/global/Dropdown.vue';
+import * as echarts from 'echarts';
 
+var colorPalette = ['#13b8a7', '#f43f5e', '#717179'];
+const chartDom = ref<HTMLElement | null>(null);
 
+onMounted(() => {
+  nextTick(() => {
+    if (chartDom.value) {
+      const myChart = echarts.init(chartDom.value);
+      const option = {
+        series: [
+          {
+            name: 'Access From',
+            type: 'pie',
+            radius: ['40%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+              show: false,
+              position: 'center'
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: 20,
+                fontWeight: 'bold'
+              }
+            },
+            labelLine: {
+              show: false
+            },
+            data: [
+              { value: 1048, name: 'Search Engine'},
+              { value: 735, name: 'Direct' },
+              { value: 580, name: 'Email' },
+            ],
+            color: colorPalette
+          }
+        ]
+      };
+
+      myChart.setOption(option);
+    }
+  });
+});
 </script>
 
 <template>
@@ -13,12 +56,7 @@ import Dropdown from '@/components/global/Dropdown.vue';
         type="normal"
         baseText="Choose one"
         align="center"
-        :items="[
-          { name: 'Last 30 days', /*event:FirstEvent*/ },
-          { name: 'Last 60 days', /*event:SecondEvent*/ },
-          { name: 'Last 3 months' , /*event:ThirdEvent*/},
-          { name: 'Last 6 months' , /*event:ThirdEvent*/}
-        ]"
+        :items="[ { name: 'Last 30 days' }, { name: 'Last 60 days' }, { name: 'Last 3 months' }, { name: 'Last 6 months' } ]"
       />
     </span>
     <div class="flex flex-row justify-start content-center items-center w-full h-full gap-4">
@@ -90,8 +128,8 @@ import Dropdown from '@/components/global/Dropdown.vue';
         <!--Middle-->
         <div class="flex flex-row gap-4 w-full h-full">
 
-          <div class="dashboardCard w-5/12 h-full">
-            <h3>Most visitors per countries</h3>
+          <div class="dashboardCard w-5/12 h-full flex flex-col justify-center items-center content-center  " ref="chartDom">
+            <h3 class="">Most visitors per countries</h3>
           </div>
 
           <div class="dashboardCard w-7/12 h-full">
