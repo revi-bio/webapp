@@ -33,9 +33,9 @@ watchEffect(() => {
 </script>
 
 <template>
-<div class="flex flex-col cursor-pointer p-2 rounded-2xl" v-for="(item, index) in messages" :id="index" @click.prevent="() => { selectMsg(index); }" :class="item.readed ? index == activeMsgIndex ? 'text-zinc-900 bg-zinc-200':'text-zinc-500' : 'text-zinc-200'" :selected="activeMsgIndex === index">
+<div class="flex flex-col cursor-pointer p-2 rounded-2xl" v-for="(item, index) in messages" @click.prevent="() => { selectMsg(index); }" :class="item.readed ? index == activeMsgIndex ? 'text-zinc-900 bg-zinc-200':'text-zinc-500' : 'text-zinc-200'" :selected="activeMsgIndex === index">
   <div class="flex flex-row items-center justify-between">
-    <Logo type="revi"></Logo>
+    <Logo type="revi" width="40"></Logo>
     <p class="text-md truncate w-[80px]">{{ item.title }}</p>
     <p class="text-sm">{{ item.senddate }}</p>
     <Icon v-if="!item.readed" type="mail" size="3xl" class="text-rose-500"></Icon>
