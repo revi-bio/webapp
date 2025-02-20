@@ -1,18 +1,30 @@
 <script setup lang="ts">
+import { watch } from 'vue';
 import Icon from './Icon.vue';
 
 const text = defineModel()
 
-defineProps<{
+const props = defineProps<{
   type: "text" | "password" | "email",
   placeholder?: string;
   disabled?: boolean;
   icon?: string;
+  error?: any
 }>();
+
+let errorstyle:boolean = false
+watch(() => props.error, ()=>{
+  if(props.error==""){
+    errorstyle = true
+  }else{
+    errorstyle = false
+  }
+})
+
 </script>
 
 <template>
-  <span class="input">
+  <span class="input" :class="errorstyle ? 'error': ''">
     <template v-if="icon">
       <span class="relative aspect-square px-1">
         <Icon class="absolute left-2 -top-2.5" :type="icon"/>
@@ -29,6 +41,10 @@ defineProps<{
 
 input {
   @apply bg-zinc-800 order-2 w-full h-full px-4 py-2 hover:bg-zinc-700 rounded transition-colors duration-200
+}
+
+.error{
+  @apply border-rose-900/80
 }
 
 </style>

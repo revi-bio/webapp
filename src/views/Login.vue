@@ -13,7 +13,8 @@ import router from '@/router';
   const userStore = useUserStore();
   const email = ref('');
   const password = ref('');
-
+  let errorMsg = ""
+  
   const onLogIn = async () => {
   try {
     const res = await ApiWrapper.post<{ jwt: string }>('auth/login', {
@@ -31,7 +32,7 @@ import router from '@/router';
       console.log("Hello I'm under the water please help me!")
     }
   } catch (error: any) {
-    console.log(error)
+    errorMsg = error.message
   }}
 </script>
 <template>
@@ -45,7 +46,7 @@ import router from '@/router';
         </div>
         <form class="w-full flex flex-col justify-start content-center items-center gap-3">
           <Input placeholder="Email" v-model="email" type="email"></Input>
-          <Input placeholder="Password" v-model="password" type="password"></Input>
+          <Input placeholder="Password" v-model="password" type="password" :error="errorMsg"></Input>
         </form>
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
           <Button text="Log in" rank="primary" size="normal" icon-position="none" @click.prevent="onLogIn"></Button>
