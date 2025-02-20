@@ -1,16 +1,31 @@
 <script lang="ts" setup>
-import { onMounted, nextTick, ref } from 'vue';
+import { onMounted, nextTick, ref, computed } from 'vue';
 import Button from '@/components/global/Button.vue';
 import Dropdown from '@/components/global/Dropdown.vue';
 import * as echarts from 'echarts';
 
-var colorPalette = ['#13b8a7', '#f43f5e', '#717179'];
+var colorPalette = ['#fafafa', '#f43f5e', '#717179'];
 const chartDom = ref<HTMLElement | null>(null);
+const chartInstance = ref<echarts.ECharts | null>(null);
+
+const rawVisitorData = ref([
+  { value: 420, country: 'Germany' },
+  { value: 210, country: 'Brazil' },
+  { value: 69, country: 'Hungary' },
+]);
+
+const visitorData = computed(() =>
+  rawVisitorData.value.map((item) => ({
+    value: item.value,
+    name: `${item.country} - ${item.value}`,
+  }))
+);
 
 onMounted(() => {
   nextTick(() => {
     if (chartDom.value) {
-      const myChart = echarts.init(chartDom.value);
+      chartInstance.value = echarts.init(chartDom.value);
+
       const option = {
         series: [
           {
@@ -29,20 +44,14 @@ onMounted(() => {
                 fontWeight: 'bold'
               }
             },
-            labelLine: {
-              show: false
-            },
-            data: [
-              { value: 1048, name: 'Search Engine'},
-              { value: 735, name: 'Direct' },
-              { value: 580, name: 'Email' },
-            ],
+            labelLine: { show: false },
+            data: visitorData.value,
             color: colorPalette
           }
         ]
       };
 
-      myChart.setOption(option);
+      chartInstance.value.setOption(option);
     }
   });
 });
@@ -128,8 +137,19 @@ onMounted(() => {
         <!--Middle-->
         <div class="flex flex-row gap-4 w-full h-full">
 
-          <div class="dashboardCard w-5/12 h-full flex flex-col justify-center items-center content-center  " ref="chartDom">
+          <div class="dashboardCard w-5/12 h-full" >
             <h3 class="">Most visitors per countries</h3>
+            <div ref="chartDom" class="w-full h-full flex items-center justify-center"></div>
+            <span class="w-full flex flex-row justify-center content-center items-center gap-4">
+              <h3
+                v-for="(visitor, index) in visitorData"
+                :key="visitor.name"
+                :style="{ color: colorPalette[index % colorPalette.length] }"
+              >
+                {{ visitor.name }}
+              </h3>
+
+            </span>
           </div>
 
           <div class="dashboardCard w-7/12 h-full">

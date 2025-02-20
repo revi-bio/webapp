@@ -25,7 +25,7 @@ import router from '@/router';
       
       userStore.setJwt(res.data.jwt);
       userStore.setStatus(200);
-      //console.log('Login successful, status:', userStore.getStatus());
+      console.log('Login successful, status:', userStore.getStatus());
       router.push('/baseDash');
     } else {
       console.log("Hello I'm under the water please help me!")
