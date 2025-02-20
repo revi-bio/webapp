@@ -6,6 +6,8 @@ import * as echarts from 'echarts';
 
 var colorPalette = ['#fafafa', '#f43f5e', '#717179'];
 const chartDom = ref<HTMLElement | null>(null);
+const barDom = ref<HTMLElement | null>(null);
+const barInstance = ref<echarts.ECharts | null>(null);
 const chartInstance = ref<echarts.ECharts | null>(null);
 
 const rawVisitorData = ref([
@@ -51,7 +53,53 @@ onMounted(() => {
         ]
       };
 
+
       chartInstance.value.setOption(option);
+    }
+    if(barDom.value){
+      barInstance.value = echarts.init(barDom.value);
+
+      
+      const bar = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          }
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            axisTick: {
+              alignWithLabel: true
+            }
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value'
+          }
+        ],
+        series: [
+          {
+            name: 'Direct',
+            type: 'bar',
+            barWidth: '60%',
+            data: [10, 52, 200, 334, 390, 330, 220]
+          }
+        ]
+      };
+
+      setTimeout(() => {
+        barInstance.value?.setOption(bar);
+      }, 100);
     }
   });
 });
@@ -160,7 +208,8 @@ onMounted(() => {
 
         <!--Bottom-->
         <div class="dashboardCard w-full h-full">
-
+            <h3>Additional views</h3>
+            <div ref="barDom" class="w-full h-full"> </div>
         </div>
 
       </div>
