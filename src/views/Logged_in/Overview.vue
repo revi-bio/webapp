@@ -5,16 +5,78 @@ import Dropdown from '@/components/global/Dropdown.vue';
 import * as echarts from 'echarts';
 
 var colorPalette = ['#fafafa', '#f43f5e', '#717179'];
+
+const referralColors = ['#d946ef', '#3b82f6', '#f97316', '#facc15', '#10b981'];
+const referralData = ref([
+  { name: "No referral", value: 35, color: referralColors[0] },
+  { name: "YouTube", value: 20, color: referralColors[1] },
+  { name: "Instagram", value: 25, color: referralColors[2] },
+  { name: "Twitter", value: 10, color: referralColors[3] },
+  { name: "Other", value: 10, color: referralColors[4] }
+]);
+
 const chartDom = ref<HTMLElement | null>(null);
 const barDom = ref<HTMLElement | null>(null);
 const barInstance = ref<echarts.ECharts | null>(null);
 const chartInstance = ref<echarts.ECharts | null>(null);
+const referralDom = ref<HTMLElement | null>(null);
+const referralInstance = ref<echarts.ECharts | null>(null);
 
+//Doughnut chart
 const rawVisitorData = ref([
   { value: 420, country: 'Germany' },
   { value: 210, country: 'Brazil' },
   { value: 69, country: 'Hungary' },
 ]);
+
+//Bar (Additional views)
+const barViewsData = ref<{ date: string; value: number }[]>([]);
+
+const generateBarData = (days: number) => {
+  const data = [];
+  for (let i = days - 1; i >= 0; i--) {
+    data.push({
+      date: (days - i).toString(), 
+      value: Math.floor(Math.random() * 500), //random
+    });
+  }
+  barViewsData.value = data;
+};
+
+
+const handleDropdownSelect = (selected: string) => {
+  let days = 30;
+  if (selected === 'Last 30 days') days = 30;
+  else if (selected === 'Last 60 days') days = 60;
+  else if (selected === 'Last 3 months') days = 90;
+  else if (selected === 'Last 6 months') days = 180;
+
+  generateBarData(days);
+
+  nextTick(() => {
+    if (barInstance.value) {
+      barInstance.value.setOption({
+        xAxis: [
+          {
+            type: 'category',
+            data: barViewsData.value.map(item => item.date),
+            axisTick: { alignWithLabel: true }
+          }
+        ],
+        yAxis: [{ type: 'value' }],
+        series: [
+          {
+            name: 'Views',
+            type: 'bar',
+            barWidth: '60%',
+            data: barViewsData.value.map(item => item.value),
+            color: colorPalette
+          }
+        ]
+      });
+    }
+  });
+};
 
 const visitorData = computed(() =>
   rawVisitorData.value.map((item) => ({
@@ -24,85 +86,86 @@ const visitorData = computed(() =>
 );
 
 onMounted(() => {
+  generateBarData(30); 
+
   nextTick(() => {
     if (chartDom.value) {
       chartInstance.value = echarts.init(chartDom.value);
-
-      const option = {
+      chartInstance.value.setOption({
         series: [
           {
             name: 'Access From',
             type: 'pie',
             radius: ['40%', '70%'],
             avoidLabelOverlap: false,
-            label: {
-              show: false,
-              position: 'center'
-            },
-            emphasis: {
-              label: {
-                show: true,
-                fontSize: 20,
-                fontWeight: 'bold'
-              }
-            },
+            label: { show: false, position: 'center' },
+            emphasis: { label: { show: true, fontSize: 20, fontWeight: 'bold' } },
             labelLine: { show: false },
             data: visitorData.value,
             color: colorPalette
           }
         ]
-      };
-
-
-      chartInstance.value.setOption(option);
+      });
     }
-    if(barDom.value){
-      barInstance.value = echarts.init(barDom.value);
 
-      
-      const bar = {
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow'
-          }
-        },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
+    if (barDom.value) {
+      barInstance.value = echarts.init(barDom.value);
+      barInstance.value.setOption({
+        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+        grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
         xAxis: [
           {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            axisTick: {
-              alignWithLabel: true
-            }
+            data: barViewsData.value.map(item => item.date), 
+            axisTick: { alignWithLabel: true }
           }
         ],
-        yAxis: [
-          {
-            type: 'value'
-          }
-        ],
+        yAxis: [{ type: 'value' }],
         series: [
           {
             name: 'Direct',
             type: 'bar',
             barWidth: '60%',
-            data: [10, 52, 200, 334, 390, 330, 220]
+            data: barViewsData.value.map(item => item.value),
+            color: colorPalette
           }
         ]
-      };
+      });
+    }
 
-      setTimeout(() => {
-        barInstance.value?.setOption(bar);
-      }, 100);
+    if (referralDom.value) {
+      referralInstance.value = echarts.init(referralDom.value);
+      referralInstance.value.setOption({
+        tooltip: {
+          trigger: "item",
+          formatter: "{b}: {c}%" 
+        },
+        grid: { left: '5%', right: '5%', top: '10%', bottom: '15%' }, 
+        xAxis: { 
+          type: "category",
+          data: referralData.value.map(item => item.name), 
+          axisLabel: { color: "#fff", rotate: 30 }, 
+        },
+        yAxis: { 
+          type: "value",
+          show: false
+        },
+        series: [
+          {
+            type: "bar",
+            barWidth: '40%', // Vékonyabb sávok
+            data: referralData.value.map(item => ({
+              value: item.value,
+              name: item.name, 
+              itemStyle: { color: item.color }
+            }))
+          }
+        ]
+      });
     }
   });
 });
+
 </script>
 
 <template>
@@ -113,8 +176,14 @@ onMounted(() => {
         type="normal"
         baseText="Choose one"
         align="center"
-        :items="[ { name: 'Last 30 days' }, { name: 'Last 60 days' }, { name: 'Last 3 months' }, { name: 'Last 6 months' } ]"
+        :items="[
+          { name: 'Last 30 days', event: () => handleDropdownSelect('Last 30 days') },
+          { name: 'Last 60 days', event: () => handleDropdownSelect('Last 60 days') },
+          { name: 'Last 3 months', event: () => handleDropdownSelect('Last 3 months') },
+          { name: 'Last 6 months', event: () => handleDropdownSelect('Last 6 months') }
+        ]"
       />
+
     </span>
     <div class="flex flex-row justify-start content-center items-center w-full h-full gap-4">
 
@@ -150,12 +219,10 @@ onMounted(() => {
         <!--Referral distribution-->
         <div class="dashboardCard h-1/2 w-full">
           <h3>Referral distribution</h3>
+          <div ref="referralDom" class="w-full h-full"></div>
         </div>
 
-        <!--Platform distribution-->
-        <div class="dashboardCard h-1/2 w-full">
-          <h3>Platform distribution</h3>
-        </div>
+
 
       </div>
 
@@ -165,19 +232,23 @@ onMounted(() => {
         <div class="flex flex-row w-full h-2/5 gap-4">
 
           <span class="dashboardCard w-full h-full">
-            <h3>Views gained</h3>
+            <h3 class="text-base text-zinc-300">Views gained</h3>
+            <h3 class="text-4xl">3020</h3>
           </span>
 
           <span class="dashboardCard w-full h-full">
-            <h3>Links/Socials clicked</h3>
+            <h3 class="text-base text-zinc-300">Links/Socials clicked</h3>
+            <h3 class="text-4xl">999 999</h3>
           </span>
 
           <span class="dashboardCard w-full h-full">
-            <h3>Avarage time on-site</h3>
+            <h3 class="text-base text-zinc-300">Avarage time on-site</h3>
+            <h3 class="text-4xl">40s</h3>
           </span>
 
           <span class="dashboardCard w-full h-full">
-            <h3>Guest-Click ratio</h3>
+            <h3 class="text-base text-zinc-300">Guest-Click ratio</h3>
+            <h3 class="text-4xl">0</h3>
           </span>
 
         </div>
