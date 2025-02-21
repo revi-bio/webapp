@@ -7,13 +7,17 @@
   import axios, { AxiosError } from 'axios';
   import { useUserStore } from '@/stores/user';
   import { ApiWrapper } from '@/composables/ApiWrapper';
-  import { ref } from 'vue';
+  import { computed, reactive, ref, watch } from 'vue';
 import router from '@/router';
 
   const userStore = useUserStore();
   const email = ref('');
   const password = ref('');
-  let errorMsg = ""
+  const errorMsg = ref()
+
+  const errorClass = computed(() => {
+    return errorMsg.value ? 'error' : 'none'; // Ha '403', akkor legyen error osztály
+  });
   
   const onLogIn = async () => {
   try {
@@ -32,7 +36,8 @@ import router from '@/router';
       console.log("Hello I'm under the water please help me!")
     }
   } catch (error: any) {
-    errorMsg = error.message
+    errorMsg.value = error.status
+    console.log(errorMsg)
   }}
 </script>
 <template>
@@ -45,8 +50,8 @@ import router from '@/router';
           <p class="text-[#52525B]">Let’s continue where you left off. Forgot your password? Click here to start the password reset process.</p>
         </div>
         <form class="w-full flex flex-col justify-start content-center items-center gap-3">
-          <Input placeholder="Email" v-model="email" type="email"></Input>
-          <Input placeholder="Password" v-model="password" type="password" :error="errorMsg"></Input>
+          <Input placeholder="Email" v-model="email" type="email" :styleclass="errorClass"></Input>
+          <Input placeholder="Password" v-model="password" type="password" :styleclass="errorClass"></Input>
         </form>
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
           <Button text="Log in" rank="primary" size="normal" icon-position="none" @click.prevent="onLogIn"></Button>

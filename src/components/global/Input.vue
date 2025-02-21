@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch } from 'vue';
+import { watch, watchEffect } from 'vue';
 import Icon from './Icon.vue';
 
 const text = defineModel()
@@ -9,22 +9,13 @@ const props = defineProps<{
   placeholder?: string;
   disabled?: boolean;
   icon?: string;
-  error?: any
+  styleclass?: "error" | "none"
 }>();
-
-let errorstyle:boolean = false
-watch(() => props.error, ()=>{
-  if(props.error==""){
-    errorstyle = true
-  }else{
-    errorstyle = false
-  }
-})
 
 </script>
 
 <template>
-  <span class="input" :class="errorstyle ? 'error': ''">
+  <span class="input" :class="styleclass">
     <template v-if="icon">
       <span class="relative aspect-square px-1">
         <Icon class="absolute left-2 -top-2.5" :type="icon"/>
@@ -44,7 +35,7 @@ input {
 }
 
 .error{
-  @apply border-rose-900/80
+  @apply border-rose-600/80
 }
 
 </style>
