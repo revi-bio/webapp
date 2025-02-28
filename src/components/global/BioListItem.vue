@@ -4,6 +4,7 @@
   import ProfilePic from './ProfilePic.vue';
   import Button from '@/components/global/Button.vue';
   import Modal from './Modal.vue';
+import { useRouter } from 'vue-router';
 
   const showModal = ref(false);
 
@@ -17,9 +18,16 @@
     lastedit: string;
   }>();
 
+  const router = useRouter();
 
   function deleteBio(){
     showModal.value = true;
+  }
+
+  function openEditor(id: string){
+    router.push({
+      path: `/editor/${id}`
+    })
   }
 
 </script>
@@ -55,7 +63,7 @@
     </div>
     <div class="flex space-x-4 py-4">
       <Button icon-position="left" icon-type="delete" text="Delete" rank="primary" size="small" v-on:click="deleteBio()"></Button>
-      <Button icon-position="left" icon-type="edit" text="Edit" rank="primary" size="small"></Button>
+      <Button icon-position="left" icon-type="edit" text="Edit" rank="primary" size="small" v-on:click="openEditor(id)"></Button>
     </div>
   </div>
   <Modal

@@ -61,6 +61,11 @@ const router = createRouter({
           name:'',
           component: ()=> import ('../views/Logged_in/Inbox.vue'),
         },
+        {
+          path:'/editor/:id',
+          name:'Editor',
+          component: ()=> import ('../views/Logged_in/Editor.vue'),
+        }
       ]
     }
   ],
