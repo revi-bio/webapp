@@ -30,7 +30,8 @@ const icons: Record<string, string> = {
   mail: "mail",
   opened_mail: "drafts",
   visibility: "visibility",
-  info: "info"
+  info: "info",
+  id_card: "id_card",
 };
 </script>
 
