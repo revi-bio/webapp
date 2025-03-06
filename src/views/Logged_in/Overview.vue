@@ -140,11 +140,9 @@ onMounted(() => {
           trigger: "item",
           formatter: "{b}: {c}%" 
         },
-        grid: { left: '5%', right: '5%', top: '10%', bottom: '15%' }, 
+        grid: { left: '10%', right: '10%', top: '20%', bottom: '20%' }, 
         xAxis: { 
-          type: "category",
-          data: referralData.value.map(item => item.name), 
-          axisLabel: { color: "#fff", rotate: 30 }, 
+          type: "category"
         },
         yAxis: { 
           type: "value",
@@ -212,14 +210,29 @@ onMounted(() => {
         </div>
 
         <!--Recently edited-->
-        <div class="dashboardCard h-full w-full">
+        <div class="dashboardCard h-full w-full gap-4 ">
           <h3>Recently edited</h3>
+          <div class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden pr-4">
+
+            <div class="flex flex-row justify-start content-center items-center gap-2">
+              <span class="w-[5rem] h-[5rem] bg-indigo-700 rounded-lg">
+                <!--profilePic-->
+              </span>
+              <span class="flex flex-col justify-center content-center items-start">
+                <h3 class="text-sm font-[300]">@lakatosdezso</h3>
+                <h3>Lakatok dezso</h3>
+              </span>
+
+            </div>
+            <h3 class="text-2xl">#1</h3>
+
+          </div>
         </div>
 
         <!--Referral distribution-->
         <div class="dashboardCard h-1/2 w-full">
           <h3>Referral distribution</h3>
-          <div ref="referralDom" class="w-full h-full"></div>
+          <div ref="referralDom" class="w-full h-full flex flex-col justify-center content-center items-center"></div>
         </div>
 
 
@@ -258,8 +271,8 @@ onMounted(() => {
 
           <div class="dashboardCard w-5/12 h-full" >
             <h3 class="">Most visitors per countries</h3>
-            <div ref="chartDom" class="w-full h-full flex items-center justify-center"></div>
-            <span class="w-full flex flex-row justify-center content-center items-center gap-4">
+            <div ref="chartDom" class="w-full h-full flex flex-col justify-center content-center items-center"></div>
+            <span class="w-full h-full flex flex-row justify-center content-center flex-wrap items-center gap-4">
               <h3
                 v-for="(visitor, index) in visitorData"
                 :key="visitor.name"
@@ -280,7 +293,7 @@ onMounted(() => {
         <!--Bottom-->
         <div class="dashboardCard w-full h-full">
             <h3>Additional views</h3>
-            <div ref="barDom" class="w-full h-full"> </div>
+            <div ref="barDom" class="w-full h-full flex flex-col justify-center content-center items-center"> </div>
         </div>
 
       </div>
