@@ -15,7 +15,7 @@ onMounted(() => {
     const isVisible = ref(false);
 
     useIntersectionObserver(
-      element,
+      element as any,
       ([entry]) => {
         if (entry.isIntersecting) {
           isVisible.value = true;
