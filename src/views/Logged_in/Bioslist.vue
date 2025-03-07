@@ -25,12 +25,32 @@
   <div class="w-full rounded-[16px] p-4 bg-zinc-700/50">
     <Searchbar v-model="search" :basearray="biolists" @filtered="changeSearch"></Searchbar>
   </div>
-  <div v-for="item in filteredData">
-    <BioListItem :id="item.id" :name="item.name" :domain="item.domain" :views="item.views" :widgets="item.widgets" :createdat="item.createdat" :lastedit="item.lastedit"></BioListItem>
+  <div class="w-full h-full baseDash overflow-y-auto flex-col space-y-6 pr-6">
+    <div v-for="item in filteredData" >
+      <BioListItem :id="item.id" :name="item.name" :domain="item.domain" :views="item.views" :widgets="item.widgets" :createdat="item.createdat" :lastedit="item.lastedit"></BioListItem>
+    </div>
   </div>
 </div>
 </template>
 
 <style>
+/* width */
+.baseDash::-webkit-scrollbar {
+  @apply w-2 rounded-full 
+}
 
+/* Track */
+.baseDash::-webkit-scrollbar-track {
+  @apply bg-zinc-800  rounded-full
+}
+
+/* Handle */
+.baseDash::-webkit-scrollbar-thumb {
+  @apply bg-zinc-600/50 rounded-full border-4
+}
+
+/* Handle on hover */
+.baseDash::-webkit-scrollbar-thumb:hover {
+  @apply bg-zinc-700 rounded-full
+}
 </style>

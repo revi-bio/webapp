@@ -140,7 +140,7 @@ onMounted(() => {
           trigger: "item",
           formatter: "{b}: {c}%" 
         },
-        grid: { left: '10%', right: '10%', top: '20%', bottom: '20%' }, 
+        grid: { left: '10%', right: '10%', top: '10%', bottom: '10%' }, 
         xAxis: { 
           type: "category"
         },
