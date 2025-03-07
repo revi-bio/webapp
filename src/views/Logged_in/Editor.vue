@@ -17,7 +17,7 @@ function hiedShow() {
   <div class="flex justify-center items-center h-full w-full relative">
     Widgets
 
-    <div class="absolute left-0 bottom-0 p-6 flex space-x-2">
+    <div class="absolute left-0 bottom-0 p-6 flex space-x-2 text-zinc-200">
       <Button icon-position="only" icon-type="eye_tracking" size="small" rank="secondary" @click.prevent="hiedShow"></Button>
       <Button icon-position="only" icon-type="info" size="small" rank="secondary" :class="visibility"></Button>
       <Button icon-position="right" icon-type="delete" size="small" rank="secondary" text="Clear all" :class="visibility"></Button>
