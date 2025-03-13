@@ -15,7 +15,7 @@ const toggleIcon = (type: string) => {
       <div>{{ activeIcon }}</div>
     </div>
 
-    <div class="flex flex-col items-center justify-center space-y-14 py-10 rounded-[16px] bg-zinc-900 transition duration-200 text-lg px-3 h-full">
+    <div class="flex flex-col items-center justify-center space-y-14 py-10 rounded-[16px] bg-zinc-900/70 transition duration-200 text-lg px-3 h-full">
       <Icon class="Icon" :class="{ 'active': activeIcon === 'Widgets' }" size="normal" type="widgets" @click="toggleIcon('Widgets')" />
       <Icon class="Icon" :class="{ 'active': activeIcon === 'Presets' }" size="normal" type="id_card" @click="toggleIcon('Presets')" />
       <Icon class="Icon" :class="{ 'active': activeIcon === 'Edit' }" size="normal" type="edit" @click="toggleIcon('Edit')" />
