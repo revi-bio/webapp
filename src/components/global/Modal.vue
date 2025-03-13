@@ -4,48 +4,25 @@ import Icon from './Icon.vue';
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 const props = defineProps<{
-
   show: boolean
   primaryMsg?: string
   secondaryMsg?: string
 }>();
 
 const emit = defineEmits(['close']);
-
-const handleOutsideClick = (event: MouseEvent) => {
-  const modal = document.querySelector('.modal-container');
-  if (modal && !modal.contains(event.target as Node)) {
-    emit('close');
-  }
-};
-
-watch(
-  () => props.show,
-  (newVal) => {
-    if (newVal) {
-      setTimeout(() => document.addEventListener('click', handleOutsideClick), 0);
-    } else {
-      document.removeEventListener('click', handleOutsideClick);
-    }
-  }
-);
-
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleOutsideClick);
-});
 </script>
 
 <template>
     <Teleport to="body">
         <Transition name="nested">
-        <div v-show="show" class="w-full h-full z-[100] bg-zinc-950/50 flex flex-col justify-center content-center items-center absolute outer">
-            <div class="w-1/3 h-1/3 bg-zinc-800 flex flex-col justify-center content-center items-center relative rounded-lg gap-2 modal-container inner">
+        <div v-show="show" @click="$emit('close')" class="w-full h-full z-[100] bg-zinc-950/50 flex flex-col justify-center content-center items-center absolute outer">
+            <div v-on:click.stop class="w-1/3 h-1/3 bg-zinc-800 flex flex-col justify-center content-center items-center relative rounded-lg gap-2 modal-container inner">
             <h3 class="text-xl text-zinc-200">{{ primaryMsg }}</h3>
             <h3 class="text-base text-zinc-300">{{ secondaryMsg }}</h3>
             <span class="flex flex-col justify-center items-center content-center">
                 <!--Inputs-->
             </span>
+            <slot></slot>
             <span>
                 <!--Buttons-->
                 <Button 

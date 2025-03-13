@@ -71,7 +71,7 @@ import { useRouter } from 'vue-router';
       @close="showModal = false"
       :primary-msg="`Delete ${name}?`"
       :secondary-msg="`Are you sure you want to delete ${domain}?`"
-    />
+    ></Modal>
 </template>
 
 <style>

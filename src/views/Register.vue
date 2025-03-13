@@ -31,9 +31,9 @@ import router from '@/router';
       password: password.value
     });
 
-    if (res.status === 200 && res.data.jwt) {
+    if (res.status === 201 && res.data.jwt) {
       userStore.setJwt(res.data.jwt);
-      router.push('baseDash');
+      router.push('overview');
     } else {
       console.error("Registration failed:", res);
     }
