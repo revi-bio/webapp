@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, nextTick, ref, computed } from 'vue';
 import Button from '@/components/global/Button.vue';
+import Icon from '@/components/global/Icon.vue'
 import Dropdown from '@/components/global/Dropdown.vue';
 import * as echarts from 'echarts';
 
@@ -14,13 +15,32 @@ const referralData = ref([
   { name: "Twitter", value: 10, color: referralColors[3] },
   { name: "Other", value: 10, color: referralColors[4] }
 ]);
+const totalValue = computed(() => referralData.value.reduce((sum, item) => sum + item.value, 0));
+const hoveredItem = ref('');
+
+const linkData = ref([
+  { name: "Youtube", icon: "youtube", value: 123 },
+  { name: "Instagram", icon: "instagram", value: 103 },
+  { name: "Steam", icon: "steam", value: 88 },
+  { name: "Github", icon: "github", value: 46 },
+  { name: "Other", icon: "other", value: 22 },
+  { name: "Something", icon: "something", value: 21 },
+]);
+
+
+const maxValue = computed(() => Math.max(...linkData.value.map(link => link.value)));
+
+
+const linkHeight = (value) => {
+  const scale = 100 / maxValue.value; 
+  return Math.round(value * scale); 
+};
 
 const chartDom = ref<HTMLElement | null>(null);
 const barDom = ref<HTMLElement | null>(null);
 const barInstance = ref<echarts.ECharts | null>(null);
 const chartInstance = ref<echarts.ECharts | null>(null);
-const referralDom = ref<HTMLElement | null>(null);
-const referralInstance = ref<echarts.ECharts | null>(null);
+
 
 //Doughnut chart
 const rawVisitorData = ref([
@@ -133,34 +153,7 @@ onMounted(() => {
       });
     }
 
-    if (referralDom.value) {
-      referralInstance.value = echarts.init(referralDom.value);
-      referralInstance.value.setOption({
-        tooltip: {
-          trigger: "item",
-          formatter: "{b}: {c}%" 
-        },
-        grid: { left: '10%', right: '10%', top: '10%', bottom: '10%' }, 
-        xAxis: { 
-          type: "category"
-        },
-        yAxis: { 
-          type: "value",
-          show: false
-        },
-        series: [
-          {
-            type: "bar",
-            barWidth: '40%', // Vékonyabb sávok
-            data: referralData.value.map(item => ({
-              value: item.value,
-              name: item.name, 
-              itemStyle: { color: item.color }
-            }))
-          }
-        ]
-      });
-    }
+
   });
 });
 
@@ -232,7 +225,25 @@ onMounted(() => {
         <!--Referral distribution-->
         <div class="dashboardCard h-1/2 w-full">
           <h3>Referral distribution</h3>
-          <div ref="referralDom" class="w-full h-full flex flex-col justify-center content-center items-center"></div>
+          <div class="referralDom w-full h-full flex flex-row justify-center content-center items-center">
+            
+            <!-- Referral distribution csíkok -->
+            <div 
+              v-for="(item, index) in referralData" 
+              :key="index"
+              class="h-3 first:rounded-l-full last:rounded-r-full relative group"
+              :style="{
+                backgroundColor: item.color,
+                width: `${(item.value / totalValue * 100)}%`
+              }">
+              
+              
+              <div 
+                class="absolute bottom-full top-5 left-1/2 transform mb-2 p-2 text-white bg-black rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 ">
+                {{ item.name }}
+              </div>
+            </div>
+          </div>
         </div>
 
 
@@ -286,6 +297,30 @@ onMounted(() => {
 
           <div class="dashboardCard w-7/12 h-full">
             <h3>Most used links</h3>
+            <div class="linkDom w-full h-full gap-5 flex flex-row justify-center items-end">
+              
+              <span 
+                v-for="(link, id) in linkData" 
+                :key="id" 
+                class="w-full h-full flex flex-col items-center gap-2 relative">
+                
+
+
+                <!-- Link Icon (sáv alulról növekszik) -->
+                <span 
+                  class="w-full flex flex-col content-center items-center justify-start mt-auto"
+                  :style="{ height: linkHeight(link.value) + '%' }">
+                  <Icon type="check"></Icon>
+                  <span class="bg-rose-500 rounded-lg w-full h-full">
+
+                  </span>
+                </span>
+
+                <!-- Szám (érték) -->
+                <h3 class="text-sm text-zinc-400">{{ link.value }}</h3>
+              </span>
+
+            </div>
           </div>
 
         </div>
@@ -306,5 +341,7 @@ onMounted(() => {
 .dashboardCard{
   @apply bg-zinc-700/50 rounded-2xl p-4 flex flex-col justify-start content-start items-start  text-xl
 }
-
+.referralDom div {
+  position: relative;
+}
 </style>
