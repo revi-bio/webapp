@@ -4,7 +4,7 @@ import Button from '@/components/global/Button.vue';
 import Icon from '@/components/global/Icon.vue'
 import Dropdown from '@/components/global/Dropdown.vue';
 import * as echarts from 'echarts';
-
+import LinkIcon from '@/components/global/LinkIcon.vue';
 var colorPalette = ['#fafafa', '#f43f5e', '#717179'];
 
 const referralColors = ['#d946ef', '#3b82f6', '#f97316', '#facc15', '#10b981'];
@@ -306,17 +306,17 @@ onMounted(() => {
                 
 
 
-                <!-- Link Icon (sáv alulról növekszik) -->
+               
                 <span 
                   class="w-full flex flex-col content-center items-center justify-start mt-auto"
                   :style="{ height: linkHeight(link.value) + '%' }">
-                  <Icon type="check"></Icon>
+                  <LinkIcon width="80%" :type="`${link.icon}`" color="text-zinc-100"></LinkIcon>
                   <span class="bg-rose-500 rounded-lg w-full h-full">
 
                   </span>
                 </span>
 
-                <!-- Szám (érték) -->
+               
                 <h3 class="text-sm text-zinc-400">{{ link.value }}</h3>
               </span>
 
