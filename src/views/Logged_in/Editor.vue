@@ -27,8 +27,8 @@ function hiedShow() {
       <Toolbar/>
     </div>
 
-    <div class="w-[50%] h-full items-center ">
-      <Profile name="Lakatos Dezso" name_align="left" badge="view" profile_align="left" tag="@lakatosdezso" text="Lakatosdezsővagyok cigány"></Profile>
+    <div class="w-[50%] flex justify-center ">
+      <Profile name="Lakatos Dezso" name_align="left" badge="view" profile_align="start" :profile_over="true" tag="@lakatosdezso" text="Lakatosdezsővagyok cigány" class="bg-zinc-700 rounded-lg flex flex-col"></Profile>
     </div>
   </div>
 </template>
