@@ -14,7 +14,7 @@ defineProps<{
 
 <template>
   <div>
-    <h3 class="text-2xl">{{ text }}</h3>
+    <h3 class="text-base">{{ text }}</h3>
       <div :class="direction === 'col' ? 'column' : 'row'" >
         <div class="flex flex-row" v-for="item in options" :value="item.value" :key="item.key">
         <div class="flex items-center flex-row hover:bg-zinc-700/50 rounded-md p-1" >

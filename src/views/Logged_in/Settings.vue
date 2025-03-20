@@ -21,7 +21,7 @@
         { buttonText: 'Preferences', buttonSize: 'small', buttonRank: 'tabItem', buttonIconPosition: 'none', event:()=> router.push('/preferences') }
       ]"
       ></TabControl>
-      <Button text="Save changes" size="small" rank="primary" icon-position="right" icon-type="check"></Button>
+      <Button text="Save changes" size="small" rank="primary" icon-position="right" icon-type="edit"></Button>
     </span>
     <div class="w-full h-full flex justify-start content-start items-start">
       <RouterView></RouterView>
