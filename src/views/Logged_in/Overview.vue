@@ -27,12 +27,11 @@ const linkData = ref([
   { name: "Something", icon: "something", value: 21 },
 ]);
 
-const maxValue = Math.max(...linkData.value.map(link => link.value));
 
 const scaleHeight = (value) => {
-  return (value / maxValue) * 100; 
+  const maxValue = Math.max(...linkData.value.map(link => link.value));
+  return (value / maxValue) * 80; 
 };
-
 const chartDom = ref<HTMLElement | null>(null);
 const barDom = ref<HTMLElement | null>(null);
 const barInstance = ref<echarts.ECharts | null>(null);
@@ -293,9 +292,9 @@ onMounted(() => {
           </div>
 
           <!--Most used links-->
-          <div class="dashboardCard w-7/12 h-full">
+          <div class="dashboardCard w-full md:w-7/12 h-full">
             <h3>Most used links</h3>
-            <div class="linkDom w-full h-full gap-5 flex flex-row justify-center items-end">
+            <div class="linkDom w-full h-full gap-2 md:gap-5 flex flex-row justify-center items-end">
               
               <span 
                 v-for="(link, id) in linkData" 
@@ -306,14 +305,15 @@ onMounted(() => {
                   class="w-full flex flex-col items-center justify-start mt-auto"
                   :style="{ height: scaleHeight(link.value) + '%' }">
                   
-                  <div class="flex items-center justify-center" style="width: 60px; height: 60px;">
-                    <LinkIcon :width="'60px'" :type="link.icon" :color="'zinc-100'"></LinkIcon>
+                  
+                  <div class="flex justify-center content-center items-center">
+                    <LinkIcon :type="link.icon" :color="'zinc-100'" :width="'90%'"></LinkIcon>
                   </div>
 
                   <span class="bg-rose-500 rounded-lg w-full h-full"></span>
                 </span>
 
-                <h3 class="text-sm text-zinc-400">{{ link.value }}</h3>
+                <h3 class="text-xs md:text-sm text-zinc-400">{{ link.value }}</h3>
               </span>
             </div>
           </div>
@@ -339,5 +339,8 @@ onMounted(() => {
 }
 .referralDom div {
   position: relative;
+}
+.aspect-square {
+  aspect-ratio: 1 / 1;
 }
 </style>

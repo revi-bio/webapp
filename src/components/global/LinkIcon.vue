@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 const props = defineProps<{
   type: string,
-  width: string, 
+  width: string,
   color: string  
 }>();
 
@@ -36,25 +36,24 @@ const iconPath = icons[props.type] ? iconsModule[`/src/assets/LinkIcons/${icons[
 const processedSvg = computed(() => {
   if (!iconPath) return null;
   
-  // Add width/height attributes to the SVG and set them to 100%
-  // Also ensure fill/stroke attributes use currentColor
+
   return iconPath
-    .replace(/<svg([^>]*)>/, '<svg$1 width="100%" height="100%" preserveAspectRatio="xMidYMid meet">')
+    .replace(/<svg/, '<svg width="100%" height="100%" preserveAspectRatio="xMidYMid meet"')
     .replace(/fill="[^"]*"/g, 'fill="currentColor"')
     .replace(/stroke="[^"]*"/g, 'stroke="currentColor"');
 });
 </script>
 
 <template>
+  
   <div 
     :style="{ width: props.width, height: props.width }" 
-    :class="`text-${props.color} overflow-hidden flex items-center justify-center`"
+    :class="`text-${props.color}`"
   >
     <div 
       v-if="processedSvg" 
       v-html="processedSvg" 
-      class="w-full h-full flex items-center justify-center"
-      style="max-width: 100%; max-height: 100%;"
+      style="width: 100%; height: 100%;"
     ></div>
     
     <svg 
