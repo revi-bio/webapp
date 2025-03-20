@@ -27,13 +27,10 @@ const linkData = ref([
   { name: "Something", icon: "something", value: 21 },
 ]);
 
+const maxValue = Math.max(...linkData.value.map(link => link.value));
 
-const maxValue = computed(() => Math.max(...linkData.value.map(link => link.value)));
-
-
-const linkHeight = (value) => {
-  const scale = 100 / maxValue.value; 
-  return Math.round(value * scale); 
+const scaleHeight = (value) => {
+  return (value / maxValue) * 100; 
 };
 
 const chartDom = ref<HTMLElement | null>(null);
@@ -295,6 +292,7 @@ onMounted(() => {
             </span>
           </div>
 
+          <!--Most used links-->
           <div class="dashboardCard w-7/12 h-full">
             <h3>Most used links</h3>
             <div class="linkDom w-full h-full gap-5 flex flex-row justify-center items-end">
@@ -304,24 +302,22 @@ onMounted(() => {
                 :key="id" 
                 class="w-full h-full flex flex-col items-center gap-2 relative">
                 
-
-
-               
                 <span 
-                  class="w-full flex flex-col content-center items-center justify-start mt-auto"
-                  :style="{ height: linkHeight(link.value) + '%' }">
-                  <LinkIcon width="80%" :type="`${link.icon}`" color="text-zinc-100"></LinkIcon>
-                  <span class="bg-rose-500 rounded-lg w-full h-full">
+                  class="w-full flex flex-col items-center justify-start mt-auto"
+                  :style="{ height: scaleHeight(link.value) + '%' }">
+                  
+                  <div class="flex items-center justify-center" style="width: 60px; height: 60px;">
+                    <LinkIcon :width="'60px'" :type="link.icon" :color="'zinc-100'"></LinkIcon>
+                  </div>
 
-                  </span>
+                  <span class="bg-rose-500 rounded-lg w-full h-full"></span>
                 </span>
 
-               
                 <h3 class="text-sm text-zinc-400">{{ link.value }}</h3>
               </span>
-
             </div>
           </div>
+
 
         </div>
 
