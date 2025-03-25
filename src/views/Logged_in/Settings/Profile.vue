@@ -3,10 +3,18 @@ import ProfilePic from '@/components/global/ProfilePic.vue';
 import Button from '@/components/global/Button.vue';
 import Input from '@/components/global/Input.vue';
 import { useSettingsStore } from '@/stores/settings';
+import { useUserStore } from '@/stores/user';
 import { ref } from 'vue';
+import { ApiWrapper } from '@/composables/ApiWrapper';
 
 // Initialize the settings store
 const settingsStore = useSettingsStore();
+const userStore = useUserStore();
+
+userStore.refreshUserData();
+
+const currentDisplayName = userStore.getUserData()?.displayName;
+console.log('displayname:',currentDisplayName)
 
 // Handle profile picture changes
 const handleChangePicture = () => {
@@ -19,9 +27,9 @@ const handleChangePicture = () => {
     if (target.files && target.files[0]) {
       // Here you would typically upload the file to your server
       // Example API call (uncomment when ready):
-      // const formData = new FormData();
-      // formData.append('profilePicture', target.files[0]);
-      // ApiWrapper.post('user/profile-picture', formData);
+       const formData = new FormData();
+       formData.append('file', target.files[0]);
+       ApiWrapper.patch('user/avatar', formData);
     }
   };
   fileInput.click();
@@ -31,7 +39,7 @@ const handleChangePicture = () => {
 const handleDeletePicture = () => {
   // Implement picture deletion
   // Example API call (uncomment when ready):
-  // ApiWrapper.delete('user/profile-picture');
+  // ApiWrapper.delete('user/avatar');
 };
 
 // Handle display name changes
@@ -42,7 +50,7 @@ const handleDisplayNameChange = (event: Event) => {
 </script>
 
 <template>
-  <div class="flex flex-col justify-center content-start items-center gap-4">
+  <div class="flex flex-col justify-start content-start items-start gap-4">
     <h3 class="text-lg text-zinc-300 text-left w-full">Profile picture</h3>
 
     <div class="flex flex-row justify-center content-center items-center gap-10">
@@ -67,14 +75,17 @@ const handleDisplayNameChange = (event: Event) => {
         ></Button>
       </div>
     </div>
-
-    <Input
+    <div class="flex flex-col justify-center content-start items-start gap-2">
+      <h3 class="text-base text-zinc-500">Your current display name is: {{ currentDisplayName }}</h3>
+      <Input
       type="text"
       placeholder="Displayname"
       class="text-base"
       :value="settingsStore.draft.displayName"
       @input="handleDisplayNameChange"
     />
+    </div>
+
   </div>
 </template>
 

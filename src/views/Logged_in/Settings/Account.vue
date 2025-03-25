@@ -4,7 +4,7 @@ import Input from '@/components/global/Input.vue';
 import { useSettingsStore } from '@/stores/settings';
 import { ref, computed } from 'vue';
 
-// Initialize the settings store
+
 const settingsStore = useSettingsStore();
 
 // For demonstration purposes - in a real app, you'd fetch this from your user store or API

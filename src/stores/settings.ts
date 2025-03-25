@@ -81,12 +81,12 @@ export const useSettingsStore = defineStore('settings', () => {
     }
 
 
-    if (isDirty.value.preferences) {
+    /*if (isDirty.value.preferences) {
       await ApiWrapper.patch('user/preferences', {
         pronounce: draft.value.pronounce,
         adultContent: draft.value.adultContent,
       });
-    }
+    }*/
 
 
     resetDirty();
