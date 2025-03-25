@@ -4,7 +4,7 @@ import Button from '@/components/global/Button.vue';
 import Input from '@/components/global/Input.vue';
 import { useSettingsStore } from '@/stores/settings';
 import { useUserStore } from '@/stores/user';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { ApiWrapper } from '@/composables/ApiWrapper';
 
 // Initialize the settings store
@@ -13,7 +13,8 @@ const userStore = useUserStore();
 
 userStore.refreshUserData();
 
-const currentDisplayName = userStore.getUserData()?.displayName;
+const currentDisplayName = computed(() => userStore.getUserData()?.displayName);
+
 console.log('displayname:',currentDisplayName)
 
 // Handle profile picture changes

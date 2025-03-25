@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { ApiWrapper } from '@/composables/ApiWrapper';
+import { useUserStore } from './user';
+
+const userStore = useUserStore();
 
 type Draft = {
   displayName: string;
@@ -54,6 +57,8 @@ export const useSettingsStore = defineStore('settings', () => {
       await ApiWrapper.patch('user/change-displayname', {
         displayName: draft.value.displayName,
       });
+      await userStore.refreshUserData();
+
     }
 
 
@@ -88,7 +93,7 @@ export const useSettingsStore = defineStore('settings', () => {
       });
     }*/
 
-
+    
     resetDirty();
   }
 
