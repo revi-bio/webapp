@@ -7,7 +7,7 @@
 
   const route = useRoute();
   watch(() => route.name, (newRouteName) => {
-    console.log("Current route name:", newRouteName);
+    //console.log("Current route name:", newRouteName);
   });
 
   onMounted(() => {
