@@ -9,6 +9,18 @@ const route = useRoute();
 const id = route.params.id;
 const visibility = ref("show");
 
+const badges = [ "download", "person", "opened_mail" ]
+
+var selectWidgetProps : any
+
+/*
+function selectWidgetProps(props: any) {
+  Object.entries(props).forEach(([key, value]) => {
+    console.log(`${key}: ${value}`);
+  });
+}
+*/
+
 function hiedShow() {
   visibility.value = visibility.value === "show" ? "hide" : "show";
 }
@@ -24,11 +36,11 @@ function hiedShow() {
     </div>
 
     <div class="absolute right-0 top-1/2 transform -translate-y-1/2 pr-4 flex items-center" :class="visibility">
-      <Toolbar/>
+      <Toolbar :selectedProps="selectWidgetProps"/>
     </div>
 
-    <div class="w-[50%] flex justify-center ">
-      <Profile name="Lakatos Dezso" name_align="left" badge="view" profile_align="start" :profile_over="true" tag="@lakatosdezso" text="Lakatosdezsővagyok cigány" class="bg-zinc-700 rounded-lg flex flex-col"></Profile>
+    <div id="widgets" class="w-[50%] flex flex-col gap-3 justify-center">
+      <Profile @profile_clicked="selectWidgetProps" name="Lakatos Dezso" :badge="badges" profile_align="center" :profile_over="true" tag="@lakatosdezso" text="Lakatosdezsővagyok cigány"/>
     </div>
   </div>
 </template>
