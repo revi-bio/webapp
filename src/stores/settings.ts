@@ -54,7 +54,7 @@ export const useSettingsStore = defineStore('settings', () => {
   async function saveSettings() {
 
     if (isDirty.value.displayName && draft.value.displayName) {
-      await ApiWrapper.patch('user/change-displayname', {
+      await ApiWrapper.patch('user/displayname', {
         displayName: draft.value.displayName,
       });
       await userStore.refreshUserData();
@@ -67,7 +67,7 @@ export const useSettingsStore = defineStore('settings', () => {
       draft.value.newEmail &&
       draft.value.currentPasswordForEmail
     ) {
-      await ApiWrapper.patch('user/change-email', {
+      await ApiWrapper.patch('user/email', {
         email: draft.value.newEmail,
         currentPassword: draft.value.currentPasswordForEmail,
       });
@@ -79,7 +79,7 @@ export const useSettingsStore = defineStore('settings', () => {
       draft.value.newPassword &&
       draft.value.currentPasswordForPassword
     ) {
-      await ApiWrapper.patch('user/change-password', {
+      await ApiWrapper.patch('user/password', {
         password: draft.value.newPassword,
         currentPassword: draft.value.currentPasswordForPassword,
       });

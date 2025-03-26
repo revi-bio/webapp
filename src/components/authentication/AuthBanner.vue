@@ -1,7 +1,25 @@
+<script setup>
+import { ref, onMounted } from 'vue';
+
+const images = Object.values(import.meta.glob('../../assets/Backgrounds/authentication/*.png', { eager: true }));
+
+const selectedBackground = ref('');
+
+onMounted(() => {
+  if (images.length > 0) {
+    const randomIndex = Math.floor(Math.random() * images.length);
+    selectedBackground.value = images[randomIndex].default;
+  }
+});
+</script>
+
 <template>
   <div class="relative">
     <div class="absolute inset-0 bg-[#F43F5E]/20 blur-xl z-10"></div>
-    <div class="bannerContainer flex flex-col justify-between content-center items-center p-[3rem] rounded-2xl z-20 h-full">
+    <div 
+      class="bannerContainer flex flex-col justify-between content-center items-center p-[3rem] rounded-2xl z-20 h-full"
+      :style="{ backgroundImage: `url(${selectedBackground})` }"
+    >
       <div class="flex flex-col justify-center content-start items-start w-full text-8xl gap-8">
         <h3>Supercharge</h3>
         <h3>Your</h3>
@@ -34,10 +52,8 @@
 </template>
 
 <style lang="scss" scoped>
-
 .bannerContainer {
   @apply relative bg-cover bg-center bg-no-repeat;
-  background-image: url(../../assets/Backgrounds/authentication/abstract.png);
   z-index: 20;
 }
 

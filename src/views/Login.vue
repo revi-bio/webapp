@@ -16,7 +16,7 @@ import router from '@/router';
   const errorMsg = ref()
 
   const errorClass = computed(() => {
-    return errorMsg.value ? 'error' : 'none'; // Ha '403', akkor legyen error osztály
+    return errorMsg.value ? 'error' : 'none'; 
   });
   
   const onLogIn = async () => {
