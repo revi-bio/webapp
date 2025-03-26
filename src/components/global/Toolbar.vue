@@ -1,29 +1,37 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import Icon from './Icon.vue';
 
 const activeIcon = ref<string | null>(null);
+  const emit = defineEmits(['clearSelectedProps']); 
 
-function loadProps(props: any) {
-  Object.entries(props).forEach(([key, value]) => {
-    console.log(`${key}: ${value}`);
-  });
-}
-
-defineProps<{
+const props = defineProps<{
   selectedProps : Record<string, any>
-}>()
+}>();
+
 
 const toggleIcon = (type: string) => {
-  activeIcon.value = activeIcon.value === type ? null : type;
+  if (activeIcon.value === type) {
+    activeIcon.value = null; // Bezárjuk az editort
+    emit('clearSelectedProps');
+  } else {
+    activeIcon.value = type; // Megnyitjuk az editort
+  }
 };
+
+watch(() => props.selectedProps, (newProps) => {
+  if (Object.keys(newProps).length !== 0 && activeIcon.value !== 'Edit') {
+    activeIcon.value = 'Edit'; 
+  }
+}, { deep: true });
+
 </script>
 
 <template>
-  <div class="flex space-x-2 items-center justify-center">
-    <div v-if="activeIcon" class="baseDash flex flex-col space-y-14 p-4 rounded-[16px] bg-zinc-900/70 text-lg px-3 w-[400px] h-[500px]">
+  <div class="flex gap-x-2 items-center justify-center">
+    <div v-if="activeIcon" class="baseDash flex flex-col p-4 rounded-[16px] bg-zinc-900/70 text-lg px-3 w-[400px] h-[500px]">
       <div>{{ activeIcon }}</div>
-      <div v-for="([key, value]) in selectedProps" :key="key">
+      <div v-if="activeIcon === 'Edit'" v-for="(value, key) in selectedProps" :key="key">
         <div>{{ key }}: {{ value }}</div>
       </div>
     </div>
