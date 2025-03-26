@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import Button from '@/components/global/Button.vue';
 import Toolbar from '@/components/global/Toolbar.vue';
 import Profile from '@/components/widget/Profile.vue';
+import { widget } from '@/stores/widget';
 
 const route = useRoute();
 const id = route.params.id;
@@ -12,7 +13,7 @@ const visibility = ref("show");
 const badges = [ "download", "person", "opened_mail" ]
 
 const selectWidgetProps = ref<Record<string, any>>({});
-
+/*
 function selectWidgetPropsHandler(props: Record<string, any>) {
   selectWidgetProps.value = props;
 }
@@ -20,7 +21,7 @@ function selectWidgetPropsHandler(props: Record<string, any>) {
 function clearSelectedProps() {
   selectWidgetProps.value = {};
 }
-
+*/
 /*
 function selectWidgetProps(props: any) {
   Object.entries(props).forEach(([key, value]) => {
@@ -28,6 +29,16 @@ function selectWidgetProps(props: any) {
   });
 }
 */
+
+const widgetStore = widget();
+
+function selectWidgetPropsHandler(props: Record<string, any>) {
+  widgetStore.setSelectedProps(props);
+}
+
+function clearSelectedProps() {
+  widgetStore.clearSelectedProps();
+}
 
 function hiedShow() {
   visibility.value = visibility.value === "show" ? "hide" : "show";

@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import Icon from './Icon.vue';
+import { widget } from '@/stores/widget';
 
+const widgetStore = widget();
 const activeIcon = ref<string | null>(null);
-  const emit = defineEmits(['clearSelectedProps']); 
+  const emit = defineEmits(['clearSelectedProps']);
 
 const props = defineProps<{
   selectedProps : Record<string, any>
@@ -18,10 +20,17 @@ const toggleIcon = (type: string) => {
     activeIcon.value = type; // Megnyitjuk az editort
   }
 };
-
+/*
 watch(() => props.selectedProps, (newProps) => {
   if (Object.keys(newProps).length !== 0 && activeIcon.value !== 'Edit') {
-    activeIcon.value = 'Edit'; 
+    activeIcon.value = 'Edit';
+  }
+}, { deep: true });
+*/
+
+watch(() => widgetStore.selectedWidgetProps, (newProps) => {
+  if (Object.keys(newProps).length !== 0 && activeIcon.value !== 'Edit') {
+    activeIcon.value = 'Edit';
   }
 }, { deep: true });
 
@@ -31,9 +40,12 @@ watch(() => props.selectedProps, (newProps) => {
   <div class="flex gap-x-2 items-center justify-center">
     <div v-if="activeIcon" class="baseDash flex flex-col p-4 rounded-[16px] bg-zinc-900/70 text-lg px-3 w-[400px] h-[500px]">
       <div>{{ activeIcon }}</div>
-      <div v-if="activeIcon === 'Edit'" v-for="(value, key) in selectedProps" :key="key">
-        <div>{{ key }}: {{ value }}</div>
+      <div v-if="Object.keys(widgetStore.selectedWidgetProps).length > 0">
+        <div v-for="(value, key) in widgetStore.selectedWidgetProps" :key="key">
+          <div>{{ key }}: {{ value }}</div>
+        </div>
       </div>
+
     </div>
 
     <div class="flex flex-col items-center justify-center space-y-14 py-10 rounded-[16px] bg-zinc-900/70 transition duration-200 text-lg px-3 h-full">
@@ -42,7 +54,7 @@ watch(() => props.selectedProps, (newProps) => {
       <Icon class="Icon" :class="{ 'active': activeIcon === 'Edit' }" size="normal" type="edit" @click="toggleIcon('Edit')" />
     </div>
   </div>
-  
+
 </template>
 
 <style>
@@ -55,7 +67,7 @@ watch(() => props.selectedProps, (newProps) => {
 
   /* width */
   .baseDash::-webkit-scrollbar {
-    @apply w-2 rounded-full 
+    @apply w-2 rounded-full
   }
 
   /* Track */
