@@ -20,18 +20,16 @@ console.log('displayname:',currentDisplayName)
 
 // Handle profile picture changes
 const handleChangePicture = () => {
-  // Create a file input element
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
   fileInput.accept = 'image/*';
-  fileInput.onchange = (event) => {
+  fileInput.onchange = async (event) => {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files[0]) {
-      // Here you would typically upload the file to your server
-      // Example API call (uncomment when ready):
-       const formData = new FormData();
-       formData.append('file', target.files[0]);
-       ApiWrapper.patch('user/avatar', formData);
+      const formData = new FormData();
+      formData.append('file', target.files[0]);
+      await ApiWrapper.patch('user/avatar', formData); 
+      await userStore.refreshUserData(); 
     }
   };
   fileInput.click();
@@ -40,10 +38,12 @@ const handleChangePicture = () => {
   console.log('áasáaádáadáa');
 };
 
-// Handle profile picture deletion
-const handleDeletePicture = () => {
 
-  ApiWrapper.delete('user/avatar',null);
+// Handle profile picture deletion
+const handleDeletePicture = async() => {
+
+  await ApiWrapper.delete('user/avatar',null);
+  await userStore.refreshUserData();
 };
 
 // Handle display name changes

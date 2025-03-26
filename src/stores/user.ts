@@ -42,9 +42,13 @@ export const useUserStore = defineStore('user', () => {
     }>('user/@me', {});
   
     if (currentUser.value) {
-      currentUser.value.data = res.data;
+      currentUser.value = { 
+        ...currentUser.value, 
+        data: res.data 
+      };
     }
   }
+  
   
 
   function loggedIn(): boolean {

@@ -2,13 +2,17 @@
 import Button from '@/components/global/Button.vue';
 import Input from '@/components/global/Input.vue';
 import { useSettingsStore } from '@/stores/settings';
+import { useUserStore } from '@/stores/user';
 import { ref, computed } from 'vue';
 
 
 const settingsStore = useSettingsStore();
+const userStore = useUserStore();
+
+userStore.refreshUserData();
 
 // For demonstration purposes - in a real app, you'd fetch this from your user store or API
-const currentEmail = ref('currentEmail@gmail.com');
+const currentEmail = computed(() => userStore.getUserData()?.email)
 
 // Handle email change
 const handleNewEmailChange = (event: Event) => {
