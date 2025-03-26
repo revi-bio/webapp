@@ -28,11 +28,15 @@ export const useUserStore = defineStore('user', () => {
 
     refreshUserData().then(x => refreshLocalStorage());
   }
+  
+  async function xd() {
+    await refreshUserData().then(x => refreshLocalStorage());
+  }
 
   async function refreshUserData() {
     const res = await ApiWrapper.get<{
       id: string;
-      profilePic: string;
+      avatar: string;
       displayName: string;
       email: string;
     }>('user/@me', {});
@@ -77,5 +81,5 @@ export const useUserStore = defineStore('user', () => {
     currentUser.value = lsUser ? JSON.parse(lsUser) : null;
   }
 
-  return { loggedIn, getUserData, getJwt, setJwt, clearUser, getStatus, setStatus, clearStatus, refreshUserData};
+  return { xd, loggedIn, getUserData, getJwt, setJwt, clearUser, getStatus, setStatus, clearStatus, refreshUserData};
 });

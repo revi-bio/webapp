@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Logo from './Logo.vue';
 import Icon from './Icon.vue';
-import ProfilePic from './ProfilePic.vue';
+import Avatar from './Avatar.vue';
 import { RouterLink } from 'vue-router';
 </script>
 
@@ -27,7 +27,7 @@ import { RouterLink } from 'vue-router';
       <RouterLink to="/inbox" class="navItem"><span>
         <Icon size="3xl" type="mail"></Icon>
       </span></RouterLink>
-      <ProfilePic class="w-[48px] h-[48px]"></ProfilePic>
+      <Avatar class="w-[48px] h-[48px]"></Avatar>
     </div>
   </div>
 </template>

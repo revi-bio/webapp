@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import ProfilePic from '../global/ProfilePic.vue';
+import ProfilePic from '../global/Avatar.vue';
 
 
 const props = defineProps<{
