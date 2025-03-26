@@ -32,7 +32,7 @@ function selectWidgetProps(props: any) {
 
 const widgetStore = widget();
 
-function selectWidgetPropsHandler(props: Record<string, any>) {
+function selectWidget(props: Record<string, any>) {
   widgetStore.setSelectedProps(props);
 }
 
@@ -59,9 +59,18 @@ function hiedShow() {
     </div>
 
     <div id="widgets" class="w-[50%] flex flex-col gap-3 justify-center z-0">
-      <Profile @profile_clicked="selectWidgetPropsHandler" name="Lakatos Dezso" :badge="badges" profile_align="center" :profile_over="true" tag="@lakatosdezso" text="Lakatosdezsővagyok cigány"/>
-      <Profile @profile_clicked="selectWidgetPropsHandler" name="Fazs" :badge="badges" profile_align="start" :profile_over="false" tag="@gecifasz" text="gecifasz"/>
-      <Profile @profile_clicked="selectWidgetPropsHandler" name="Zöld" :badge="badges" profile_align="center" :profile_over="false" tag="@zold" text="Kék"/>
+      <Profile @profile_clicked="selectWidget" name="Lakatos Dezso" :badge="badges" profile_align="center" :profile_over="true" tag="@lakatosdezso" text="Lakatosdezsővagyok cigány"/>
+      <Profile @profile_clicked="selectWidget" name="Ferencz" :badge="badges" profile_align="start" :profile_over="false" tag="@Ferimeri" text="feri bemutatkozó szövege tökre sokminden meg tökre szöveg csak hogy legyen olyan ami legalább egy sort kitölt, szerintem ez már meglesz egy sor de azért nyomom még hogy legyen azért kettő vagy akár három sor na mostmár meguntamhelloköszi"/>
+      <Profile @profile_clicked="selectWidget" name="Zöld" :badge="badges" profile_align="center" :profile_over="false" tag="@zold" text="Kék"/>
+      <Profile
+        @profile_clicked="selectWidget"
+        :name="widgetStore.selectedWidget.name"
+        :badge="badges"
+        :profile_align="widgetStore.selectedWidget.profile_align"
+        :profile_over="true"
+        :tag="widgetStore.selectedWidget.tag"
+        :text="widgetStore.selectedWidget.text"
+      />
     </div>
   </div>
 </template>

@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import Icon from './Icon.vue';
 import { widget } from '@/stores/widget';
+import { storeToRefs } from "pinia";
+import Icon from './Icon.vue';
+import Input from '@/components/global/Input.vue';
 
-const widgetStore = widget();
 const activeIcon = ref<string | null>(null);
   const emit = defineEmits(['clearSelectedProps']);
 
@@ -14,12 +15,20 @@ const props = defineProps<{
 
 const toggleIcon = (type: string) => {
   if (activeIcon.value === type) {
-    activeIcon.value = null; // Bezárjuk az editort
+    activeIcon.value = null;
     emit('clearSelectedProps');
   } else {
-    activeIcon.value = type; // Megnyitjuk az editort
+    activeIcon.value = type;
   }
 };
+
+const widgetStore = widget();
+
+function updateProp(key: string, newValue: any) {
+  widgetStore.setSelectedProp(key, newValue);
+}
+
+
 /*
 watch(() => props.selectedProps, (newProps) => {
   if (Object.keys(newProps).length !== 0 && activeIcon.value !== 'Edit') {
@@ -28,7 +37,7 @@ watch(() => props.selectedProps, (newProps) => {
 }, { deep: true });
 */
 
-watch(() => widgetStore.selectedWidgetProps, (newProps) => {
+watch(() => widgetStore.selectedWidget, (newProps) => {
   if (Object.keys(newProps).length !== 0 && activeIcon.value !== 'Edit') {
     activeIcon.value = 'Edit';
   }
@@ -38,11 +47,19 @@ watch(() => widgetStore.selectedWidgetProps, (newProps) => {
 
 <template>
   <div class="flex gap-x-2 items-center justify-center">
-    <div v-if="activeIcon" class="baseDash flex flex-col p-4 rounded-[16px] bg-zinc-900/70 text-lg px-3 w-[400px] h-[500px]">
+    <div v-if="activeIcon" class="flex flex-col p-4 rounded-[16px] bg-zinc-900/70 text-lg px-3 w-[400px] h-[500px]">
       <div>{{ activeIcon }}</div>
-      <div v-if="Object.keys(widgetStore.selectedWidgetProps).length > 0">
-        <div v-for="(value, key) in widgetStore.selectedWidgetProps" :key="key">
-          <div>{{ key }}: {{ value }}</div>
+      <div class="baseDash overflow-y-auto" v-if="Object.keys(widgetStore.selectedWidget).length > 0">
+        <div  v-for="(value, key) in widgetStore.selectedWidget" :key="key">
+          <div class="flex items-center space-y-2 pr-2">
+            <p class="flex-1">{{ key }}: </p>
+            <Input
+              class="flex-[2]"
+              type="text"
+              :model-value="widgetStore.selectedWidget[key]"
+              @update:modelValue="updateProp(key, $event)"
+            ></Input>
+          </div>
         </div>
       </div>
 

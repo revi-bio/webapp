@@ -1,9 +1,13 @@
 <script lang="ts" setup>
+import { computed } from 'vue';
 import Avatar from '../global/Avatar.vue';
 import Icon from '../global/Icon.vue';
+import { widget } from "@/stores/widget";
 
-
+const widgetStore = widget();
 const emit = defineEmits(["profile_clicked"]);
+
+const widgetData = computed(() => widgetStore.selectedWidget);
 
 const props = defineProps<{
   profile_align: "start" | "center";
@@ -15,7 +19,7 @@ const props = defineProps<{
 
   badge_color?: string;
   tag_color?: string;
-  name_color?: string;  
+  name_color?: string;
   bg_color?: string;
   rounded?: string;
 
@@ -35,19 +39,19 @@ function clicked(){
         </div>
       </div>
       <div class="flex" :class="`justify-${profile_align}`">
-        <h1 class="text-2xl" :class="`text-${name_color}`">{{ name }}</h1>
+        <h1 class="text-2xl" :class="`text-${name_color}`">{{ widgetData.name }}</h1>
         <div v-if="profile_align != 'center' && badge.length != 0" v-for="badge in badge" :key="badge" class="text-rose-500 flex items-center" :class="`text-${badge_color}`">
           <Icon :type="`${badge}`" size="text-lg" class=""></Icon>
         </div>
       </div>
       <p class="text-sm text-zinc-400 flex" :class="`justify-${profile_align} text${tag_color}`" >{{ tag }}</p>
-      
+
       <div class="flex justify-center w-full">
         <div v-if="profile_align == 'center' && badge.length != 0" v-for="badge in badge" :key="badge" class="text-rose-500 flex items-center" :class="`text-${badge_color}`">
           <Icon :type="`${badge}`" size="text-lg" class=""></Icon>
         </div>
       </div>
-      
+
       <p class="text-md">{{ text }}</p>
 
     </div>
