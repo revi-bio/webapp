@@ -26,8 +26,7 @@ export const useUserStore = defineStore('user', () => {
 
     console.log('xd2')
 
-    refreshLocalStorage();
-    refreshUserData();
+    refreshUserData().then(x => refreshLocalStorage());
   }
 
   async function refreshUserData() {
@@ -78,5 +77,5 @@ export const useUserStore = defineStore('user', () => {
     currentUser.value = lsUser ? JSON.parse(lsUser) : null;
   }
 
-  return { loggedIn, getUserData, getJwt, setJwt, clearUser, getStatus, setStatus, clearStatus };
+  return { loggedIn, getUserData, getJwt, setJwt, clearUser, getStatus, setStatus, clearStatus, refreshUserData};
 });
