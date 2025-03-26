@@ -4,6 +4,16 @@ import Icon from './Icon.vue';
 
 const activeIcon = ref<string | null>(null);
 
+function loadProps(props: any) {
+  Object.entries(props).forEach(([key, value]) => {
+    console.log(`${key}: ${value}`);
+  });
+}
+
+defineProps<{
+  selectedProps : Record<string, any>
+}>()
+
 const toggleIcon = (type: string) => {
   activeIcon.value = activeIcon.value === type ? null : type;
 };
@@ -11,8 +21,11 @@ const toggleIcon = (type: string) => {
 
 <template>
   <div class="flex space-x-2 items-center justify-center">
-    <div v-if="activeIcon" class="flex flex-col space-y-14 p-4 rounded-[16px] bg-zinc-900/70 text-lg px-3 w-[400px] h-[500px]">
+    <div v-if="activeIcon" class="baseDash flex flex-col space-y-14 p-4 rounded-[16px] bg-zinc-900/70 text-lg px-3 w-[400px] h-[500px]">
       <div>{{ activeIcon }}</div>
+      <div v-for="([key, value]) in selectedProps" :key="key">
+        <div>{{ key }}: {{ value }}</div>
+      </div>
     </div>
 
     <div class="flex flex-col items-center justify-center space-y-14 py-10 rounded-[16px] bg-zinc-900/70 transition duration-200 text-lg px-3 h-full">
@@ -30,5 +43,25 @@ const toggleIcon = (type: string) => {
   }
   .Icon.active {
     @apply bg-zinc-700/75  hover:bg-zinc-600
+  }
+
+  /* width */
+  .baseDash::-webkit-scrollbar {
+    @apply w-2 rounded-full 
+  }
+
+  /* Track */
+  .baseDash::-webkit-scrollbar-track {
+    @apply bg-zinc-800  rounded-full
+  }
+
+  /* Handle */
+  .baseDash::-webkit-scrollbar-thumb {
+    @apply bg-zinc-600/50 rounded-full border-4
+  }
+
+  /* Handle on hover */
+  .baseDash::-webkit-scrollbar-thumb:hover {
+    @apply bg-zinc-700 rounded-full
   }
 </style>
