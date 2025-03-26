@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import ProfilePic from '../global/ProfilePic.vue';
+import Avatar from '../global/Avatar.vue';
 import Icon from '../global/Icon.vue';
+
 
 const emit = defineEmits(["profile_clicked"]);
 
@@ -30,7 +31,7 @@ function clicked(){
     <div class="flex w-full p-2 bg-zinc-700 rounded-lg flex-col" :class="`bg-${bg_color} rounded-[${rounded }] ${profile_over ? 'pt-8 relative' : ''}`" @click="clicked" >
       <div :class="`flex w-full ${profile_over ? 'absolute -top-8 pr-4' : 'static'} justify-${profile_align}`">
         <div :class="`flex `">
-          <ProfilePic class= "w-[64px] h-[64px]"></ProfilePic>
+          <Avatar class= "w-[64px] h-[64px]"></Avatar>
         </div>
       </div>
       <div class="flex" :class="`justify-${profile_align}`">

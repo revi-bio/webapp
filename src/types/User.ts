@@ -2,7 +2,7 @@ export interface User{
     jwt: string,
     data?:{
         id: string,
-        profilePic: string,
+        avatar: string,
         displayName: string,
         email:string
     }

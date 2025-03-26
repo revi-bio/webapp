@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import ProfilePic from '@/components/global/ProfilePic.vue';
+import ProfilePic from '@/components/global/Avatar.vue';
 import Button from '@/components/global/Button.vue';
 import Input from '@/components/global/Input.vue';
 import { useSettingsStore } from '@/stores/settings';
@@ -14,6 +14,7 @@ const userStore = useUserStore();
 userStore.refreshUserData();
 
 const currentDisplayName = computed(() => userStore.getUserData()?.displayName);
+//const currentAvatar = computed(() => userStore.getUserData()?.avatar);
 
 console.log('displayname:',currentDisplayName)
 
@@ -34,13 +35,15 @@ const handleChangePicture = () => {
     }
   };
   fileInput.click();
+  console.log('áasáaádáadáa');
+  userStore.xd().then(x => console.log(x));
+  console.log('áasáaádáadáa');
 };
 
 // Handle profile picture deletion
 const handleDeletePicture = () => {
-  // Implement picture deletion
-  // Example API call (uncomment when ready):
-  // ApiWrapper.delete('user/avatar');
+
+  ApiWrapper.delete('user/avatar',null);
 };
 
 // Handle display name changes
