@@ -6,7 +6,6 @@ import Icon from './Icon.vue';
 import Input from '@/components/global/Input.vue';
 
 const activeIcon = ref<string | null>(null);
-  const emit = defineEmits(['clearSelectedProps']);
 
 const props = defineProps<{
   selectedProps : Record<string, any>
@@ -16,7 +15,7 @@ const props = defineProps<{
 const toggleIcon = (type: string) => {
   if (activeIcon.value === type) {
     activeIcon.value = null;
-    emit('clearSelectedProps');
+    widgetStore.clearSelectedProps();
   } else {
     activeIcon.value = type;
   }
