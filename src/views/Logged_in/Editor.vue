@@ -66,6 +66,11 @@ function hiedShow() {
         :profile_over="true"
         :tag="widgetStore.selectedWidget.tag"
         :text="widgetStore.selectedWidget.text"
+        :badge_color="widgetStore.selectedWidget.badge_color"
+        :tag_color="widgetStore.selectedWidget.tag_color"
+        :name_color="widgetStore.selectedWidget.name_color"
+        :bg_color="widgetStore.selectedWidget.bg_color"
+        :rounded="widgetStore.selectedWidget.rounded"
       />
     </div>
   </div>
