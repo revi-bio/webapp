@@ -36,10 +36,6 @@ function selectWidget(props: Record<string, any>) {
   widgetStore.setSelectedProps(props);
 }
 
-function clearSelectedProps() {
-  widgetStore.clearSelectedProps();
-}
-
 function hiedShow() {
   visibility.value = visibility.value === "show" ? "hide" : "show";
 }
@@ -55,7 +51,7 @@ function hiedShow() {
     </div>
 
     <div class="absolute right-0 top-1/2 transform -translate-y-1/2 pr-4 flex items-center z-10" :class="visibility">
-      <Toolbar :selectedProps="selectWidgetProps" @clearSelectedProps="clearSelectedProps"/>
+      <Toolbar :selectedProps="selectWidgetProps"/>
     </div>
 
     <div id="widgets" class="w-[50%] flex flex-col gap-3 justify-center z-0">
