@@ -20,10 +20,10 @@ const logoutUser = () =>{
     <div class="flex flex-col justify-center content-center items-center gap-8">
       <Logo type="revi"></Logo>
       <span class="bg-zinc-800 rounded-full w-full h-[2px]"><!--Separator--></span>
-      <RouterLink to="/overview" class="navItem"><span >
+      <RouterLink to="/baseDash/overview" class="navItem"><span >
         <Icon size="3xl" type="house"></Icon>
       </span></RouterLink>
-      <RouterLink to="/bios" class="navItem"><span >
+      <RouterLink to="/baseDash/bios" class="navItem"><span >
         <Icon size="3xl" type="person"></Icon>
       </span></RouterLink>
       <RouterLink to="" class="navItem"><span >
@@ -31,10 +31,10 @@ const logoutUser = () =>{
       </span></RouterLink>
     </div>
     <div class="flex flex-col justify-center content-center items-center gap-8">
-      <RouterLink to="/settings" class="navItem"><span >
+      <RouterLink to="/baseDash/settings" class="navItem"><span >
         <Icon size="3xl" type="settings"></Icon>
       </span></RouterLink>
-      <RouterLink to="/inbox" class="navItem"><span>
+      <RouterLink to="/baseDash/inbox" class="navItem"><span>
         <Icon size="3xl" type="mail"></Icon>
       </span></RouterLink>
       <Avatar @click.prevent="logoutUser()" class="w-[48px] h-[48px]"></Avatar>

@@ -13,10 +13,11 @@ const settingsStore = useSettingsStore();
 
 
 onMounted(() => {
-  if (route.path === '/settings') {
-    router.push('/profile');
+  if (route.path === '/baseDash/settings') {
+    router.push('/baseDash/settings/profile');
   }
 });
+
 
 
 const hasChanges = computed(() => {
@@ -35,33 +36,31 @@ const saveChanges = async () => {
   <div class="w-full h-full flex flex-col justify-start content-start items-start text-3xl py-20 px-6 gap-5">
     <span class="flex flex-row justify-center content-start items-center gap-5">
       <TabControl
-        :items="[
-          {
-            buttonText: 'Profile',
-            buttonSize: 'small',
-            buttonRank: 'tabItem',
-            buttonIconPosition: 'none',
-            event: () => router.push('/profile'),
-            //isActive: route.path.includes('/profile')
-          },
-          {
-            buttonText: 'Account',
-            buttonSize: 'small',
-            buttonRank: 'tabItem',
-            buttonIconPosition: 'none',
-            event: () => router.push('/account'),
-            //isActive: route.path.includes('/account')
-          },
-          {
-            buttonText: 'Preferences',
-            buttonSize: 'small',
-            buttonRank: 'tabItem',
-            buttonIconPosition: 'none',
-            event: () => router.push('/preferences'),
-            //isActive: route.path.includes('/preferences')
-          }
-        ]"
-      ></TabControl>
+  :items="[
+    {
+      buttonText: 'Profile',
+      buttonSize: 'small',
+      buttonRank: 'tabItem',
+      buttonIconPosition: 'none',
+      event: () => router.push('/baseDash/settings/profile'),
+    },
+    {
+      buttonText: 'Account',
+      buttonSize: 'small',
+      buttonRank: 'tabItem',
+      buttonIconPosition: 'none',
+      event: () => router.push('/baseDash/settings/account'),
+    },
+    {
+      buttonText: 'Preferences',
+      buttonSize: 'small',
+      buttonRank: 'tabItem',
+      buttonIconPosition: 'none',
+      event: () => router.push('/baseDash/settings/preferences'),
+    }
+  ]"
+/>
+
 
       <Button
         text="Save changes"

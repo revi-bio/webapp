@@ -20,7 +20,9 @@
         ease: "easeInOut",
       }
     );
-    router.push("/overview")
+    if (route.path === "/baseDash") {
+    router.push("/baseDash/overview");
+  }
   });
 </script>
 
