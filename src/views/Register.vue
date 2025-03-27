@@ -33,7 +33,7 @@ import router from '@/router';
 
     if (res.status === 201 && res.data.jwt) {
       userStore.setJwt(res.data.jwt);
-      router.push('overview');
+      router.push('baseDash/overview');
     } else {
       console.error("Registration failed:", res);
     }

@@ -37,7 +37,10 @@ const logoutUser = () =>{
       <RouterLink to="/baseDash/inbox" class="navItem"><span>
         <Icon size="3xl" type="mail"></Icon>
       </span></RouterLink>
-      <Avatar @click.prevent="logoutUser()" class="w-[48px] h-[48px]"></Avatar>
+      <div class="relative flex flex-col justify-start content-start items-start">
+        <Avatar @click.prevent="logoutUser()" class="w-[48px] h-[48px]"></Avatar>
+      </div>
+
     </div>
   </div>
 </template>

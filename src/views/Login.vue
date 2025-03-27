@@ -16,9 +16,9 @@ import router from '@/router';
   const errorMsg = ref()
 
   const errorClass = computed(() => {
-    return errorMsg.value ? 'error' : 'none'; 
+    return errorMsg.value ? 'error' : 'none';
   });
-  
+
   const onLogIn = async () => {
   try {
     const res = await ApiWrapper.post<{ jwt: string }>('auth/login', {
@@ -27,11 +27,11 @@ import router from '@/router';
     });
 
     if (res.status === 200) {
-      
+
       userStore.setJwt(res.data.jwt);
       userStore.setStatus(200);
       console.log('Login successful, status:', userStore.getStatus());
-      router.push('/baseDash');
+      router.push('/baseDash/overview');
     } else {
       console.log("Hello I'm under the water please help me!")
     }
