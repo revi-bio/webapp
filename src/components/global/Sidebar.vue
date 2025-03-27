@@ -3,6 +3,16 @@ import Logo from './Logo.vue';
 import Icon from './Icon.vue';
 import Avatar from './Avatar.vue';
 import { RouterLink } from 'vue-router';
+import { useUserStore } from '@/stores/user';
+import router from '@/router';
+
+const userStore = useUserStore();
+
+const logoutUser = () =>{
+  userStore.clearUser();
+  router.push('/');
+  document.location.reload();
+};
 </script>
 
 <template>
@@ -27,7 +37,7 @@ import { RouterLink } from 'vue-router';
       <RouterLink to="/inbox" class="navItem"><span>
         <Icon size="3xl" type="mail"></Icon>
       </span></RouterLink>
-      <Avatar class="w-[48px] h-[48px]"></Avatar>
+      <Avatar @click.prevent="logoutUser()" class="w-[48px] h-[48px]"></Avatar>
     </div>
   </div>
 </template>

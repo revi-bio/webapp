@@ -77,6 +77,7 @@ export const useUserStore = defineStore('user', () => {
 
   function clearStatus(): void {
     currentStatus.value = null;
+    refreshUserData();
   }
 
   if (currentUser.value == null) {
