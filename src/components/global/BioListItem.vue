@@ -4,7 +4,7 @@
   import Avatar from './Avatar.vue';
   import Button from '@/components/global/Button.vue';
   import Modal from './Modal.vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
   const showModal = ref(false);
 
@@ -24,11 +24,10 @@ import { useRouter } from 'vue-router';
     showModal.value = true;
   }
 
-  function openEditor(id: string){
-    router.push({
-      path: `/editor/${id}`
-    })
-  }
+  function openEditor(id: string) {
+
+  router.push({ name: 'Editor', params: { id } });
+}
 
 </script>
 
