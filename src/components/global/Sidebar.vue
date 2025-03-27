@@ -62,13 +62,13 @@ const toggleLogoutWindow = (event: Event) => {
       <div class="relative flex flex-col justify-start content-start items-start">
         <div
           v-if="toggleLogout"
-          class="absolute bottom-[4rem] left-0 transition duration-200 bg-zinc-800 hover:text-zinc-300 active:text-zinc-300 hover:bg-red-500 active:bg-red-600 p-3 rounded-md z-[200] text-red-500 w-[200px]"
+          class="absolute border-[1px] border-zinc-700 bottom-[4rem] left-0 transition duration-200 bg-zinc-800 hover:text-zinc-300 active:text-zinc-300 hover:bg-red-500 active:bg-red-600 p-3 rounded-md z-[200] text-red-500 w-[200px]"
         >
           <div
             class="flex flex-row justify-between items-center cursor-pointer"
             @click.stop="logoutUser()"
           >
-            <h3 class="text-base">Kijelentkezés</h3>
+            <h3 class="text-base">Log out</h3>
             <Icon type="logout"></Icon>
           </div>
         </div>
