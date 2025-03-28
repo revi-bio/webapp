@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import { widget } from '@/stores/widget';
-import { storeToRefs } from "pinia";
 import Icon from './Icon.vue';
 import Input from '@/components/global/Input.vue';
 
@@ -10,7 +9,6 @@ const activeIcon = ref<string | null>(null);
 const props = defineProps<{
   selectedProps : Record<string, any>
 }>();
-
 
 const toggleIcon = (type: string) => {
   if (activeIcon.value === type) {
@@ -23,18 +21,10 @@ const toggleIcon = (type: string) => {
 
 const widgetStore = widget();
 
-function updateProp(key: string, newValue: any) {
-  widgetStore.setSelectedProp(key, newValue);
+function updateProp(key: string, newValue: any, id: string) {
+  widgetStore.setSelectedProp(key, newValue, id);
+  console.log(id);
 }
-
-
-/*
-watch(() => props.selectedProps, (newProps) => {
-  if (Object.keys(newProps).length !== 0 && activeIcon.value !== 'Edit') {
-    activeIcon.value = 'Edit';
-  }
-}, { deep: true });
-*/
 
 watch(() => widgetStore.selectedWidget, (newProps) => {
   if (Object.keys(newProps).length !== 0 && activeIcon.value !== 'Edit') {
@@ -56,7 +46,7 @@ watch(() => widgetStore.selectedWidget, (newProps) => {
               class="flex-[2]"
               type="text"
               :model-value="widgetStore.selectedWidget[key]"
-              @update:modelValue="updateProp(key, $event)"
+              @update:modelValue="updateProp(key, $event, widgetStore.selectedWidget.id)"
             ></Input>
           </div>
         </div>
