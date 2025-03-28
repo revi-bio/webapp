@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, computed, watch } from 'vue';
 import Button from './Button.vue';
 
 const generateTWColors = (colors: string[]) => {
@@ -20,7 +20,7 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'color-selected', baseColor: string, shade: number): void
+  (e: 'color-selected', baseColor: string, shade: number, opacity: number): void
   (e: 'reset'): void
 }>();
 
@@ -32,6 +32,7 @@ const baseColor = ref("");
 const chosenShades = ref<string[]>([]);
 const selectedShade = ref<number | null>(null);
 const colorPickerOpen = ref(false);
+const opacity = ref(100);
 
 const selectBaseColor = (color: string) => {
   baseColor.value = color;
@@ -44,21 +45,42 @@ const selectBaseColor = (color: string) => {
 
 const selectShade = (shade: number) => {
   selectedShade.value = shade;
-  emit('color-selected', baseColor.value, shade);
+  emit('color-selected', baseColor.value, shade, opacity.value);
 };
-
-
 
 const toggleColorPicker = (event: Event) => {
   event.stopPropagation();
   colorPickerOpen.value = !colorPickerOpen.value;
 };
-const closeColorPicker = (event: Event) =>{
+
+const closeColorPicker = (event: Event) => {
   const colorPicker = document.querySelector(".color-picker");
   if(colorPicker && !colorPicker?.contains(event.target as Node)){
     colorPickerOpen.value = false
   }
-}
+};
+
+const colorWithOpacity = computed(() => {
+  if (selectedShade.value !== null) {
+
+    return `bg-${baseColor.value}-${selectedShade.value}/${opacity.value}`;
+  }
+  return '';
+});
+
+
+watch(opacity, (newOpacity) => {
+  if (selectedShade.value !== null && baseColor.value) {
+    emit('color-selected', baseColor.value, selectedShade.value, newOpacity);
+  }
+});
+const goBackToBaseColors = () => {
+  shadeChosen.value = false;
+  selectedShade.value = null;
+  chosenShades.value = [];
+  colorPickerOpen.value = true;
+};
+
 document.addEventListener('click', closeColorPicker);
 </script>
 
@@ -92,9 +114,9 @@ document.addEventListener('click', closeColorPicker);
 
     <div
       v-else-if="colorPickerOpen && shadeChosen"
-      class="flex flex-col justify-between h-[25rem] w-[25rem] content-start items-start px-3 py-2 gap-2 bg-zinc-900 border-zinc-800 border-[1px] rounded-md z-[200] absolute top-16"
+      class="flex flex-col justify-between w-[25rem] content-start items-start px-3 py-2 gap-4 bg-zinc-900 border-zinc-800 border-[1px] rounded-md z-[200] absolute top-16"
     >
-      <div class="w-full h-full flex flex-col justify-between content-start items-start">
+      <div class="w-full h-full flex flex-col justify-between content-start items-start gap-4">
         <div class="text-white text-lg">{{ baseColor }} shades</div>
         <div class="w-full h-full flex flex-row flex-wrap justify-center items-center content-center gap-5">
           <div
@@ -111,29 +133,58 @@ document.addEventListener('click', closeColorPicker);
           </div>
         </div>
       </div>
-
+      <div class="flex flex-col content-end items-end gap-4 w-full">
+        <h3 class="text-lg text-zinc-200">Opacity: {{ opacity }}%</h3>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          step="5"
+          v-model.number="opacity"
+          class="opacityRange w-full h-3 rounded-full bg-rose-500/80 outline-none hover:bg-rose-500"
+        />
+        <div
+          v-if="selectedShade !== null"
+          class="w-12 h-12 rounded-full flex items-center justify-center"
+          :class="colorWithOpacity"
+        >
+          <span class="text-xs text-white">{{ opacity }}%</span>
+        </div>
+      </div>
       <Button
         rank="primary"
         size="small"
         text="Back"
         icon-position="right"
         icon-type="undo"
-        @click="shadeChosen = false"
+        @click.stop="goBackToBaseColors"
       ></Button>
     </div>
   </div>
+  <!--
+  HOW TO USE:
+  const handleColorSelection = (baseColor: any, shade: any) => {
+    console.log(`Selected color: ${baseColor}-${shade}`);
 
-<!--
-HOW TO USE:
+  };
 
-const handleColorSelection = (baseColor: any, shade: any) => {
-  console.log(`Selected color: ${baseColor}-${shade}`);
-
-};
-
-
-
-
-<ColorPicker type="tag" @color-selected="handleColorSelection"></ColorPicker>
--->
+  <ColorPicker type="tag" @color-selected="handleColorSelection"></ColorPicker>
+  -->
 </template>
+
+<style lang="scss" scoped>
+.opacityRange{
+  -webkit-appearance: none;
+  -webkit-transition: .2s;
+}
+.opacityRange::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  appearance: none;
+  @apply bg-zinc-300 cursor-pointer w-5 h-5 rounded-full
+}
+.opacityRange::-moz-range-thumb{
+  -webkit-appearance: none;
+  appearance: none;
+  @apply bg-zinc-300 cursor-pointer w-5 h-5 rounded-full
+}
+</style>
