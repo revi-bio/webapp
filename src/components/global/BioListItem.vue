@@ -9,13 +9,13 @@ import { useRoute, useRouter } from 'vue-router';
   const showModal = ref(false);
 
   defineProps<{
-    id: string
+    //id: string
     name: string;
-    domain: string;
+    handle: string;
     views: number;
     widgets: number;
-    createdat: string;
-    lastedit: string;
+    createdAt: string;
+    updatedAt: string;
   }>();
 
   const router = useRouter();
@@ -37,7 +37,7 @@ import { useRoute, useRouter } from 'vue-router';
       <Avatar class="w-[64px] h-[64px]"></Avatar>
       <div class="flex flex-col">
         <h3 class="text-2xl text-zinc-100 w-full">{{ name }}</h3>
-        <h3 class="text-md text-zinc-500">{{ domain }}</h3>
+        <h3 class="text-md text-zinc-500">{{ handle }}</h3>
       </div>
       <div class="flex space-x-1">
         <div class="stats">
@@ -56,7 +56,7 @@ import { useRoute, useRouter } from 'vue-router';
         </div>
         <div class="dates text-zinc-500">
           <h3 class="font-medium">Last edited at</h3>
-          <h3 class="text-zinc-600">{{ lastedit }}</h3>
+          <h3 class="text-zinc-600">{{ updatedAt }}</h3>
         </div>
       </div>
     </div>
@@ -69,7 +69,7 @@ import { useRoute, useRouter } from 'vue-router';
       :show="showModal"
       @close="showModal = false"
       :primary-msg="`Delete ${name}?`"
-      :secondary-msg="`Are you sure you want to delete ${domain}?`"
+      :secondary-msg="`Are you sure you want to delete ${handle}?`"
     ></Modal>
 </template>
 

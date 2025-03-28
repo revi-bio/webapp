@@ -1,9 +1,9 @@
 export interface Bio{
     name: string,
-    id: string,
-    domain:string,
+    //_id: string,
+    handle:string,
     views:number,
     widgets:number,
-    createdat:string,
-    lastedit:string
+    createdAt:string,
+    updatedAt:string
 }

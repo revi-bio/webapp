@@ -39,7 +39,7 @@ onMounted(() => {
   <div class="flex flex-col justify-center content-center items-start gap-8 w-full">
     <!-- Pronounce Section -->
     <div class="flex flex-col justify-center content-center items-start gap-2">
-      <h3 class="text-lg text-zinc-300">Pronounce</h3>
+      <h3 class="text-lg text-zinc-300">Pronoun</h3>
       <Radiobutton
         text="Choose an option"
         :options="pronounceOptions"
