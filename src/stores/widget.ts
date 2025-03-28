@@ -2,20 +2,22 @@ import { defineStore } from 'pinia';
 
 export const widget = defineStore('widget', {
   state: () => ({
-    selectedWidget: {} as Record<string, any> // 🔥 NE használj reactive()!
+    selectedWidget: {} as Record<string, any>
   }),
   actions: {
     setSelectedProps(props: Record<string, any>) {
-      this.selectedWidget = { ...props }; // ✅ Teljes másolat, így reaktív marad
+      this.selectedWidget = { ...props }; 
     },
     clearSelectedProps() {
-      this.selectedWidget = {}; // ✅ Törlés helyes módja
+      this.selectedWidget = {};
     },
-    setSelectedProp(key: string, value: any) {
-      this.selectedWidget = {
-        ...this.selectedWidget, // ✅ Új objektum referenciával
-        [key]: value
-      };
+    setSelectedProp(key: string, value: any, id:string) {
+      if(this.selectedWidget.id == id){
+        this.selectedWidget = {
+          ...this.selectedWidget,
+          [key]: value
+        };
+      }
     }
   }
 });

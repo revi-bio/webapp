@@ -55,19 +55,20 @@ function hiedShow() {
     </div>
 
     <div id="widgets" class="w-[50%] flex flex-col gap-3 justify-center z-0">
-      <Profile @profile_clicked="selectWidget" name="Lakatos Dezso" :badge="badges" profile_align="center" :profile_over="true" tag="@lakatosdezso" text="Lakatosdezsővagyok cigány"/>
-      <Profile @profile_clicked="selectWidget" name="Ferencz" :badge="badges" profile_align="start" :profile_over="false" tag="@Ferimeri" text="feri bemutatkozó szövege tökre sokminden meg tökre szöveg csak hogy legyen olyan ami legalább egy sort kitölt, szerintem ez már meglesz egy sor de azért nyomom még hogy legyen azért kettő vagy akár három sor na mostmár meguntamhelloköszi"/>
-      <Profile @profile_clicked="selectWidget" name="Zöld" :badge="badges" profile_align="center" :profile_over="false" tag="@zold" text="Kék"/>
+      <Profile id="jshglfgka" @profile_clicked="selectWidget" name="Lakatos Dezso" :badge="badges" profile_align="center" :profile_over="true" handle="lakatosdezso" text="Lakatosdezsővagyok cigány"/>
+      <Profile id="kjshgfkjg" @profile_clicked="selectWidget" name="Ferencz" :badge="badges" profile_align="start" :profile_over="false" handle="Ferimeri" text="feri bemutatkozó szövege tökre sokminden meg tökre szöveg csak hogy legyen olyan ami legalább egy sort kitölt, szerintem ez már meglesz egy sor de azért nyomom még hogy legyen azért kettő vagy akár három sor na mostmár meguntamhelloköszi"/>
+      <Profile id="lsgjldfhg" @profile_clicked="selectWidget" name="Zöld" :badge="badges" profile_align="center" :profile_over="false" handle="zold" text="Kék"/>
       <Profile
+        id="fkrlxoeai"
         @profile_clicked="selectWidget"
         :name="widgetStore.selectedWidget.name"
         :badge="badges"
         :profile_align="widgetStore.selectedWidget.profile_align"
         :profile_over="true"
-        :tag="widgetStore.selectedWidget.tag"
+        :handle="widgetStore.selectedWidget.handle"
         :text="widgetStore.selectedWidget.text"
         :badge_color="widgetStore.selectedWidget.badge_color"
-        :tag_color="widgetStore.selectedWidget.tag_color"
+        :handle_color="widgetStore.selectedWidget.handle_color"
         :name_color="widgetStore.selectedWidget.name_color"
         :bg_color="widgetStore.selectedWidget.bg_color"
         :rounded="widgetStore.selectedWidget.rounded"

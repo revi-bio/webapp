@@ -10,15 +10,16 @@ const emit = defineEmits(["profile_clicked"]);
 const widgetData = computed(() => widgetStore.selectedWidget);
 
 const props = defineProps<{
+  id: string;
   profile_align: "start" | "center";
   profile_over?: boolean;
   name: string;
-  tag: string;
+  handle: string;
   badge: string[];
   text: string;
 
   badge_color?: string;
-  tag_color?: string;
+  handle_color?: string;
   name_color?: string;
   bg_color?: string;
   rounded?: string;
@@ -39,12 +40,12 @@ function clicked(){
         </div>
       </div>
       <div class="flex" :class="`justify-${profile_align}`">
-        <h1 class="text-2xl" :class="`text-${name_color}`">{{ widgetData.name }}</h1>
+        <h1 class="text-2xl" :class="`text-${name_color}`">{{ name }}</h1>
         <div v-if="profile_align != 'center' && badge.length != 0" v-for="badge in badge" :key="badge" class="text-rose-500 flex items-center" :class="`text-${badge_color}`">
           <Icon :type="`${badge}`" size="text-lg" class=""></Icon>
         </div>
       </div>
-      <p class="text-sm text-zinc-400 flex" :class="`justify-${profile_align} text-${tag_color}`" >{{ tag }}</p>
+      <p class="text-sm text-zinc-400 flex" :class="`justify-${profile_align} text-${handle_color}`" >@{{ handle }}</p>
 
       <div class="flex justify-center w-full">
         <div v-if="profile_align == 'center' && badge.length != 0" v-for="badge in badge" :key="badge" class="text-rose-500 flex items-center" :class="`text-${badge_color}`">
