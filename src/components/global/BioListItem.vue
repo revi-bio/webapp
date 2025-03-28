@@ -25,9 +25,8 @@ import { useRoute, useRouter } from 'vue-router';
   }
 
   function openEditor(id: string) {
-
-  router.push({ name: 'Editor', params: { id } });
-}
+    router.push({ name: 'Editor', params: { id } });
+  }
 
 </script>
 
@@ -52,7 +51,7 @@ import { useRoute, useRouter } from 'vue-router';
       <div class="flex space-x-2 justify-evenly">
         <div class="dates text-zinc-500">
           <h3 class="font-medium">Created at</h3>
-          <h3 class="text-zinc-600">{{ createdat }}</h3>
+          <h3 class="text-zinc-600">{{ createdAt }}</h3>
         </div>
         <div class="dates text-zinc-500">
           <h3 class="font-medium">Last edited at</h3>
@@ -62,7 +61,7 @@ import { useRoute, useRouter } from 'vue-router';
     </div>
     <div class="flex space-x-4 py-4">
       <Button icon-position="left" icon-type="delete" text="Delete" rank="primary" size="small" v-on:click="deleteBio()"></Button>
-      <Button icon-position="left" icon-type="edit" text="Edit" rank="primary" size="small" v-on:click="openEditor(id)"></Button>
+      <Button icon-position="left" icon-type="edit" text="Edit" rank="primary" size="small" v-on:click="openEditor(handle)"></Button>
     </div>
   </div>
   <Modal
