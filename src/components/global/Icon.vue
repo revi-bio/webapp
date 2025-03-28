@@ -32,7 +32,8 @@ const icons: Record<string, string> = {
   visibility: "visibility",
   info: "info",
   id_card: "id_card",
-  logout: "logout"
+  logout: "logout",
+  undo: "undo"
 };
 </script>
 
