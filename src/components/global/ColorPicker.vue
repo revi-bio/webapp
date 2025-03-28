@@ -163,8 +163,8 @@ document.addEventListener('click', closeColorPicker);
   </div>
   <!--
   HOW TO USE:
-  const handleColorSelection = (baseColor: any, shade: any) => {
-    console.log(`Selected color: ${baseColor}-${shade}`);
+  const handleColorSelection = (baseColor: any, shade: any, opacity: any) => {
+    console.log(`Selected color: ${baseColor}-${shade}/${opacity}`);
 
   };
 
