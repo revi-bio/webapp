@@ -1,36 +1,44 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { widget } from '@/stores/widget';
 import Icon from './Icon.vue';
 import Input from '@/components/global/Input.vue';
+import { b } from 'motion/react-client';
 
 const activeIcon = ref<string | null>(null);
 
-const props = defineProps<{
-  selectedProps : Record<string, any>
-}>();
 
 const toggleIcon = (type: string) => {
   if (activeIcon.value === type) {
     activeIcon.value = null;
-    widgetStore.clearSelectedProps();
+    widgetStore.selectedId = null;
   } else {
     activeIcon.value = type;
+    if (type != "Edit") {
+      widgetStore.selectedId = null;
+    }
   }
 };
 
 const widgetStore = widget();
+var selectedWidget = ref<Record<string, any>>({});
 
 function updateProp(key: string, newValue: any, id: string) {
-  widgetStore.setSelectedProp(key, newValue, id);
-  console.log(id);
+  console.log(newValue)
+  widgetStore.updateWidgetProp(id, key, newValue);
 }
 
-watch(() => widgetStore.selectedWidget, (newProps) => {
-  if (Object.keys(newProps).length !== 0 && activeIcon.value !== 'Edit') {
-    activeIcon.value = 'Edit';
-  }
-}, { deep: true });
+
+watch(() => widgetStore.selectedId, (newId) => {
+    if (newId !== null) {
+      activeIcon.value = 'Edit';
+      selectedWidget.value = widgetStore.getWidget(newId);
+    } else {
+      selectedWidget.value = {};
+    }
+  },
+  { deep: true }
+);
 
 </script>
 
@@ -38,20 +46,19 @@ watch(() => widgetStore.selectedWidget, (newProps) => {
   <div class="flex gap-x-2 items-center justify-center">
     <div v-if="activeIcon" class="flex flex-col p-4 rounded-[16px] bg-zinc-900/70 text-lg px-3 w-[400px] h-[500px]">
       <div>{{ activeIcon }}</div>
-      <div class="baseDash overflow-y-auto" v-if="Object.keys(widgetStore.selectedWidget).length > 0">
-        <div  v-for="(value, key) in widgetStore.selectedWidget" :key="key">
+      <div class="baseDash overflow-y-auto" v-if="widgetStore.selectedId">
+        <div  v-for="(value, key) in selectedWidget" :key="key">
           <div class="flex items-center space-y-2 pr-2">
             <p class="flex-1">{{ key }}: </p>
             <Input
               class="flex-[2]"
               type="text"
-              :model-value="widgetStore.selectedWidget[key]"
-              @update:modelValue="updateProp(key, $event, widgetStore.selectedWidget.id)"
+              :model-value="selectedWidget[key]"
+              @update:modelValue="updateProp(key, $event, selectedWidget.id)"
             ></Input>
           </div>
         </div>
       </div>
-
     </div>
 
     <div class="flex flex-col items-center justify-center space-y-14 py-10 rounded-[16px] bg-zinc-900/70 transition duration-200 text-lg px-3 h-full">

@@ -7,17 +7,24 @@ import { widget } from "@/stores/widget";
 const widgetStore = widget();
 const emit = defineEmits(["profile_clicked"]);
 
-const widgetData = computed(() => widgetStore.selectedWidget);
+const widgetData = computed(() => {
+  //console.log(widgetStore.getWidget(widgetStore.selectedId!).id)
+  if (widgetStore.selectedId !== null) {
+    return widgetStore.getWidget(widgetStore.selectedId);
+  } else {
+    return {};
+  }
+});
 
 const props = defineProps<{
   id: string;
   profile_align: "start" | "center";
-  profile_over?: boolean;
   name: string;
   handle: string;
   badge: string[];
   text: string;
 
+  profile_over?: boolean;
   badge_color?: string;
   handle_color?: string;
   name_color?: string;
@@ -27,21 +34,23 @@ const props = defineProps<{
 
 }>();
 
-function clicked(){
-  emit('profile_clicked', props);
+function selectWidget(props: Record<string, any>) {
+  widgetStore.addWidget(props.id, props);
+  widgetStore.selectWidget(props.id);
 }
+
 
 </script>
 
 <template>
-    <div class="flex w-full p-2 flex-col" :class="`bg-${widgetData.bg_color} rounded-${widgetData.rounded} ${widgetData.profile_over ? 'pt-8 relative' : ''}`" @click="clicked" >
+    <div @click="selectWidget(props)" class="flex w-full p-2 flex-col" :class="`bg-${widgetData.bg_color} rounded-${widgetData.rounded} ${widgetData.profile_over ? 'pt-8 relative' : ''}`">
       <div :class="`flex w-full ${widgetData.profile_over ? 'absolute -top-8 pr-4' : 'static'} justify-${widgetData.profile_align}`">
         <div :class="`flex `">
           <Avatar class= "w-[64px] h-[64px]"></Avatar>
         </div>
       </div>
       <div class="flex" :class="`justify-${widgetData.profile_align}`">
-        <h1 class="text-2xl" :class="`text-${widgetData.name_color}`">{{ widgetData.name }}</h1>
+        <h1 class="text-2xl" :class="`text-${widgetData.name_color}`">{{ widgetData.selectedId == props.id ? widgetData.name : name }}</h1>
         <div v-if="widgetData.profile_align != 'center' && badge.length != 0" v-for="badge in badge" :key="badge" class="text-rose-500 flex items-center" :class="`text-${widgetData.badge_color}`">
           <Icon :type="`${badge}`" size="text-lg" class=""></Icon>
         </div>
