@@ -1,37 +1,52 @@
 <script lang="ts" setup>
-  import { ref } from 'vue';
-  import Icon from './Icon.vue';
-  import Avatar from './Avatar.vue';
-  import Button from '@/components/global/Button.vue';
-  import Modal from './Modal.vue';
+import { ref } from 'vue';
+import Icon from './Icon.vue';
+import Avatar from './Avatar.vue';
+import Button from '@/components/global/Button.vue';
+import Modal from './Modal.vue';
+import { useBioStore } from '@/stores/bio';
 import { useRoute, useRouter } from 'vue-router';
 
-  const showModal = ref(false);
+const showModal = ref(false);
+const bioStore = useBioStore();
 
-  defineProps<{
-    //id: string
-    name: string;
-    handle: string;
-    views: number;
-    widgets: number;
-    createdAt: string;
-    updatedAt: string;
-  }>();
 
-  const router = useRouter();
+const props = defineProps<{
+  name: string;
+  handle: string;
+  views: number;
+  widgets: number;
+  createdAt: string;
+  updatedAt: string;
+}>();
 
-  function deleteBio(){
-    showModal.value = true;
+const router = useRouter();
+
+
+function deleteBio() {
+  showModal.value = true;
+}
+
+
+function openEditor(handle: string) {
+  router.push({ name: 'Editor', params: { handle } });
+}
+
+// A törlés megerősítése és a bio törlése
+async function confirmDelete() {
+  const response = await bioStore.deletBio(props.handle);  
+  if (response) {
+    showModal.value = false;  
   }
-
-  function openEditor(id: string) {
-    router.push({ name: 'Editor', params: { id } });
+  else{
+    alert("Couldn't delete")
   }
+}
 
 </script>
 
 <template>
-  <div class="flex flex-row justify-between w-full rounded-[16px]  p-4 bg-zinc-700/50">
+  <div class="flex flex-row justify-between w-full rounded-[16px] p-4 bg-zinc-700/50">
     <div class="flex flex-row space-x-4 items-center">
       <Avatar class="w-[64px] h-[64px]"></Avatar>
       <div class="flex flex-col">
@@ -64,20 +79,24 @@ import { useRoute, useRouter } from 'vue-router';
       <Button icon-position="left" icon-type="edit" text="Edit" rank="primary" size="small" v-on:click="openEditor(handle)"></Button>
     </div>
   </div>
+
+
   <Modal
-      :show="showModal"
-      @close="showModal = false"
-      :primary-msg="`Delete ${name}?`"
-      :secondary-msg="`Are you sure you want to delete ${handle}?`"
-    ></Modal>
+    :show="showModal"
+    @close="showModal = false"
+    :primaryMsg="`Delete ${name}?`"
+    :secondaryMsg="`Are you sure you want to delete ${handle}?`"
+    :showDeleteButton="true"  
+    @delete="confirmDelete"  
+  ></Modal>
 </template>
 
 <style>
-.stats{
-  @apply flex flex-row items-center text-zinc-500 space-x-1
+.stats {
+  @apply flex flex-row items-center text-zinc-500 space-x-1;
 }
 
-.dates{
-  @apply flex flex-col  space-x-0 justify-center items-start
+.dates {
+  @apply flex flex-col space-x-0 justify-center items-start;
 }
 </style>

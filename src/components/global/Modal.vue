@@ -9,7 +9,7 @@ const props = defineProps<{
   secondaryMsg?: string
 }>();
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'delete']);
 </script>
 
 <template>
@@ -31,7 +31,7 @@ const emit = defineEmits(['close']);
                 icon-type="delete" 
                 text="Delete" 
                 rank="primary"
-                @click="$emit('close')"
+                @click="$emit('delete')"
                 ></Button>
             </span>
             <h3 class="text-sm text-zinc-300 underline absolute left-3 bottom-3 cursor-pointer">Have any questions?</h3>

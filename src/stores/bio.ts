@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { ApiWrapper } from "@/composables/ApiWrapper";
 import type { Bio } from "@/types/Bio";
+import { data } from "motion/react-client";
 
 export const useBioStore = defineStore('bios', () => {
     const bios = ref<Bio[]>([]); 
@@ -39,5 +40,17 @@ export const useBioStore = defineStore('bios', () => {
         }
     }
 
-    return { bios, fetchBios, getBios, createBio };
+    async function deletBio(handle: string) {
+        try {
+            const response = await ApiWrapper.delete<Bio>('bio', handle);
+            fetchBios(); 
+            return response.data;
+        } catch (error) {
+            console.error("Failed to delete bio:", error);
+            return null;
+        }
+    }
+    
+
+    return { bios, fetchBios, getBios, createBio, deletBio };
 });
