@@ -32,16 +32,19 @@ function openEditor(handle: string) {
   router.push({ name: 'Editor', params: { handle } });
 }
 
-// A törlés megerősítése és a bio törlése
+
 async function confirmDelete() {
-  const response = await bioStore.deletBio(props.handle);  
-  if (response) {
-    showModal.value = false;  
-  }
-  else{
-    alert("Couldn't delete")
+  try {
+    const response = await bioStore.deletBio(props.handle);
+    if (response) {
+      showModal.value = false;  
+    } 
+  } catch (error) {
+    console.error("Error deleting bio:", error);
+    alert("An error occurred while deleting.");
   }
 }
+
 
 </script>
 
