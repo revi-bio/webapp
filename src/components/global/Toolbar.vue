@@ -3,20 +3,14 @@ import { computed, ref, watch } from 'vue';
 import { widget } from '@/stores/widget';
 import Icon from './Icon.vue';
 import Input from '@/components/global/Input.vue';
-import { b } from 'motion/react-client';
 
 const activeIcon = ref<string | null>(null);
-
 
 const toggleIcon = (type: string) => {
   if (activeIcon.value === type) {
     activeIcon.value = null;
-    widgetStore.selectedId = null;
   } else {
     activeIcon.value = type;
-    if (type != "Edit") {
-      widgetStore.selectedId = null;
-    }
   }
 };
 
@@ -24,7 +18,7 @@ const widgetStore = widget();
 var selectedWidget = ref<Record<string, any>>({});
 
 function updateProp(key: string, newValue: any, id: string) {
-  console.log(newValue)
+  //console.log(newValue)
   widgetStore.updateWidgetProp(id, key, newValue);
 }
 

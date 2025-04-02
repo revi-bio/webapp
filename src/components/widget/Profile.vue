@@ -8,9 +8,8 @@ const widgetStore = widget();
 const emit = defineEmits(["profile_clicked"]);
 
 const widgetData = computed(() => {
-  //console.log(widgetStore.getWidget(widgetStore.selectedId!).id)
-  if (widgetStore.selectedId !== null) {
-    return widgetStore.getWidget(widgetStore.selectedId);
+  if (widgetStore.selectedId != null) {
+    return widgetStore.getWidget(props.id);
   } else {
     return {};
   }
@@ -50,7 +49,7 @@ function selectWidget(props: Record<string, any>) {
         </div>
       </div>
       <div class="flex" :class="`justify-${widgetData.profile_align}`">
-        <h1 class="text-2xl" :class="`text-${widgetData.name_color}`">{{ widgetData.selectedId == props.id ? widgetData.name : name }}</h1>
+        <h1 class="text-2xl" :class="`text-${widgetData.name_color}`">{{ widgetData.name }}</h1>
         <div v-if="widgetData.profile_align != 'center' && badge.length != 0" v-for="badge in badge" :key="badge" class="text-rose-500 flex items-center" :class="`text-${widgetData.badge_color}`">
           <Icon :type="`${badge}`" size="text-lg" class=""></Icon>
         </div>

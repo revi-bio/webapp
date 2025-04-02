@@ -13,9 +13,8 @@ export const widget = defineStore('widget', {
       delete this.widgets[id];
     },
     updateWidgetProp(id: string, key: string, value: any) {
-      console.log(key, value, id)
       if (this.widgets[id]) {
-        this.widgets[id][key] = value;
+        this.widgets[id] = Object.assign({}, this.widgets[id], { [key]: value });
       }
     },
     getWidget(id: string) {
