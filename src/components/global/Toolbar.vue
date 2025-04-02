@@ -3,8 +3,15 @@ import { computed, ref, watch } from 'vue';
 import { widget } from '@/stores/widget';
 import Icon from './Icon.vue';
 import Input from '@/components/global/Input.vue';
+import ColorPicker from '@/components/global/ColorPicker.vue';
+
 
 const activeIcon = ref<string | null>(null);
+
+const handleColorSelection = (baseColor: any, shade: any, opacity: any) => {
+  console.log(`Selected color: ${baseColor}-${shade}/${opacity}`);
+  return `${baseColor}-${shade}/${opacity}`;
+};
 
 const toggleIcon = (type: string) => {
   if (activeIcon.value === type) {
@@ -42,7 +49,7 @@ watch(() => widgetStore.selectedId, (newId) => {
       <div>{{ activeIcon }}</div>
       <div class="baseDash overflow-y-auto" v-if="widgetStore.selectedId">
         <div  v-for="(value, key) in selectedWidget" :key="key">
-          <div class="flex items-center space-y-2 pr-2">
+          <div class="flex items-center space-y-2 pr-2" v-if="key.split('_')[1] != 'color'">
             <p class="flex-1">{{ key }}: </p>
             <Input
               class="flex-[2]"
@@ -50,6 +57,11 @@ watch(() => widgetStore.selectedId, (newId) => {
               :model-value="selectedWidget[key]"
               @update:modelValue="updateProp(key, $event, selectedWidget.id)"
             ></Input>
+          </div>
+
+          <div class="flex items-center space-y-2 pr-2" v-if="key.split('_')[1] == 'color'">
+            <p class="flex-1">{{ key }}: </p>
+            <ColorPicker type="tag" @color-selected="updateProp(key, handleColorSelection, selectedWidget.id)" :model-value="selectedWidget[key]"></ColorPicker>
           </div>
         </div>
       </div>
