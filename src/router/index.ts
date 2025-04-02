@@ -74,7 +74,7 @@ const router = createRouter({
           component: () => import('../views/Logged_in/Inbox.vue'),
         },
         {
-          path: 'editor/:id',
+          path: 'editor/:handle',
           name: 'Editor',
           meta: { public: false },
           component: () => import('../views/Logged_in/Editor.vue'),
