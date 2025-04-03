@@ -7,10 +7,13 @@ import ColorPicker from '@/components/global/ColorPicker.vue';
 
 
 const activeIcon = ref<string | null>(null);
+var selectedColor = ref<string>();
 
 const handleColorSelection = (baseColor: any, shade: any, opacity: any) => {
-  console.log(`Selected color: ${baseColor}-${shade}/${opacity}`);
+  //console.log(`Selected color: ${baseColor}-${shade}/${opacity}`);
+  selectedColor.value = `${baseColor}-${shade}/${opacity}`;
   return `${baseColor}-${shade}/${opacity}`;
+  console.log(selectedColor.value)
 };
 
 const toggleIcon = (type: string) => {
@@ -25,7 +28,7 @@ const widgetStore = widget();
 var selectedWidget = ref<Record<string, any>>({});
 
 function updateProp(key: string, newValue: any, id: string) {
-  //console.log(newValue)
+  console.log(selectedColor.value)
   widgetStore.updateWidgetProp(id, key, newValue);
 }
 
@@ -60,8 +63,7 @@ watch(() => widgetStore.selectedId, (newId) => {
           </div>
 
           <div class="flex items-center space-y-2 pr-2" v-if="key.split('_')[1] == 'color'">
-            <p class="flex-1">{{ key }}: </p>
-            <ColorPicker type="tag" @color-selected="updateProp(key, handleColorSelection, selectedWidget.id)" :model-value="selectedWidget[key]"></ColorPicker>
+            <ColorPicker class="w-full" :type="key" @color-selected="handleColorSelection, updateProp(key, selectedColor, selectedWidget.id)"></ColorPicker>
           </div>
         </div>
       </div>
