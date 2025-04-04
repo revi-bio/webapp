@@ -50,14 +50,14 @@ function selectWidget(props: Record<string, any>) {
       </div>
       <div class="flex" :class="`justify-${widgetData.profile_align}`">
         <h1 class="text-2xl" :class="`text-${widgetData.name_color}`">{{ widgetData.name }}</h1>
-        <div v-if="widgetData.profile_align != 'center' && badge.length != 0" v-for="badge in badge" :key="badge" class="text-rose-500 flex items-center" :class="`text-${widgetData.badge_color}`">
+        <div v-if="widgetData.profile_align != 'center' && badge.length != 0" v-for="badge in badge" :key="badge" class="flex items-center" :class="`text-${widgetData.badge_color}`">
           <Icon :type="`${badge}`" size="text-lg" class=""></Icon>
         </div>
       </div>
-      <p class="text-sm text-zinc-400 flex" :class="`justify-${widgetData.profile_align} text-${widgetData.handle_color}`" >@{{ widgetData.handle }}</p>
+      <p class="text-sm flex" :class="`justify-${widgetData.profile_align} text-${widgetData.handle_color}`" >@{{ widgetData.handle }}</p>
 
       <div class="flex justify-center w-full">
-        <div v-if="widgetData.profile_align == 'center' && badge.length != 0" v-for="badge in badge" :key="badge" class="text-rose-500 flex items-center" :class="`text-${widgetData.badge_color}`">
+        <div v-if="widgetData.profile_align == 'center' && badge.length != 0" v-for="badge in badge" :key="badge" class="flex items-center" :class="`text-${widgetData.badge_color}`">
           <Icon :type="`${badge}`" size="text-lg" class=""></Icon>
         </div>
       </div>

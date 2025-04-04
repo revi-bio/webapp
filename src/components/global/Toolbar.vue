@@ -4,16 +4,25 @@ import { widget } from '@/stores/widget';
 import Icon from './Icon.vue';
 import Input from '@/components/global/Input.vue';
 import ColorPicker from '@/components/global/ColorPicker.vue';
+import { base } from 'motion/react-client';
 
 
 const activeIcon = ref<string | null>(null);
 var selectedColor = ref<string>();
-
+/*
+const widgetData = computed(() => {
+  if (widgetStore.selectedId != null) {
+    return widgetStore.getWidget(props.id);
+  } else {
+    return {};
+  }
+});
+*/
 const handleColorSelection = (baseColor: any, shade: any, opacity: any) => {
-  //console.log(`Selected color: ${baseColor}-${shade}/${opacity}`);
+  console.log(`Selected color: ${baseColor}-${shade}/${opacity}`);
   selectedColor.value = `${baseColor}-${shade}/${opacity}`;
-  return `${baseColor}-${shade}/${opacity}`;
   console.log(selectedColor.value)
+  return `${baseColor}-${shade}/${opacity}`;
 };
 
 const toggleIcon = (type: string) => {
@@ -28,10 +37,9 @@ const widgetStore = widget();
 var selectedWidget = ref<Record<string, any>>({});
 
 function updateProp(key: string, newValue: any, id: string) {
-  console.log(selectedColor.value)
+  console.log(key, newValue, id);
   widgetStore.updateWidgetProp(id, key, newValue);
 }
-
 
 watch(() => widgetStore.selectedId, (newId) => {
     if (newId !== null) {
@@ -63,7 +71,11 @@ watch(() => widgetStore.selectedId, (newId) => {
           </div>
 
           <div class="flex items-center space-y-2 pr-2" v-if="key.split('_')[1] == 'color'">
-            <ColorPicker class="w-full" :type="key" @color-selected="handleColorSelection, updateProp(key, selectedColor, selectedWidget.id)"></ColorPicker>
+            <ColorPicker class="w-full" :type="key" @color-selected="
+              (baseColor, shade, opacity) => {
+                const selectedColor = handleColorSelection(baseColor, shade, opacity);
+                updateProp(key, selectedColor, selectedWidget.id)
+              }"  ></ColorPicker>
           </div>
         </div>
       </div>
