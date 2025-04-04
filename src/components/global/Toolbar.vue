@@ -1,27 +1,15 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { widget } from '@/stores/widget';
 import Icon from './Icon.vue';
 import Input from '@/components/global/Input.vue';
 import ColorPicker from '@/components/global/ColorPicker.vue';
-import { base } from 'motion/react-client';
-
 
 const activeIcon = ref<string | null>(null);
 var selectedColor = ref<string>();
-/*
-const widgetData = computed(() => {
-  if (widgetStore.selectedId != null) {
-    return widgetStore.getWidget(props.id);
-  } else {
-    return {};
-  }
-});
-*/
+
 const handleColorSelection = (baseColor: any, shade: any, opacity: any) => {
-  console.log(`Selected color: ${baseColor}-${shade}/${opacity}`);
   selectedColor.value = `${baseColor}-${shade}/${opacity}`;
-  console.log(selectedColor.value)
   return `${baseColor}-${shade}/${opacity}`;
 };
 
@@ -31,13 +19,17 @@ const toggleIcon = (type: string) => {
   } else {
     activeIcon.value = type;
   }
+  
+  if(selectedWidget.value) {
+    selectedWidget.value={}
+  }
+
 };
 
 const widgetStore = widget();
 var selectedWidget = ref<Record<string, any>>({});
 
 function updateProp(key: string, newValue: any, id: string) {
-  console.log(key, newValue, id);
   widgetStore.updateWidgetProp(id, key, newValue);
 }
 
@@ -45,8 +37,6 @@ watch(() => widgetStore.selectedId, (newId) => {
     if (newId !== null) {
       activeIcon.value = 'Edit';
       selectedWidget.value = widgetStore.getWidget(newId);
-    } else {
-      selectedWidget.value = {};
     }
   },
   { deep: true }

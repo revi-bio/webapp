@@ -35,6 +35,7 @@ const props = defineProps<{
 
 function selectWidget(props: Record<string, any>) {
   widgetStore.addWidget(props.id, props);
+  widgetStore.selectWidget("-1");
   widgetStore.selectWidget(props.id);
 }
 
