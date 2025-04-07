@@ -96,7 +96,7 @@ document.addEventListener('click', closeColorPicker);
 
     <div
       v-if="colorPickerOpen && !shadeChosen"
-      class="color-picker flex flex-row flex-wrap justify-center h-[25rem] w-[25rem] content-center items-center px-3 py-2 gap-4 bg-zinc-900 border-zinc-800 border-[1px] rounded-md z-[200] absolute top-16"
+      class="color-picker flex flex-row flex-wrap justify-center  content-center items-center p-4 gap-4 bg-zinc-900 border-zinc-800 border-[1px] rounded-md z-[200] absolute top-16"
     >
       <div
         v-for="color in colorNames"
