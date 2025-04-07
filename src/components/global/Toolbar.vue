@@ -4,6 +4,7 @@ import { widget } from '@/stores/widget';
 import Icon from './Icon.vue';
 import Input from '@/components/global/Input.vue';
 import ColorPicker from '@/components/global/ColorPicker.vue';
+import Button from './Button.vue';
 
 const activeIcon = ref<string | null>(null);
 var selectedColor = ref<string>();
@@ -19,7 +20,7 @@ const toggleIcon = (type: string) => {
   } else {
     activeIcon.value = type;
   }
-  
+
   if(selectedWidget.value) {
     selectedWidget.value={}
   }
@@ -48,8 +49,8 @@ watch(() => widgetStore.selectedId, (newId) => {
   <div class="flex gap-x-2 items-center justify-center">
     <div v-if="activeIcon" class="flex flex-col p-4 rounded-[16px] bg-zinc-900/70 text-lg px-3 w-[400px] h-[500px]">
       <div>{{ activeIcon }}</div>
-      <div class="baseDash overflow-y-auto" v-if="widgetStore.selectedId">
-        <div  v-for="(value, key) in selectedWidget" :key="key">
+      <div class="baseDash overflow-y-auto">
+        <div v-if="widgetStore.selectedId && activeIcon == 'Edit'" v-for="(value, key) in selectedWidget" :key="key">
           <div class="flex items-center space-y-2 pr-2" v-if="key.split('_')[1] != 'color'">
             <p class="flex-1">{{ key }}: </p>
             <Input
@@ -67,6 +68,14 @@ watch(() => widgetStore.selectedId, (newId) => {
                 updateProp(key, selectedColor, selectedWidget.id)
               }"  ></ColorPicker>
           </div>
+        </div>
+
+        <div v-else-if="activeIcon == 'Presets'">
+
+        </div>
+
+        <div v-else-if="activeIcon == 'Widgets'">
+          <Button size="normal" rank="primary" iconPosition="none" text="Profile"></Button>
         </div>
       </div>
     </div>
