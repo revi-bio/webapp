@@ -5,6 +5,9 @@ import Icon from './Icon.vue';
 import Input from '@/components/global/Input.vue';
 import ColorPicker from '@/components/global/ColorPicker.vue';
 import Button from './Button.vue';
+import BioPfpWidget from '../widget/BioPfpWidget.vue';
+import Spotify from '../widget/Spotify.vue';
+import Youtube from '../widget/Youtube.vue';
 
 const activeIcon = ref<string | null>(null);
 var selectedColor = ref<string>();
@@ -74,8 +77,10 @@ watch(() => widgetStore.selectedId, (newId) => {
 
         </div>
 
-        <div v-else-if="activeIcon == 'Widgets'">
-          <Button size="normal" rank="primary" iconPosition="none" text="Profile"></Button>
+        <div v-else-if="activeIcon == 'Widgets'" class="flex flex-col justify-center content-center items-center gap-5 p-5">
+          <BioPfpWidget></BioPfpWidget>
+          <Spotify></Spotify>
+          <Youtube></Youtube>
         </div>
       </div>
     </div>

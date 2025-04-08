@@ -15,11 +15,11 @@ const logo = computed(() => {
 </script>
 
 <template>
-  <div class="w-full py-5
+  <div class="w-full py-5 gap-2
   flex flex-col justify-center content-center items-center rounded-lg
-   bg-[#191414] hover:bg-zinc-800/90 active:bg-zinc-950/60 duration-200">
+  border border-zinc-100/30 bg-zinc-200/10 hover:bg-zinc-200/20 active:bg-zinc-200/30 duration-200">
     <div class="w-20 h-20 "v-html="logo"></div>
-    <h3 class="text-2xl">
+    <h3 class="text-xl">
       Youtube playlist
     </h3>
   </div>

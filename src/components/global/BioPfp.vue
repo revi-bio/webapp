@@ -1,0 +1,46 @@
+<script lang="ts" setup>
+import { computed, onMounted, defineProps } from 'vue';
+import { useBioStore } from '@/stores/bio';
+
+
+const props = defineProps({
+  bioHandle: {
+    type: String,
+    default: ''
+  }
+});
+
+const bioStore = useBioStore();
+const defaultPfp = new URL('@/assets/defPfp.png', import.meta.url).href;
+
+onMounted(async () => {
+  if (bioStore.bios.length === 0) {
+    await bioStore.fetchBios();
+  }
+});
+
+
+const BioPfp = computed(() => {
+
+  const pfpUrl = bioStore.getBioPfpUrl(props.bioHandle || undefined);
+  return pfpUrl || defaultPfp;
+});
+
+
+const handleImageError = (event: Event) => {
+  const imgElement = event.target as HTMLImageElement;
+  if (imgElement) {
+    imgElement.src = defaultPfp;
+  }
+};
+</script>
+
+<template>
+  <img
+    :src="BioPfp"
+    :key="BioPfp"
+    alt="Bio_profile_picture"
+    class="rounded-full object-cover"
+    @error="handleImageError"
+  >
+</template>

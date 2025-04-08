@@ -47,7 +47,7 @@ export const useSettingsStore = defineStore('settings', () => {
     try {
       isLoading.value = true;
       console.log('Loading settings...');
-      
+
       const response = await ApiWrapper.get('setting', {});
       console.log('API response:', response.data);
 
@@ -62,8 +62,8 @@ export const useSettingsStore = defineStore('settings', () => {
 
         if (typeof response.data['preferences.autoAcceptAdultContent'] === 'boolean') {
           draft.value.adultContent = response.data['preferences.autoAcceptAdultContent'];
-        } 
-        
+        }
+
         console.log('Settings loaded successfully:', draft.value);
       }
     } catch (error) {
@@ -72,32 +72,32 @@ export const useSettingsStore = defineStore('settings', () => {
       isLoading.value = false;
     }
   }
-  
+
   function updateDraft<K extends keyof Draft>(field: K, value: Draft[K]) {
     if (typeof value === 'object' && value !== null && 'isTrusted' in value) {
       console.error(`Received event object for ${field} instead of a value:`, value);
-      
+
       if (field === 'adultContent' && 'target' in value && 'checked' in value.target) {
         // @ts-ignore - handle event object from checkbox
         value = value.target.checked;
       } else {
-        return; 
+        return;
       }
     }
-    
+
 
     if (draft.value[field] === value) {
       return;
     }
-    
+
     draft.value[field] = value;
-    
+
 
     if (field === 'displayName') isDirty.value.displayName = true;
     if (field === 'newEmail' || field === 'currentPasswordForEmail') isDirty.value.email = true;
     if (field === 'newPassword' || field === 'currentPasswordForPassword') isDirty.value.password = true;
     if (field === 'pronounce' || field === 'adultContent') isDirty.value.preferences = true;
-    
+
     console.log(`Updated ${field}:`, value, 'isDirty:', isDirty.value);
   }
 
@@ -129,23 +129,23 @@ export const useSettingsStore = defineStore('settings', () => {
           "preferences.pronouns": draft.value.pronounce,
           "preferences.autoAcceptAdultContent": draft.value.adultContent
         };
-        
+
         console.log('Saving preferences:', serverSettings);
-        
+
         try {
           await ApiWrapper.post('setting', serverSettings);
           console.log('Preferences saved successfully with dotted notation');
         } catch (error) {
           console.error('Error saving with dotted notation, trying without dots:', error);
-          
+
         }
       }
-      
+
       resetDirty();
       console.log('All settings saved successfully');
     } catch (error) {
       console.error('Error saving settings:', error);
-      throw error; 
+      throw error;
     }
   }
 
@@ -153,13 +153,13 @@ export const useSettingsStore = defineStore('settings', () => {
     isDirty.value = { displayName: false, email: false, password: false, preferences: false };
   }
 
-  return { 
-    draft, 
-    isDirty, 
+  return {
+    draft,
+    isDirty,
     isLoading,
-    updateDraft, 
-    saveSettings, 
-    resetDirty, 
-    loadSettings 
+    updateDraft,
+    saveSettings,
+    resetDirty,
+    loadSettings
   };
 });

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import ProfilePic from '@/components/global/Avatar.vue';
+import Avatar from '@/components/global/Avatar.vue';
 import Button from '@/components/global/Button.vue';
 import Input from '@/components/global/Input.vue';
 import { useSettingsStore } from '@/stores/settings';
@@ -7,18 +7,16 @@ import { useUserStore } from '@/stores/user';
 import { ref, computed } from 'vue';
 import { ApiWrapper } from '@/composables/ApiWrapper';
 
-// Initialize the settings store
 const settingsStore = useSettingsStore();
 const userStore = useUserStore();
 
 userStore.refreshUserData();
 
 const currentDisplayName = computed(() => userStore.getUserData()?.displayName);
-//const currentAvatar = computed(() => userStore.getUserData()?.avatar);
+
 
 console.log('displayname:',currentDisplayName)
 
-// Handle profile picture changes
 const handleChangePicture = () => {
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
@@ -28,14 +26,12 @@ const handleChangePicture = () => {
     if (target.files && target.files[0]) {
       const formData = new FormData();
       formData.append('file', target.files[0]);
-      await ApiWrapper.patch('user/avatar', formData); 
-      await userStore.refreshUserData(); 
+      await ApiWrapper.patch('user/avatar', formData);
+      await userStore.refreshUserData();
     }
   };
   fileInput.click();
-  console.log('áasáaádáadáa');
   userStore.xd().then(x => console.log(x));
-  console.log('áasáaádáadáa');
 };
 
 
@@ -58,7 +54,7 @@ const handleDisplayNameChange = (event: Event) => {
     <h3 class="text-lg text-zinc-300 text-left w-full">Profile picture</h3>
 
     <div class="flex flex-row justify-center content-center items-center gap-10">
-      <ProfilePic class="w-[9rem] h-[9rem]"></ProfilePic>
+      <Avatar class="w-[9rem] h-[9rem]"></Avatar>
 
       <div class="flex flex-col justify-center content-center items-start gap-2">
         <Button

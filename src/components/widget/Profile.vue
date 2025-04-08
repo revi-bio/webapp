@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import Avatar from '../global/Avatar.vue';
+import BioPfp from '../global/BioPfp.vue';
 import Icon from '../global/Icon.vue';
 import { widget } from "@/stores/widget";
 
@@ -46,7 +46,7 @@ function selectWidget(props: Record<string, any>) {
     <div @click="selectWidget(props)" class="flex w-full p-2 flex-col" :class="`bg-${widgetData.bg_color} rounded-${widgetData.rounded} ${widgetData.profile_over ? 'pt-8 relative' : ''}`">
       <div :class="`flex w-full ${widgetData.profile_over ? 'absolute -top-8 pr-4' : 'static'} justify-${widgetData.profile_align}`">
         <div :class="`flex `">
-          <Avatar class= "w-[64px] h-[64px]"></Avatar>
+          <BioPfp class= "w-[64px] h-[64px]"></BioPfp>
         </div>
       </div>
       <div class="flex" :class="`justify-${widgetData.profile_align}`">

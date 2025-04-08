@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import Icon from './Icon.vue';
-import Avatar from './Avatar.vue';
+import BioPfp from './BioPfp.vue';
 import Button from '@/components/global/Button.vue';
 import Modal from './Modal.vue';
 import { useBioStore } from '@/stores/bio';
@@ -35,10 +35,10 @@ function openEditor(handle: string) {
 
 async function confirmDelete() {
   try {
-    const response = await bioStore.deletBio(props.handle);
+    const response = await bioStore.deleteBio(props.handle);
     if (response) {
-      showModal.value = false;  
-    } 
+      showModal.value = false;
+    }
   } catch (error) {
     console.error("Error deleting bio:", error);
     alert("An error occurred while deleting.");
@@ -51,7 +51,7 @@ async function confirmDelete() {
 <template>
   <div class="flex flex-row justify-between w-full rounded-[16px] p-4 bg-zinc-700/50">
     <div class="flex flex-row space-x-4 items-center">
-      <Avatar class="w-[64px] h-[64px]"></Avatar>
+      <BioPfp class="w-[64px] h-[64px]"></BioPfp>
       <div class="flex flex-col">
         <h3 class="text-2xl text-zinc-100 w-full">{{ name }}</h3>
         <h3 class="text-md text-zinc-500">{{ handle }}</h3>
@@ -89,8 +89,8 @@ async function confirmDelete() {
     @close="showModal = false"
     :primaryMsg="`Delete ${name}?`"
     :secondaryMsg="`Are you sure you want to delete ${handle}?`"
-    :showDeleteButton="true"  
-    @delete="confirmDelete"  
+    :showDeleteButton="true"
+    @delete="confirmDelete"
   ></Modal>
 </template>
 
