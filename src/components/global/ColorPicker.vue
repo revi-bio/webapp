@@ -114,7 +114,7 @@ document.addEventListener('click', closeColorPicker);
 
     <div
       v-else-if="colorPickerOpen && shadeChosen"
-      class="flex flex-col justify-between w-[25rem] content-start items-start px-3 py-2 gap-4 bg-zinc-900 border-zinc-800 border-[1px] rounded-md z-[200] absolute top-16"
+      class="flex flex-col justify-between content-start items-start px-3 py-2 gap-4 bg-zinc-900 border-zinc-800 border-[1px] rounded-md z-[200] absolute top-16"
     >
       <div class="w-full h-full flex flex-col justify-between content-start items-start gap-4">
         <div class="text-white text-lg">{{ baseColor }} shades</div>
