@@ -2,42 +2,48 @@
 import Checkbox from '@/components/global/Checkbox.vue';
 import Radiobutton from '@/components/global/Radiobutton.vue';
 import { useSettingsStore } from '@/stores/settings';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 
-// Initialize the settings store
 const settingsStore = useSettingsStore();
 
-// Create a map for pronounce options
 const pronounceOptions = [
-  { key: 'Male', value: 'male' },
-  { key: 'Female', value: 'female' },
-  { key: 'They', value: 'they' },
-  { key: 'Cheese (cheddar)', value: 'cheese' },
-  { key: 'Other', value: 'other' },
+  { key: 'He/Him', value: 'he/him' },
+  { key: 'She/Her', value: 'she/her' },
+  { key: 'They/Them', value: 'they/them' },
+  { key: 'Cheese/cheddar', value: 'cheese/cheddar' }
 ];
 
-// Handle pronounce selection change
+const selectedPronounce = computed(() => settingsStore.draft.pronounce);
+
+const isAdultContent = computed(() => {
+  return Boolean(settingsStore.draft.adultContent);
+});
+
+
 const handlePronounceChange = (value: string) => {
+  console.log('Pronounce change:', value);
   settingsStore.updateDraft('pronounce', value);
 };
 
-// Handle adult content checkbox change
 const handleAdultContentChange = (checked: boolean) => {
+  console.log('Adult content change:', checked);
   settingsStore.updateDraft('adultContent', checked);
 };
 
-// Find the initial selected pronounce value when component mounts
+
+watch(() => settingsStore.isDirty.preferences, (isDirty) => {
+  console.log('Preferences dirty state changed:', isDirty);
+});
+
 onMounted(() => {
-  // If no pronounce is set in the store but we need a default
-  if (!settingsStore.draft.pronounce) {
-    settingsStore.updateDraft('pronounce', 'cheese'); // Default value
-  }
+  console.log('Component mounted, current settings:', settingsStore.draft);
+
+  settingsStore.loadSettings();
 });
 </script>
 
 <template>
   <div class="flex flex-col justify-center content-center items-start gap-8 w-full">
-    <!-- Pronounce Section -->
     <div class="flex flex-col justify-center content-center items-start gap-2">
       <h3 class="text-lg text-zinc-300">Pronoun</h3>
       <Radiobutton
@@ -45,19 +51,25 @@ onMounted(() => {
         :options="pronounceOptions"
         direction="col"
         class="text-sm"
-        :selected="settingsStore.draft.pronounce"
+        :selected="selectedPronounce"
         @change="handlePronounceChange"
       />
+      <div class="text-xs text-zinc-500">Current value: {{ selectedPronounce }}</div>
     </div>
-
-    <!-- Adult Content Section -->
+    
     <div class="flex flex-col justify-center content-center items-start gap-2">
       <h3 class="text-lg text-zinc-300">Adult content</h3>
       <Checkbox
         text="Set my account to adult by default"
-        :checked="settingsStore.draft.adultContent"
+        :checked="isAdultContent"
         @change="handleAdultContentChange"
       />
+      <div class="text-xs text-zinc-500">Current value: {{ settingsStore.draft.adultContent ? 'Yes' : 'No' }}</div>
+    </div>
+
+    <!-- Debug info -->
+    <div class="text-xs text-zinc-500 mt-4" v-if="settingsStore.isDirty.preferences">
+      Changes detected and ready to save
     </div>
   </div>
 </template>
