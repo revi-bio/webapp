@@ -9,7 +9,6 @@ export const useUserStore = defineStore('user', () => {
 
   function refreshLocalStorage() {
     localStorage.setItem('user', JSON.stringify(currentUser.value || {}));
-    console.log('xd3')
   }
 
   function clearUser() {
@@ -19,16 +18,13 @@ export const useUserStore = defineStore('user', () => {
   }
 
   function setJwt(jwt: string): void {
-    console.log('xd1')
     currentUser.value = {
       jwt,
     };
 
-    console.log('xd2')
-
     refreshUserData().then(x => refreshLocalStorage());
   }
-  
+
   async function xd() {
     await refreshUserData().then(x => refreshLocalStorage());
   }
@@ -40,16 +36,16 @@ export const useUserStore = defineStore('user', () => {
       displayName: string;
       email: string;
     }>('user/@me', {});
-  
+
     if (currentUser.value) {
-      currentUser.value = { 
-        ...currentUser.value, 
-        data: res.data 
+      currentUser.value = {
+        ...currentUser.value,
+        data: res.data
       };
     }
   }
-  
-  
+
+
 
   function loggedIn(): boolean {
     return currentUser.value != null;
