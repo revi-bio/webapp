@@ -5,7 +5,6 @@ import type { Bio } from "@/types/Bio";
 
 export const useBioStore = defineStore('bios', () => {
     const bios = ref<Bio[]>([]);
-    const fileServerUrl = 'http://65.87.7.245/file/';
 
     async function fetchBios() {
         try {
@@ -47,7 +46,7 @@ export const useBioStore = defineStore('bios', () => {
 
     function getBioPfpUrl(handle?: string): string | null {
         const path = getBioPfpPath(handle);
-        return path ? `${fileServerUrl}${path}` : null;
+        return path ? `${import.meta.env.VITE_API_BASE_URL}/file/${path}` : null;
     }
 
     async function createBio(name: string, handle: string) {

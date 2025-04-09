@@ -1,8 +1,6 @@
 import axios, { type AxiosResponse } from 'axios';
 
 export class ApiWrapper {
-  private static readonly BACKEND_URL = 'http://65.87.7.245';
-
   // A store-t itt hozzuk létre, amikor szükség van rá
   private static getUserStore() {
     return import('@/stores/user').then(({ useUserStore }) => useUserStore());
@@ -43,7 +41,7 @@ export class ApiWrapper {
     const res = await axios.request({
       method,
       url: route,
-      baseURL: ApiWrapper.BACKEND_URL,
+      baseURL: import.meta.env.VITE_API_BASE_URL,
       data,
       headers: store.loggedIn()
         ? {
