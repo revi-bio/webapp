@@ -57,22 +57,10 @@ const handleChangePicture = (event) => {
 </script>
 
 <template>
-  <div class="flex flex-col justify-center content-center items-center w-full rounded-lg border border-zinc-100/30 bg-zinc-200/10 hover:bg-zinc-200/20 active:bg-zinc-200/30 duration-200 py-5 px-2 gap-2">
+  <div class="flex flex-row justify-start content-center items-center w-full rounded-lg border border-zinc-100/30 bg-zinc-200/10 hover:bg-zinc-200/20 active:bg-zinc-200/30 duration-200 py-5 px-2 gap-2" @click="handleChangePicture">
 
     <BioPfp class="w-20 h-20" :bioHandle="bioHandle" />
+    <h3 class="text-lg">Change/Drag profile picture</h3>
 
-    <h3 class="text-xl w-full text-center">
-      Set and drag your bio's profile picture in
-    </h3>
-
-
-    <Button
-      rank="primary"
-      size="small"
-      icon-position="right"
-      icon-type="edit"
-      text="Change"
-      @click="handleChangePicture"
-    ></Button>
   </div>
 </template>

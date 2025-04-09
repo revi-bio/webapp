@@ -16,10 +16,10 @@ const logo = computed(() => {
 
 <template>
   <div class="w-full py-5 gap-2
-  flex flex-col justify-center content-center items-center rounded-lg
+  flex flex-row justify-start content-center items-center rounded-lg px-2
   border border-zinc-100/30 bg-zinc-200/10 hover:bg-zinc-200/20 active:bg-zinc-200/30 duration-200">
     <div class="w-20 h-20 "v-html="logo"></div>
-    <h3 class="text-xl">
+    <h3 class="text-lg">
       Youtube playlist
     </h3>
   </div>
