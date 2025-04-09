@@ -3,6 +3,8 @@ import { nextTick, ref, watch } from 'vue';
 import Icon from './Icon.vue';
 import {animate, inView} from 'motion'
 
+const emit = defineEmits(['select']);
+
 const props = defineProps<{
   baseText?: string;
   type: "iconOnly" | "normal";
@@ -10,7 +12,8 @@ const props = defineProps<{
     name: string;
     event?: () => void;
   }[];
-  align: "center" | "start" | "end";
+  position: "center" | "start" | "end";
+  selected?: string
 }>();
 
 const selectedText = ref(props.baseText);
@@ -19,6 +22,15 @@ const isOpen = ref(false);
 watch(() => props.baseText, (newValue) => {
   if (newValue) selectedText.value = newValue;
 });
+
+watch(() => props.selected, (newValue) => {
+  if (newValue) selectedText.value = newValue;
+}, { immediate: true });
+
+watch(() => props.baseText, (newValue) => {
+  if (newValue && !props.selected) selectedText.value = newValue;
+});
+
 
 const triggerItems = async () => {
   isOpen.value = !isOpen.value;
@@ -36,6 +48,7 @@ const triggerItems = async () => {
 const selectItem = (item: { name: string; event?: () => void }) => {
   selectedText.value = item.name;
   isOpen.value = false;
+  emit('select', item);
 
   if (item.event) {
     item.event();
@@ -54,7 +67,7 @@ document.addEventListener('click', closeDropdown);
 
 <template>
   <div class="dropdown-container relative">
-    <div :class="`flex flex-col justify-center content-${align} items-${align} gap-2 relative`">
+    <div :class="`flex flex-col justify-center content-${position} items-${position} gap-2 relative`">
       <span v-if="type === 'iconOnly'" class="dropdown" @click="triggerItems">
       </span>
       <span v-else class="dropdown" @click="triggerItems">

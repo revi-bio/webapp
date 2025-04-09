@@ -8,6 +8,7 @@ import Button from './Button.vue';
 import BioPfpWidget from '../widget/BioPfpWidget.vue';
 import Spotify from '../widget/Spotify.vue';
 import Youtube from '../widget/Youtube.vue';
+import Dropdown from './Dropdown.vue';
 
 const activeIcon = ref<string | null>(null);
 var selectedColor = ref<string>();
@@ -27,7 +28,6 @@ const toggleIcon = (type: string) => {
   if(selectedWidget.value) {
     selectedWidget.value={}
   }
-
 };
 
 const widgetStore = widget();
@@ -45,7 +45,6 @@ watch(() => widgetStore.selectedId, (newId) => {
   },
   { deep: true }
 );
-
 </script>
 
 <template>
@@ -54,7 +53,7 @@ watch(() => widgetStore.selectedId, (newId) => {
       <div>{{ activeIcon }}</div>
       <div class="baseDash overflow-y-auto">
         <div v-if="widgetStore.selectedId && activeIcon == 'Edit'" v-for="(value, key) in selectedWidget" :key="key">
-          <div class="flex items-center space-y-2 pr-2" v-if="key.split('_')[1] != 'color'">
+          <div class="flex items-center space-y-2 pr-2" v-if="key.split('_')[1] !== 'color' && key !== 'rounded'">
             <p class="flex-1">{{ key }}: </p>
             <Input
               class="flex-[2]"
@@ -64,17 +63,40 @@ watch(() => widgetStore.selectedId, (newId) => {
             ></Input>
           </div>
 
-          <div class="flex items-center space-y-2 pr-2" v-if="key.split('_')[1] == 'color'">
+          <div class="flex items-center space-y-2 pr-2" v-else-if="key.split('_')[1] === 'color'">
             <ColorPicker class="w-full" :type="key" @color-selected="
               (baseColor, shade, opacity) => {
                 const selectedColor = handleColorSelection(baseColor, shade, opacity);
                 updateProp(key, selectedColor, selectedWidget.id)
               }"  ></ColorPicker>
           </div>
+          
+          <div class="flex flex-row justify-center content-center items-center"
+                v-else-if="key === 'rounded'">
+                <p class="flex-1">{{ key }}</p>
+                <Dropdown
+                  class="z-50"
+                  type="normal"
+                  baseText="Rounded"
+                  position="end"
+                  :items="[
+                    {name: 'xs'},
+                    {name: 'sm'},
+                    {name: 'md'},
+                    {name: 'lg'},
+                    {name: 'xl'},
+                    {name: '2xl'},
+                    {name: '3xl'},
+                    {name: '4xl'},
+                    {name: 'full'}
+                  ]"
+                  :selected="selectedWidget[key]"
+                  @select="(item) => updateProp(key, item.name, selectedWidget.id)"
+                />
+          </div>
         </div>
 
         <div v-else-if="activeIcon == 'Presets'">
-
         </div>
 
         <div v-else-if="activeIcon == 'Widgets'" class="flex flex-col justify-center content-center items-center gap-5 p-5">
@@ -91,7 +113,6 @@ watch(() => widgetStore.selectedId, (newId) => {
       <Icon class="Icon" :class="{ 'active': activeIcon === 'Edit' }" size="normal" type="edit" @click="toggleIcon('Edit')" />
     </div>
   </div>
-
 </template>
 
 <style>

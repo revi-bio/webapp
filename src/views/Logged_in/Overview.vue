@@ -162,7 +162,7 @@ onMounted(() => {
       <Dropdown
         type="normal"
         baseText="Choose one"
-        align="center"
+        position="center"
         :items="[
           { name: 'Last 30 days', event: () => handleDropdownSelect('Last 30 days') },
           { name: 'Last 60 days', event: () => handleDropdownSelect('Last 60 days') },
