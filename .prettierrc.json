@@ -1,7 +1,11 @@
-
 {
   "$schema": "https://json.schemastore.org/prettierrc",
-  "semi": false,
+  "semi": true,
   "singleQuote": true,
-  "arrowParens": "avoid"
+  "arrowParens": "always",
+  "bracketSameLine": true,
+  "bracketSpacing": true,
+  "printWidth": 120,
+  "useTabs": false,
+  "tabWidth": 2
 }
