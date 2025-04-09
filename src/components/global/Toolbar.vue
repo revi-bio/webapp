@@ -48,12 +48,12 @@ watch(() => widgetStore.selectedId, (newId) => {
 </script>
 
 <template>
-  <div class="flex gap-x-2 items-center justify-center">
-    <div v-if="activeIcon" class="flex flex-col p-4 rounded-[16px] bg-zinc-900/70 text-lg px-3 w-[400px] h-[500px]">
+  <div class="flex flex-row justify-center content-center items-center gap-4">
+    <div v-if="activeIcon" class="flex flex-col justify-start content-start items-start rounded-lg bg-zinc-900/70 text-lg w-[25rem] h-[35rem] gap-4 pl-4 pr-2 py-4">
       <div>{{ activeIcon }}</div>
-      <div class="baseDash overflow-y-auto">
+      <div class="baseDash overflow-y-auto w-full h-full flex flex-col justify-start content-start pr-2 gap-4">
         <div v-if="widgetStore.selectedId && activeIcon == 'Edit'" v-for="(value, key) in selectedWidget" :key="key">
-          <div class="flex items-center space-y-2 pr-2" v-if="key.split('_')[1] !== 'color' && key !== 'rounded'">
+          <div class="flex flex-row justify-center content-center items-center w-full" v-if="key.split('_')[1] !== 'color' && key !== 'rounded'">
             <p class="flex-1">{{ key }}: </p>
             <Input
               class="flex-[2]"
@@ -63,14 +63,14 @@ watch(() => widgetStore.selectedId, (newId) => {
             ></Input>
           </div>
 
-          <div class="flex items-center space-y-2 pr-2" v-else-if="key.split('_')[1] === 'color'">
+          <div class="flex items-center" v-else-if="key.split('_')[1] === 'color'">
             <ColorPicker class="w-full" :type="key" @color-selected="
               (baseColor, shade, opacity) => {
                 const selectedColor = handleColorSelection(baseColor, shade, opacity);
                 updateProp(key, selectedColor, selectedWidget.id)
               }"  ></ColorPicker>
           </div>
-          
+
           <div class="flex flex-row justify-center content-center items-center"
                 v-else-if="key === 'rounded'">
                 <p class="flex-1">{{ key }}</p>
