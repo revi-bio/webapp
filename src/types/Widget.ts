@@ -2,10 +2,15 @@ export type WidgetType = 'profile' | 'link' | 'linkContainer';
 
 export interface WidgetGenericSettings {
     borderRadius: number;
+    /*
     backgroundColor: string;
     textColor: string;
+    */
     // might be not needed if we support argb background color
-    opacity: string;
+    opacity: number;
+    tint: number;
+    // to be discussed
+    saturation: number;
 }
 
 /** The actual widget placed on the bio site, NOT the widget definition */
@@ -16,7 +21,7 @@ export interface Widget {
     type: WidgetType;
 
     /** settings that every widget has */
-    genericSettings: WidgetGenericSettings;
+    genericSettings: Partial<WidgetGenericSettings>;
 
     /** widget-specific settings */
     specificSettings: { [key: string]: any };
