@@ -7,8 +7,8 @@ const props = defineProps<{
 }>();
 
 const style =
-  `border-radius: ${props.data.genericSettings.borderRadius ?? 16}px;` +
-  `background-color: hsla(${props.data.genericSettings.tint ?? 240}, ${props.data.genericSettings.saturation ?? 4}%, 16%, ${props.data.genericSettings.opacity ?? 0.8});`;
+  `border-radius: ${props.data.genericSettings.borderRadius}px;` +
+  `background-color: hsla(${props.data.genericSettings.background?.tint}, ${props.data.genericSettings.background?.saturation}%, 16%, ${props.data.genericSettings.background?.opacity});`;
 </script>
 
 <template>

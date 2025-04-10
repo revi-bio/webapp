@@ -7,11 +7,11 @@ defineProps<{
 </script>
 
 <template>
-  <a class="flex flex-col gap-0" :href="data.specificSettings['link']">
+  <div class="flex flex-col gap-0" :href="data.specificSettings['link']">
     <span class="text-2xl">{{ data.specificSettings['title'] }}</span>
     <span class="text-zinc-400">{{ data.specificSettings['description'] }}</span>
     <span class="text-zinc-700">{{ data.specificSettings['link'] }}</span>
-  </a>
+  </div>
 </template>
 
 <style lang="scss">
