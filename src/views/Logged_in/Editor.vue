@@ -11,15 +11,13 @@ import Input from '@/components/global/Input.vue';
 
 const route = useRoute();
 const id = route.params.id;
-const visibility = ref('show');
+const visible = ref(true);
 // const selectedWidgetId: Ref<string | null> = ref(null);
 // const selectedWidgetIndex = computed(() => widgetList.value.findIndex(x => x.id == selectedWidgetId.value))
 const selectedWidgetIndex: Ref<number | null> = ref(null);
 
-const badges = ['download', 'person', 'opened_mail'];
-
-function hiedShow() {
-  visibility.value = visibility.value === 'show' ? 'hide' : 'show';
+function selectWidget(index: number) {
+  selectedWidgetIndex.value = index == selectedWidgetIndex.value ? null : index;
 }
 
 const widgetList: Ref<IWidget[]> = ref([
@@ -61,30 +59,19 @@ const widgetList: Ref<IWidget[]> = ref([
 <template>
   <div class="flex justify-center items-center h-full w-full relative">
     <div class="absolute left-0 bottom-0 p-6 flex space-x-2 text-zinc-200">
-      <Button
-        icon-position="only"
-        icon-type="eye_tracking"
-        size="small"
-        rank="secondary"
-        @click.prevent="hiedShow"></Button>
-      <Button icon-position="only" icon-type="info" size="small" rank="secondary" :class="visibility"></Button>
-      <Button
-        icon-position="right"
-        icon-type="delete"
-        size="small"
-        rank="secondary"
-        text="Clear all"
+      <Button icon-position="only" icon-type="eye_tracking" size="small" rank="secondary"
+        @click.prevent="visible = !visible"></Button>
+      <Button icon-position="only" icon-type="info" size="small" rank="secondary"
+        :class="visible ? 'hide' : ''"></Button>
+      <Button icon-position="right" icon-type="delete" size="small" rank="secondary" text="Clear all"
         :class="visibility"></Button>
     </div>
 
-    <div
-      v-if="selectedWidgetIndex != null"
+    <div v-if="selectedWidgetIndex != null"
       class="absolute right-0 top-1/2 transform -translate-y-1/2 pr-4 items-center z-10 flex flex-col"
       :class="visibility">
       <div class="flex flex-col bg-zinc-800/50 p-4">
-        <Input
-          v-for="setting in SPECIFIC_SETTINGS_DEFINITIONS[widgetList[selectedWidgetIndex].type]"
-          type="text"
+        <Input v-for="setting in SPECIFIC_SETTINGS_DEFINITIONS[widgetList[selectedWidgetIndex].type]" type="text"
           v-model="widgetList[selectedWidgetIndex].specificSettings[setting.name]"></Input>
       </div>
       <!--
@@ -93,7 +80,7 @@ const widgetList: Ref<IWidget[]> = ref([
     </div>
 
     <div id="widgets" class="w-[50%] flex flex-col gap-3 justify-center z-0">
-      <Widget v-for="(widget, i) in widgetList" :key="widget.id" :data="widget" @click="selectedWidgetIndex = i" />
+      <Widget v-for="(widget, i) in widgetList" :key="widget.id" :data="widget" @click="selectWidget(i)" />
     </div>
   </div>
 </template>
