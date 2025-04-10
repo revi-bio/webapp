@@ -7,7 +7,7 @@ const defaultPfp = new URL('@/assets/defPfp.png', import.meta.url).href;
 
 const currentPfp = computed(() => {
   const pfpLocation = userStore.getUserData()?.avatar;
-  return pfpLocation ? `http://65.87.7.245/file/${pfpLocation}` : defaultPfp;
+  return pfpLocation ? `${import.meta.env.VITE_API_BASE_URL}/file/${pfpLocation}` : defaultPfp;
 });
 
 </script>

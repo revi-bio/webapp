@@ -1,10 +1,15 @@
 # revi-bio-webapp
 
-This template should help get you started developing with Vue 3 in Vite.
+The Vue3 webapp for the revi.bio project.
 
 ## Recommended IDE Setup
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- [VSCode](https://code.visualstudio.com/) 
+
+Install the following extensions:
+- [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
 ## Type Support for `.vue` Imports in TS
 
