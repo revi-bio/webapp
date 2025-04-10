@@ -22,7 +22,7 @@ onMounted(async () => {
 
 const BioPfp = computed(() => {
 
-  const pfpUrl = bioStore.getBioPfpUrl(props.bioHandle || undefined);
+  const pfpUrl = bioStore.getBioPfpUrl(props.bioHandle);
   return pfpUrl || defaultPfp;
 });
 

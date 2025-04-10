@@ -51,7 +51,7 @@ async function confirmDelete() {
 <template>
   <div class="flex flex-row justify-between w-full rounded-[16px] p-4 bg-zinc-700/50">
     <div class="flex flex-row space-x-4 items-center">
-      <BioPfp class="w-[64px] h-[64px]"></BioPfp>
+      <BioPfp class="w-[64px] h-[64px]" :bioHandle="handle"></BioPfp>
       <div class="flex flex-col">
         <h3 class="text-2xl text-zinc-100 w-full">{{ name }}</h3>
         <h3 class="text-md text-zinc-500">{{ handle }}</h3>

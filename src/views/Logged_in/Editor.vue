@@ -7,7 +7,6 @@ import Profile from '@/components/widget/Profile.vue';
 import type { Widget as IWidget } from '@/types/Widget';
 import Widget from '@/components/widget/Widget.vue';
 import { v4 as uuidv4 } from 'uuid';
-
 const route = useRoute();
 const id = route.params.id;
 const visibility = ref("show");
