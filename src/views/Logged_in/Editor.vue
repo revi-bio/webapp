@@ -67,8 +67,6 @@ const widgetList: Ref<IWidget[]> = ref([
         v-if="visible"></Button>
     </div>
 
-    <Button text="asd" size="normal" rank="primary" icon-position="none" :onClick="() => console.log(Object.getOwnPropertyDescriptors(new WidgetGenericSettings(widgetList[selectedWidgetIndex].genericSettings)))"></Button>
-
     <div v-if="selectedWidgetIndex != null && visible"
       class="absolute right-0 top-1/2 transform -translate-y-1/2 pr-4 items-center z-10 flex flex-col">
       <div class="flex flex-col bg-zinc-800/50 p-4">
