@@ -62,14 +62,13 @@ const widgetList: Ref<IWidget[]> = ref([
       <Button icon-position="only" icon-type="eye_tracking" size="small" rank="secondary"
         @click.prevent="visible = !visible"></Button>
       <Button icon-position="only" icon-type="info" size="small" rank="secondary"
-        :class="visible ? 'hide' : ''"></Button>
+        v-if="visible"></Button>
       <Button icon-position="right" icon-type="delete" size="small" rank="secondary" text="Clear all"
-        :class="visibility"></Button>
+        v-if="visible"></Button>
     </div>
 
-    <div v-if="selectedWidgetIndex != null"
-      class="absolute right-0 top-1/2 transform -translate-y-1/2 pr-4 items-center z-10 flex flex-col"
-      :class="visibility">
+    <div v-if="selectedWidgetIndex != null && visible"
+      class="absolute right-0 top-1/2 transform -translate-y-1/2 pr-4 items-center z-10 flex flex-col">
       <div class="flex flex-col bg-zinc-800/50 p-4">
         <Input v-for="setting in SPECIFIC_SETTINGS_DEFINITIONS[widgetList[selectedWidgetIndex].type]" type="text"
           v-model="widgetList[selectedWidgetIndex].specificSettings[setting.name]"></Input>
@@ -85,8 +84,5 @@ const widgetList: Ref<IWidget[]> = ref([
   </div>
 </template>
 
-<style>
-.hide {
-  display: none;
-}
+<style lang="scss">
 </style>
