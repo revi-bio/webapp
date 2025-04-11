@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import type { Widget } from '@/types/Widget';
 import Link from '@/components/widget/Link.vue';
+import { computed } from 'vue';
 
 const props = defineProps<{
   data: Widget;
 }>();
 
-const style =
+let style = computed(() =>
   `border-radius: ${props.data.genericSettings.borderRadius}px;` +
-  `background-color: hsla(${props.data.genericSettings.background?.tint}, ${props.data.genericSettings.background?.saturation}%, 16%, ${props.data.genericSettings.background?.opacity});`;
+  `background-color: hsla(${props.data.genericSettings.background?.tint}, ${props.data.genericSettings.background?.saturation}%, 16%, ${props.data.genericSettings.background?.opacity});`
+);
 </script>
 
 <template>
