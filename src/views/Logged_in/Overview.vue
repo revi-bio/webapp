@@ -1,10 +1,36 @@
 <script lang="ts" setup>
-import { onMounted, nextTick, ref, computed } from 'vue';
 import Button from '@/components/global/Button.vue';
-import Icon from '@/components/global/Icon.vue'
 import Dropdown from '@/components/global/Dropdown.vue';
-import * as echarts from 'echarts';
 import LinkIcon from '@/components/global/LinkIcon.vue';
+import * as echarts from 'echarts';
+import { computed, nextTick, onMounted, ref } from 'vue';
+import BioPfp from '@/components/global/BioPfp.vue';
+import { useBioStore } from '@/stores/bio';
+import type { Bio } from '@/types/Bio';
+
+const bioStore = useBioStore();
+const biosList = ref<Bio[]>([]);
+const topBios = computed( ()=>{
+  return [...biosList.value]
+    .sort((a,b) =>{
+      if (b.views !== a.views){
+        return b.views - a.views;
+      }
+
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    })
+    .slice(0,3)
+});
+
+const lastUpdatedBio = computed(()=>{
+  if(biosList.value.length === 0) return null;
+
+  return [...biosList.value]
+  .sort((a,b)=>{
+    return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+  })[0]
+})
+
 var colorPalette = ['#fafafa', '#f43f5e', '#717179'];
 
 const referralColors = ['#d946ef', '#3b82f6', '#f97316', '#facc15', '#10b981'];
@@ -30,7 +56,7 @@ const linkData = ref([
 
 const scaleHeight = (value) => {
   const maxValue = Math.max(...linkData.value.map(link => link.value));
-  return (value / maxValue) * 80; 
+  return (value / maxValue) * 80;
 };
 const chartDom = ref<HTMLElement | null>(null);
 const barDom = ref<HTMLElement | null>(null);
@@ -52,7 +78,7 @@ const generateBarData = (days: number) => {
   const data = [];
   for (let i = days - 1; i >= 0; i--) {
     data.push({
-      date: (days - i).toString(), 
+      date: (days - i).toString(),
       value: Math.floor(Math.random() * 500), //random
     });
   }
@@ -101,8 +127,8 @@ const visitorData = computed(() =>
   }))
 );
 
-onMounted(() => {
-  generateBarData(30); 
+onMounted(async () => {
+  generateBarData(30);
 
   nextTick(() => {
     if (chartDom.value) {
@@ -132,7 +158,7 @@ onMounted(() => {
         xAxis: [
           {
             type: 'category',
-            data: barViewsData.value.map(item => item.date), 
+            data: barViewsData.value.map(item => item.date),
             axisTick: { alignWithLabel: true }
           }
         ],
@@ -151,6 +177,8 @@ onMounted(() => {
 
 
   });
+  await bioStore.fetchBios();
+  biosList.value = [...bioStore.bios]
 });
 
 </script>
@@ -178,43 +206,40 @@ onMounted(() => {
       <div class="flex flex-col justify-center content-center items-center w-2/6 h-full gap-4">
 
         <!--Most viewed-->
-        <div class="dashboardCard h-[130%] w-full gap-4">
+        <div class="dashboardCard w-full gap-4">
           <h3>Most viewed bio pages</h3>
-          <div class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden pr-4">
+          <div v-for="(bio,index) in topBios" class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2">
 
             <div class="flex flex-row justify-start content-center items-center gap-2">
-              <span class="w-[5rem] h-[5rem] bg-indigo-700 rounded-lg">
-                <!--profilePic-->
-              </span>
+              <BioPfp class="w-16 h-16" :bioHandle="bio.handle"></BioPfp>
               <span class="flex flex-col justify-center content-center items-start">
-                <h3 class="text-sm font-[300]">@lakatosdezso</h3>
-                <h3>Lakatok dezso</h3>
+                <h3 class="text-sm font-[300]">{{ bio.handle }}</h3>
+                <h3>{{ bio.name }}</h3>
               </span>
 
             </div>
-            <h3 class="text-2xl">#1</h3>
+            <h3 class="text-2xl">#{{ index+1 }}</h3>
 
           </div>
 
         </div>
 
         <!--Recently edited-->
-        <div class="dashboardCard h-full w-full gap-4 ">
+        <div class="dashboardCard h-full w-full gap-4 p-4">
           <h3>Recently edited</h3>
-          <div class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden pr-4">
+          <div class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2">
 
             <div class="flex flex-row justify-start content-center items-center gap-2">
-              <span class="w-[5rem] h-[5rem] bg-indigo-700 rounded-lg">
-                <!--profilePic-->
-              </span>
+              <BioPfp class="w-16 h-16" :bioHandle="lastUpdatedBio?.handle"></BioPfp>
               <span class="flex flex-col justify-center content-center items-start">
-                <h3 class="text-sm font-[300]">@lakatosdezso</h3>
-                <h3>Lakatok dezso</h3>
+                <h3 class="text-sm font-[300]">{{ lastUpdatedBio?.handle }}</h3>
+                <h3>{{ lastUpdatedBio?.name }}</h3>
               </span>
 
             </div>
-            <h3 class="text-2xl">#1</h3>
-
+            <h3>
+                {{ lastUpdatedBio?.updatedAt }}
+            </h3>
           </div>
         </div>
 
@@ -222,19 +247,19 @@ onMounted(() => {
         <div class="dashboardCard h-1/2 w-full">
           <h3>Referral distribution</h3>
           <div class="referralDom w-full h-full flex flex-row justify-center content-center items-center">
-            
+
             <!-- Referral distribution csíkok -->
-            <div 
-              v-for="(item, index) in referralData" 
+            <div
+              v-for="(item, index) in referralData"
               :key="index"
               class="h-3 first:rounded-l-full last:rounded-r-full relative group"
               :style="{
                 backgroundColor: item.color,
                 width: `${(item.value / totalValue * 100)}%`
               }">
-              
-              
-              <div 
+
+
+              <div
                 class="absolute bottom-full top-5 left-1/2 transform mb-2 p-2 text-white bg-black rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 ">
                 {{ item.name }}
               </div>
@@ -295,17 +320,17 @@ onMounted(() => {
           <div class="dashboardCard w-full md:w-7/12 h-full">
             <h3>Most used links</h3>
             <div class="linkDom w-full h-full gap-2 md:gap-5 flex flex-row justify-center items-end">
-              
-              <span 
-                v-for="(link, id) in linkData" 
-                :key="id" 
+
+              <span
+                v-for="(link, id) in linkData"
+                :key="id"
                 class="w-full h-full flex flex-col items-center gap-2 relative">
-                
-                <span 
+
+                <span
                   class="w-full flex flex-col items-center justify-start mt-auto"
                   :style="{ height: scaleHeight(link.value) + '%' }">
-                  
-                  
+
+
                   <div class="flex justify-center content-center items-center">
                     <LinkIcon :type="link.icon" :color="'zinc-100'" :width="'90%'"></LinkIcon>
                   </div>
