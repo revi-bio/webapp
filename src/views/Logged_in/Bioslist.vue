@@ -56,7 +56,7 @@ watchEffect(() => {
       <Button @click.prevent="createBio" rank="primary" size="small" text="Create bio" icon-position="right" icon-type="add"></Button>
     </div>
 
-    <div class="w-full h-full baseDash overflow-y-auto flex-col space-y-6 pr-6">
+    <div class="w-full h-full baseDash overflow-y-auto flex-col space-y-6">
       <div v-for="item in filteredData" :key="item.handle">
         <BioListItem
           :name="item.name"
