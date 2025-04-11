@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router';
 import Button from '@/components/global/Button.vue';
 import Toolbar from '@/components/global/Toolbar.vue';
 import Profile from '@/components/widget/Profile.vue';
-import { SPECIFIC_SETTINGS_DEFINITIONS, WidgetGenericSettings, type Widget as IWidget } from '@/types/Widget';
+import { GENERIC_SETTINGS_DEFINITIONS, SPECIFIC_SETTINGS_DEFINITIONS, WidgetGenericSettings, type Widget as IWidget } from '@/types/Widget';
 import Widget from '@/components/widget/Widget.vue';
 import { v4 as uuidv4 } from 'uuid';
 import Input from '@/components/global/Input.vue';
@@ -23,7 +23,7 @@ function selectWidget(index: number) {
 const widgetList: Ref<IWidget[]> = ref([
   {
     id: uuidv4(),
-    genericSettings: {
+    genericSettings: new WidgetGenericSettings({
       // opacity: 0.6,
       // tint: 240,
       background: {
@@ -31,7 +31,7 @@ const widgetList: Ref<IWidget[]> = ref([
         saturation: 8,
         opacity: 0.8,
       },
-    },
+    }),
     page: 0,
     position: 0,
     specificSettings: {
@@ -67,11 +67,17 @@ const widgetList: Ref<IWidget[]> = ref([
         v-if="visible"></Button>
     </div>
 
+    <Button text="asd" size="normal" rank="primary" icon-position="none" :onClick="() => console.log(Object.getOwnPropertyDescriptors(new WidgetGenericSettings(widgetList[selectedWidgetIndex].genericSettings)))"></Button>
+
     <div v-if="selectedWidgetIndex != null && visible"
       class="absolute right-0 top-1/2 transform -translate-y-1/2 pr-4 items-center z-10 flex flex-col">
       <div class="flex flex-col bg-zinc-800/50 p-4">
         <Input v-for="setting in SPECIFIC_SETTINGS_DEFINITIONS[widgetList[selectedWidgetIndex].type]" type="text"
           v-model="widgetList[selectedWidgetIndex].specificSettings[setting.name]"></Input>
+      </div>
+      <div class="flex flex-col bg-zinc-800/50 p-4">
+        <Input v-for="setting in GENERIC_SETTINGS_DEFINITIONS" type="text"
+          v-model="widgetList[selectedWidgetIndex].genericSettings[setting.name]"></Input>
       </div>
       <!--
         <Toolbar />
