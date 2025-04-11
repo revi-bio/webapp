@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import Button from '@/components/global/Button.vue';
 import Toolbar from '@/components/global/Toolbar.vue';
 import ProfileWidget from '@/components/widget/ProfileWidget.vue';
+import BioPfpWidget from '@/components/widget/BioPfpWidget.vue';
 import type { Widget as IWidget } from '@/types/Widget';
 import Widget from '@/components/widget/Widget.vue';
 import { v4 as uuidv4 } from 'uuid';
@@ -56,7 +57,7 @@ const profileWidgetData: Ref<IWidget[]> = ref([
       badgeVisible: true,
       handleVisible: true,
       handleColor: "violet-500",
-      handle: "default_handle",
+      handle: handle,
       text: "Lorem ipsum dolor sit amet consectetur adipisicing elit."
     },
     type: 'profile',
@@ -72,10 +73,14 @@ onMounted(async () => {
       if (bio) {
         profileWidgetData.value[0].specificSettings.name = bio.name;
         profileWidgetData.value[0].specificSettings.handle = bio.handle;
+      } else {
+        console.error("Bio not found with handle:", handle);
       }
     } catch (error) {
       console.error("Error loading bio:", error);
     }
+  } else {
+    console.warn("No handle provided in route params");
   }
 });
 </script>
@@ -95,7 +100,7 @@ onMounted(async () => {
       <Toolbar/>
     </div>
 
-    <div id="widgets" class="w-[50%] flex flex-col gap-3 justify-center z-0">
+    <div class="w-[50%] flex flex-col gap-3 justify-center z-0">
       <Widget v-for="widget in widgetList" :key="widget.id" :data="widget" />
       <ProfileWidget :data="profileWidgetData[0]" />
     </div>
