@@ -1,12 +1,12 @@
 export type WidgetType = 'profile' | 'link' | 'linkContainer';
 
-export interface SpecificSettingDefinition {
-  name: string,
-  type: 'string' | 'number';
+export interface SettingDefinition<T = string> {
+  name: T;
+  type: 'string' | 'number' | 'color';
 }
 
-export const SPECIFIC_SETTINGS_DEFINITIONS: {[key in WidgetType]: SpecificSettingDefinition[]} = {
-  'link': [
+export const SPECIFIC_SETTINGS_DEFINITIONS: { [key in WidgetType]: SettingDefinition[] } = {
+  link: [
     {
       name: 'title',
       type: 'string',
@@ -20,9 +20,20 @@ export const SPECIFIC_SETTINGS_DEFINITIONS: {[key in WidgetType]: SpecificSettin
       type: 'string',
     },
   ],
-  'linkContainer': [],
-  'profile': [],
-}
+  linkContainer: [],
+  profile: [],
+};
+
+export const GENERIC_SETTINGS_DEFINITIONS: SettingDefinition<keyof (typeof WidgetGenericSettings)['prototype']>[] = [
+  {
+    name: 'borderRadius',
+    type: 'number',
+  },
+  {
+    name: 'background',
+    type: 'color',
+  },
+];
 
 export interface Color {
   opacity: number;
@@ -55,7 +66,6 @@ export class WidgetGenericSettings {
     backgroundColor: string;
     textColor: string;
     */
-  // might be not needed if we support argb background color
   background: Color = {
     tint: 240,
     saturation: 4,
