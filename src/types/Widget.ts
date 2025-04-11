@@ -2,10 +2,9 @@ export type WidgetType = 'profile' | 'link' | 'linkContainer';
 
 export interface WidgetGenericSettings {
     borderRadius: number;
-    /*
+    rounded:string;
     backgroundColor: string;
     textColor: string;
-    */
     // might be not needed if we support argb background color
     opacity: number;
     tint: number;

@@ -1,17 +1,18 @@
 <script lang="ts" setup>
-import { ref, type Ref } from 'vue';
+import { ref, type Ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import Button from '@/components/global/Button.vue';
 import Toolbar from '@/components/global/Toolbar.vue';
-import Profile from '@/components/widget/Profile.vue';
+import ProfileWidget from '@/components/widget/ProfileWidget.vue';
 import type { Widget as IWidget } from '@/types/Widget';
 import Widget from '@/components/widget/Widget.vue';
 import { v4 as uuidv4 } from 'uuid';
-const route = useRoute();
-const id = route.params.id;
-const visibility = ref("show");
+import { useBioStore } from '@/stores/bio';
 
-const badges = [ "download", "person", "opened_mail" ]
+const route = useRoute();
+const bioStore = useBioStore();
+const handle = route.params.handle as string;
+const visibility = ref("show");
 
 function hiedShow() {
   visibility.value = visibility.value === "show" ? "hide" : "show";
@@ -21,8 +22,6 @@ const widgetList: Ref<IWidget[]> = ref([
   {
     id: uuidv4(),
     genericSettings: {
-      // opacity: 0.6,
-      // tint: 240,
       tint: 340,
       saturation: 8,
     },
@@ -36,6 +35,49 @@ const widgetList: Ref<IWidget[]> = ref([
     type: 'link',
   }
 ]);
+
+const profileWidgetData: Ref<IWidget[]> = ref([
+  {
+    id: uuidv4(),
+    genericSettings: {
+      backgroundColor: "red-500",
+      textColor: "zinc-100",
+      borderRadius: 8,
+    },
+    page: 0,
+    position: 0,
+    specificSettings: {
+      fullAlign: "center",
+      bioAvatarAndName: "center",
+      profileOver: true,
+      nameColor: "zinc-100",
+      name: "Default Name",
+      badgeColor: "violet-500",
+      badgeVisible: true,
+      handleVisible: true,
+      handleColor: "violet-500",
+      handle: "default_handle",
+      text: "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+    },
+    type: 'profile',
+  }
+]);
+
+onMounted(async () => {
+  if (handle) {
+    try {
+      await bioStore.fetchBios();
+      const bio = bioStore.getBioByHandle(handle);
+
+      if (bio) {
+        profileWidgetData.value[0].specificSettings.name = bio.name;
+        profileWidgetData.value[0].specificSettings.handle = bio.handle;
+      }
+    } catch (error) {
+      console.error("Error loading bio:", error);
+    }
+  }
+});
 </script>
 
 <template>
@@ -55,9 +97,7 @@ const widgetList: Ref<IWidget[]> = ref([
 
     <div id="widgets" class="w-[50%] flex flex-col gap-3 justify-center z-0">
       <Widget v-for="widget in widgetList" :key="widget.id" :data="widget" />
-      <Profile id="jshglfgka" name="Lakatos Dezso" :badge="badges" profile_align="center" :profile_over="true" handle="lakatosdezso" text="Lakatosdezsővagyok cigány"/>
-      <Profile id="kjshgfkjg" name="Ferencz" :badge="badges" profile_align="start" :profile_over="false" handle="Ferimeri" text="feri bemutatkozó szövege tökre sokminden meg tökre szöveg csak hogy legyen olyan ami legalább egy sort kitölt, szerintem ez már meglesz egy sor de azért nyomom még hogy legyen azért kettő vagy akár három sor na mostmár meguntamhelloköszi"/>
-      <Profile id="lsgjldfhg" name="Zöld" :badge="badges" profile_align="center" :profile_over="false" handle="zold" text="Kék"/>
+      <ProfileWidget :data="profileWidgetData[0]" />
     </div>
   </div>
 </template>

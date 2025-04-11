@@ -4,38 +4,45 @@ import BioPfp from '../global/BioPfp.vue';
 import Icon from '../global/Icon.vue';
 
 const props = defineProps<{
-  data?: Widget
+  data: Widget
 }>()
 </script>
+
 <template>
-  <!--Full widget, CENTER/START-->
-  <div :class="`flex flex-col justify-center content-${data.specificSettings['profileAlign']} items-${data.specificSettings['profileAlign']} w-full p-4 gap-4 bg-red-500`">
+  <!-- Main container with stacking context -->
+  <div class="relative isolate">
+    <!-- Full widget with lower z-index -->
+    <div :class="`flex flex-col justify-center content-${data.specificSettings['fullAlign']} items-${data.specificSettings['fullAlign']} w-full p-4 ${data.specificSettings['profileOver'] ? 'pt-12' : ''} gap-4 bg-${data.genericSettings['backgroundColor']} rounded-${data.specificSettings['rounded']} relative z-0`">
 
-    <!--Bio avatar,name/badge, CENTER/START-->
-    <div class="flex flex-col justify-center content-center items-center">
+      <!--Bio avatar,name/badge, CENTER/START-->
+      <div :class="`flex flex-col justify-center content-${data.specificSettings['bioAvatarAndName']} items-${data.specificSettings['bioAvatarAndName']}`">
 
-      <!--Bio avatar IN/OVER-->
-      <BioPfp class="w-20 h-20"></BioPfp>
+        <!--Bio avatar - only show if NOT profileOver-->
+        <BioPfp v-if="!data.specificSettings['profileOver']" class="w-20 h-20" :bioHandle="data.specificSettings['handle']"></BioPfp>
 
-      <!--Bio name/badge, BADGE ON / BADGE OFF-->
-      <div class="flex flex-row justify-center content-center items-center text-xl gap-2">
-        <h3>Locksmith Dennis</h3>
-        <div class="flex flex-row justify-center content-center items-center">
-          <Icon type="shield_person" size="2xl"></Icon>
-          <Icon type="apps" size="2xl"></Icon>
-          <Icon type="id_card" size="2xl"></Icon>
+        <!--Bio name/badge, BADGE VISIBLE / BADGE INVISIBLE-->
+        <div class="flex flex-row justify-center content-center items-center text-xl gap-2 mt-2">
+          <h3 :class="`text-${data.specificSettings['nameColor']}`">{{ data.specificSettings['name'] }}</h3>
+          <div v-if="data.specificSettings['badgeVisible']" :class="`flex flex-row justify-center content-center items-center text-${data.specificSettings['badgeColor']}`">
+            <Icon type="shield_person" size="2xl"></Icon>
+            <Icon type="apps" size="2xl"></Icon>
+            <Icon type="id_card" size="2xl"></Icon>
+          </div>
         </div>
       </div>
 
+      <!--Bio handle VISIBLE/INVISIBLE-->
+      <h3 v-if="data.specificSettings['handleVisible']" :class="`text-${data.specificSettings['handleColor']}`">@{{ data.specificSettings['handle'] }}</h3>
+
+      <!--Text-->
+      <div :class="`flex flex-col justify-center content-start items-start w-full text-${data.genericSettings['textColor']}`">
+        <p>{{ data.specificSettings['text'] }}</p>
+      </div>
     </div>
 
-    <!--Bio handle ON/OFF-->
-    <h3>@locksmithdennis</h3>
-
-    <!--Text-->
-    <div class="flex flex-col justify-center content-start items-start w-full">
-      <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque aperiam soluta deleniti sunt mollitia reiciendis doloribus, dolore qui rerum, corrupti aliquam corporis blanditiis tempora! Voluptas ducimus tenetur ex id earum.</p>
+    <!-- Avatar with higher z-index -->
+    <div v-if="data.specificSettings['profileOver']" class="absolute w-full flex justify-center top-[-2.5rem] z-10">
+      <BioPfp class="w-20 h-20" :bioHandle="data.specificSettings['handle']"></BioPfp>
     </div>
-
   </div>
 </template>
