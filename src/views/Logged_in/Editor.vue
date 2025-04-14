@@ -3,7 +3,6 @@ import { computed, ref, type Ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Button from '@/components/global/Button.vue';
 import Toolbar from '@/components/global/Toolbar.vue';
-import Profile from '@/components/widget/Profile.vue';
 import {
   GENERIC_SETTINGS_DEFINITIONS,
   SPECIFIC_SETTINGS_DEFINITIONS,
@@ -13,217 +12,286 @@ import {
 import Widget from '@/components/widget/Widget.vue';
 import { v4 as uuidv4 } from 'uuid';
 import Input from '@/components/global/Input.vue';
-import Icon from '@/components/global/Icon.vue';
 import { LinkWidget } from '@/types/widgets/Link';
 
-const route = useRoute();
-const id = route.params.id;
-// const selectedWidgetId: Ref<string | null> = ref(null);
-// const selectedWidgetIndex = computed(() => widgetList.value.findIndex(x => x.id == selectedWidgetId.value))
-const selectedWidget: Ref<string | null> = ref(null);
+const currentPageIndex = ref(0);
+const selectedWidgetId = ref<string | null>(null);
 const widgetToolboxOpened = ref(false);
 const bioSettingsOpened = ref(false);
 
-function selectWidget(id: string) {
-  selectedWidget.value = selectedWidget.value == id ? null : id;
+// Initialize pages with sample widgets
+const pages = ref<Page[]>([
+  {
+    id: uuidv4(),
+    name: 'Page 1',
+    icon: 'home',
+    widgets: [
+      {
+        id: uuidv4(),
+        genericSettings: new WidgetGenericSettings({
+          background: {
+            tint: 340,
+            saturation: 8,
+            opacity: 0.8,
+          },
+        }),
+        page: 0,
+        position: 0,
+        specificSettings: {
+          title: 'hello',
+          description: 'asdlkasjdlksajdlksajdklsajdkl',
+          link: 'https://youtube.com/',
+        },
+        type: 'link',
+      },
+      {
+        id: uuidv4(),
+        genericSettings: new WidgetGenericSettings({}),
+        page: 0,
+        position: 1,
+        specificSettings: {
+          title: 'big gyatt in your area',
+          description: 'hahahahahahahahaha',
+          link: 'https://youtube.com/',
+        },
+        type: 'link',
+      },
+    ],
+  },
+]);
+
+// Computed properties
+const currentPage = computed(() =>
+  currentPageIndex.value < pages.value.length ? pages.value[currentPageIndex.value] : null,
+);
+
+const widgetsOnCurrentPage = computed(() => currentPage.value?.widgets.sort((a, b) => a.position - b.position) || []);
+
+const selectedWidget = computed(() => {
+  if (!selectedWidgetId.value) return null;
+
+  // Look for the selected widget across all pages
+  for (const page of pages.value) {
+    const widget = page.widgets.find((w) => w.id === selectedWidgetId.value);
+    if (widget) return widget;
+  }
+
+  return null;
+});
+
+// Check if the selected widget is on the current page
+const isSelectedWidgetOnCurrentPage = computed(() => {
+  if (!selectedWidgetId.value || !currentPage.value) return false;
+  return currentPage.value.widgets.some((w) => w.id === selectedWidgetId.value);
+});
+
+function getNextPosition(): number {
+  if (!currentPage.value || currentPage.value.widgets.length === 0) return 0;
+
+  return Math.max(...currentPage.value.widgets.map((w) => w.position)) + 1;
+}
+
+function findWidgetIndex(id: string): number {
+  if (!currentPage.value) return -1;
+  return currentPage.value.widgets.findIndex((w) => w.id === id);
+}
+
+function findWidgetByPosition(position: number): number {
+  if (!currentPage.value) return -1;
+  return currentPage.value.widgets.findIndex((w) => w.position === position);
+}
+
+// UI interaction functions
+function toggleSelection(id: string) {
+  selectedWidgetId.value = selectedWidgetId.value === id ? null : id;
   widgetToolboxOpened.value = false;
   bioSettingsOpened.value = false;
 }
 
-function openWidgetToolbox() {
-  selectedWidget.value = null;
+function toggleWidgetToolbox() {
+  selectedWidgetId.value = null;
   widgetToolboxOpened.value = !widgetToolboxOpened.value;
   bioSettingsOpened.value = false;
 }
 
-function openBioSettings() {
-  selectedWidget.value = null;
+function toggleBioSettings() {
+  selectedWidgetId.value = null;
   widgetToolboxOpened.value = false;
   bioSettingsOpened.value = !bioSettingsOpened.value;
 }
 
-interface Page {
-  // random uuidv4
-  id: string;
-  name: string;
-  icon: string;
-  widgets: IWidget[];
+// Widget manipulation functions
+function moveWidget(direction: 'up' | 'down') {
+  if (!selectedWidgetId.value || !currentPage.value) return;
+
+  const index = findWidgetIndex(selectedWidgetId.value);
+  if (index === -1) return;
+
+  const widget = currentPage.value.widgets[index];
+  const newPosition = direction === 'up' ? widget.position - 1 : widget.position + 1;
+
+  // Don't move if at the edge
+  if (newPosition < 0 || newPosition >= currentPage.value.widgets.length) return;
+
+  const swapIndex = findWidgetByPosition(newPosition);
+  if (swapIndex !== -1) {
+    // Swap positions
+    currentPage.value.widgets[swapIndex].position = widget.position;
+    widget.position = newPosition;
+  }
 }
 
-const newWidgetList: Ref<Page[]> = ref();
-const widgetList: Ref<IWidget[]> = ref([
-  {
-    id: uuidv4(),
-    genericSettings: new WidgetGenericSettings({
-      // opacity: 0.6,
-      // tint: 240,
-      background: {
-        tint: 340,
-        saturation: 8,
-        opacity: 0.8,
-      },
-    }),
-    page: 0,
-    position: 0,
-    specificSettings: {
-      title: 'hello',
-      description: 'asdlkasjdlksajdlksajdklsajdkl',
-      link: 'https://youtube.com/',
-    },
-    type: 'link',
-  },
-  {
-    id: uuidv4(),
-    genericSettings: new WidgetGenericSettings({}),
-    page: 0,
-    position: 1,
-    specificSettings: {
-      title: 'big gyatt in your area',
-      description: 'hahahahahahahahaha',
-      link: 'https://youtube.com/',
-    },
-    type: 'link',
-  },
-]);
+function deleteWidget() {
+  if (!selectedWidgetId.value || !currentPage.value) return;
 
-const widgetsOnCurrentPage = computed(() =>
-  widgetList.value.filter((x) => x.page == currentPageIndex.value).sort((a, b) => a.position - b.position),
-);
+  const index = findWidgetIndex(selectedWidgetId.value);
+  if (index === -1) return;
 
-function moveUp() {
-  const selected = widgetList.value.findIndex((x) => x.id == selectedWidget.value && x.page == currentPageIndex.value);
-  const aboveSelected = widgetList.value.findIndex(
-    (x) => x.position == widgetList.value[selected].position - 1 && x.page == currentPageIndex.value,
-  );
+  // Remove the widget
+  currentPage.value.widgets = currentPage.value.widgets.filter((w) => w.id !== selectedWidgetId.value);
 
-  widgetList.value[selected].position = widgetList.value[selected].position - 1;
-
-  if (aboveSelected != -1) widgetList.value[aboveSelected].position = widgetList.value[aboveSelected].position + 1;
-}
-
-function moveDown() {
-  const selected = widgetList.value.findIndex((x) => x.id == selectedWidget.value && x.page == currentPageIndex.value);
-  const belowSelected = widgetList.value.findIndex(
-    (x) => x.position == widgetList.value[selected].position + 1 && x.page == currentPageIndex.value,
-  );
-
-  widgetList.value[selected].position = widgetList.value[selected].position + 1;
-
-  if (belowSelected != -1) widgetList.value[belowSelected].position = widgetList.value[belowSelected].position - 1;
-}
-
-function del() {
-  const selected = widgetList.value.findIndex((x) => x.id == selectedWidget.value && x.page == currentPageIndex.value);
-  const aboveSelected = widgetList.value.findIndex(
-    (x) => x.position == widgetList.value[selected].position - 1 && x.page == currentPageIndex.value,
-  );
-  widgetList.value = widgetList.value.filter((x) => x.id != selectedWidget.value && x.page == currentPageIndex.value);
-  selectedWidget.value = widgetList.value[aboveSelected].id;
-
-  if (widgetList.value.length == 0) selectedWidget.value = null;
-}
-
-const pages = ref([...new Set(widgetList.value.map((x) => x.page))]);
-const currentPageIndex = ref(0);
-
-function goLeft() {
-  if (currentPageIndex.value == 0) return;
-
-  if (!widgetList.value.find((x) => x.page == currentPageIndex.value)) pages.value.pop();
-
-  currentPageIndex.value--;
-}
-
-function goRight() {
-  if (pages.value.length == 3) return;
-
-  if (pages.value.includes(currentPageIndex.value + 1)) {
-    currentPageIndex.value++;
+  // Select another widget if available
+  if (currentPage.value.widgets.length > 0) {
+    selectedWidgetId.value = currentPage.value.widgets[0].id;
   } else {
-    pages.value.push(currentPageIndex.value + 1);
-    currentPageIndex.value++;
+    selectedWidgetId.value = null;
   }
 }
 
-function currentBiggestPositionOnCurrentPage(): number {
-  let biggest = -1;
+function addWidget(type: 'link') {
+  if (!currentPage.value) return;
 
-  for (let w of widgetList.value) {
-    if (w.page == currentPageIndex.value && w.position > biggest) biggest = w.position;
+  const newWidget = new LinkWidget({
+    page: currentPageIndex.value,
+    position: getNextPosition(),
+  });
+
+  currentPage.value.widgets.push(newWidget);
+}
+
+// Page navigation
+function navigatePage(direction: 'prev' | 'next') {
+  if (direction === 'prev') {
+    if (currentPageIndex.value > 0) {
+      currentPageIndex.value--;
+    }
+  } else {
+    if (currentPageIndex.value >= pages.value.length - 1) {
+      // Create a new page if we're at the last page and there's less than 3 pages
+      if (pages.value.length < 3) {
+        pages.value.push({
+          id: uuidv4(),
+          name: `Page ${pages.value.length + 1}`,
+          icon: 'page',
+          widgets: [],
+        });
+      } else {
+        return;
+      }
+    }
+    currentPageIndex.value++;
   }
-
-  return biggest;
 }
 </script>
 
 <template>
   <div class="flex justify-center items-center h-full w-full relative">
+    <!-- Bottom toolbar -->
     <div class="absolute w-full bottom-0 p-6 justify-between space-x-2 text-zinc-200 grid grid-cols-3">
+      <!-- Add widget button -->
       <div class="flex gap-2">
-        <Button :onClick="openWidgetToolbox" icon-position="only" icon-type="add" size="small" rank="primary" />
+        <Button :onClick="toggleWidgetToolbox" icon-position="only" icon-type="add" size="small" rank="primary" />
       </div>
+
+      <!-- Page navigation -->
       <div class="flex gap-2 items-center justify-center">
-        <Button :onClick="goLeft" icon-position="only" icon-type="chevron_left" size="small" rank="secondary" />
-        <span v-for="page in pages" :key="page">{{ pages[currentPageIndex] == page ? 'x' : '-' }}</span>
-        <Button :onClick="goRight" icon-position="only" icon-type="chevron_right" size="small" rank="secondary" />
+        <Button
+          :onClick="() => navigatePage('prev')"
+          icon-position="only"
+          icon-type="chevron_left"
+          size="small"
+          rank="secondary" />
+        <span v-for="(page, index) in pages" :key="page.id">
+          {{ currentPageIndex === index ? 'x' : '-' }}
+        </span>
+        <Button
+          :onClick="() => navigatePage('next')"
+          icon-position="only"
+          icon-type="chevron_right"
+          size="small"
+          rank="secondary" />
       </div>
+
+      <!-- Bio settings button -->
       <div class="flex justify-end">
-        <Button :onClick="openBioSettings" icon-position="only" icon-type="settings" size="small" rank="secondary" />
+        <Button :onClick="toggleBioSettings" icon-position="only" icon-type="settings" size="small" rank="secondary" />
       </div>
     </div>
+
+    <!-- Widget toolbox sidebar -->
     <Teleport defer to="#sidebar-right-outlet" v-if="widgetToolboxOpened">
       <div class="sidebar">
         <span class="text-2xl">Widget toolbox</span>
-        <div
-          @click="
-            widgetList.push(
-              new LinkWidget({ page: currentPageIndex, position: currentBiggestPositionOnCurrentPage() + 1 }),
-            )
-          ">
-          Add link widget
-        </div>
+        <div @click="addWidget('link')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
       </div>
     </Teleport>
+
+    <!-- Bio settings sidebar -->
     <Teleport defer to="#sidebar-right-outlet" v-if="bioSettingsOpened">
       <div class="sidebar">
         <span class="text-2xl">Bio settings</span>
       </div>
     </Teleport>
-    <Teleport defer to="#sidebar-right-outlet" v-if="selectedWidget != null">
+
+    <!-- Widget settings sidebar -->
+    <Teleport defer to="#sidebar-right-outlet" v-if="selectedWidgetId !== null && selectedWidget">
       <div class="sidebar">
         <span class="text-2xl">Widget settings</span>
+
+        <!-- Widget-specific settings -->
         <span>Widget-specific settings</span>
-        <span
-          v-for="setting in SPECIFIC_SETTINGS_DEFINITIONS[
-            widgetList[widgetList.findIndex((x) => x.id == selectedWidget)].type
-          ]"
-          :key="setting.name">
+        <span v-for="setting in SPECIFIC_SETTINGS_DEFINITIONS[selectedWidget.type]" :key="setting.name">
           <span class="text-zinc-400">{{ setting.name }}</span>
-          <Input
-            type="text"
-            v-model="widgetList[widgetList.findIndex((x) => x.id == selectedWidget)].specificSettings[setting.name]" />
+          <Input type="text" v-model="(selectedWidget.specificSettings as any)[setting.name]" />
         </span>
+
+        <!-- Generic settings -->
         <span>Generic settings</span>
         <span v-for="setting in GENERIC_SETTINGS_DEFINITIONS" :key="setting.name">
           <span class="text-zinc-400">{{ setting.name }}</span>
-          <Input
-            type="text"
-            v-model="widgetList[widgetList.findIndex((x) => x.id == selectedWidget)].genericSettings[setting.name]" />
+          <Input type="text" v-model="selectedWidget.genericSettings[setting.name]" />
         </span>
       </div>
     </Teleport>
+
+    <!-- Widgets display -->
     <div id="widgets" class="w-[50%] flex flex-col gap-3 justify-center z-0">
       <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
         <div class="flex gap-2 relative">
+          <!-- Widget component -->
           <Widget
-            @click="selectWidget(widget.id)"
+            @click="toggleSelection(widget.id)"
             :data="widget"
             class="w-full"
-            :selected="widget.id == selectedWidget" />
-          <div class="flex flex-col absolute left-[calc(100%+12px)] gap-2 z-10" v-if="widget.id == selectedWidget">
-            <Button :onClick="moveUp" icon-position="only" icon-type="arrow_upward" size="small" rank="secondary" />
-            <Button :onClick="moveDown" icon-position="only" icon-type="arrow_downward" size="small" rank="secondary" />
-            <Button :onClick="del" icon-position="only" icon-type="delete" size="small" rank="secondary" />
+            :selected="widget.id === selectedWidgetId" />
+
+          <!-- Widget controls - only show for widgets on the current page -->
+          <div
+            class="flex flex-col absolute left-[calc(100%+12px)] gap-2 z-10"
+            v-if="widget.id === selectedWidgetId && isSelectedWidgetOnCurrentPage">
+            <Button
+              :onClick="() => moveWidget('up')"
+              icon-position="only"
+              icon-type="arrow_upward"
+              size="small"
+              rank="secondary" />
+            <Button
+              :onClick="() => moveWidget('down')"
+              icon-position="only"
+              icon-type="arrow_downward"
+              size="small"
+              rank="secondary" />
+            <Button :onClick="deleteWidget" icon-position="only" icon-type="delete" size="small" rank="secondary" />
           </div>
         </div>
       </template>
