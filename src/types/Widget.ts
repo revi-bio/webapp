@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export type WidgetType = 'profile' | 'link' | 'linkContainer' | 'spotify';
+export type WidgetType = 'profile' | 'link' | 'linkContainer' | 'spotify' | 'youtube';
 
 export interface SettingDefinition<T = string> {
   name: T;
@@ -33,7 +33,21 @@ export const SPECIFIC_SETTINGS_DEFINITIONS: { [key in WidgetType]: SettingDefini
       name: 'showArtwork',
       type: 'boolean',
     },
-  ]
+  ],
+  youtube: [
+    {
+      name: 'title',
+      type: 'string',
+    },
+    {
+      name: 'description',
+      type: 'string',
+    },
+    {
+      name: 'id',
+      type: 'string',
+    },
+  ],
 };
 
 export const GENERIC_SETTINGS_DEFINITIONS: SettingDefinition<keyof (typeof WidgetGenericSettings)['prototype']>[] = [

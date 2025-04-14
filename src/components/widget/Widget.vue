@@ -3,6 +3,7 @@ import type { Widget } from '@/types/Widget';
 import Link from '@/components/widget/Link.vue';
 import { computed } from 'vue';
 import ProfileWidget from './ProfileWidget.vue';
+import Youtube from './Youtube.vue';
 
 const props = defineProps<{
   data: Widget;
@@ -18,6 +19,7 @@ let style = computed(() =>
   <div class="p-4 relative" :style="style">
     <Link :data="data" v-if="data.type == 'link'" />
     <ProfileWidget :data="data" v-if="data.type == 'profile'" />
+    <Youtube :data="data" v-if="data.type == 'youtube'" />
     <!-- <span class="absolute right-4 bottom-2 text-zinc-900/80">meta: {{ data.type }} - {{ data.id }} - {{ data.page }}:{{ data.position }}</span> -->
   </div>
 </template>
