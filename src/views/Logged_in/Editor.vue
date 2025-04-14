@@ -13,7 +13,9 @@ import Widget from '@/components/widget/Widget.vue';
 import { v4 as uuidv4 } from 'uuid';
 import Input from '@/components/global/Input.vue';
 import { LinkWidget } from '@/types/widgets/Link';
+import type { Page } from '@/types/Page';
 
+const route = useRoute();
 const currentPageIndex = ref(0);
 const selectedWidgetId = ref<string | null>(null);
 const widgetToolboxOpened = ref(false);
@@ -85,6 +87,20 @@ const isSelectedWidgetOnCurrentPage = computed(() => {
   return currentPage.value.widgets.some((w) => w.id === selectedWidgetId.value);
 });
 
+// Find the page that contains the selected widget
+const selectedWidgetPageIndex = computed(() => {
+  if (!selectedWidgetId.value) return -1;
+
+  for (let i = 0; i < pages.value.length; i++) {
+    if (pages.value[i].widgets.some(w => w.id === selectedWidgetId.value)) {
+      return i;
+    }
+  }
+
+  return -1;
+});
+
+// Helper functions
 function getNextPosition(): number {
   if (!currentPage.value || currentPage.value.widgets.length === 0) return 0;
 
@@ -138,6 +154,52 @@ function moveWidget(direction: 'up' | 'down') {
     // Swap positions
     currentPage.value.widgets[swapIndex].position = widget.position;
     widget.position = newPosition;
+  }
+}
+
+function moveWidgetToPage(direction: 'prev' | 'next') {
+  if (!selectedWidgetId.value) return;
+
+  // Find the page that contains the widget
+  const sourcePageIndex = selectedWidgetPageIndex.value;
+  if (sourcePageIndex === -1) return;
+
+  // Determine target page index
+  const targetPageIndex = direction === 'prev'
+    ? sourcePageIndex - 1
+    : sourcePageIndex + 1;
+
+  // Check if target page exists
+  if (targetPageIndex < 0 || targetPageIndex >= pages.value.length) return;
+
+  const sourcePage = pages.value[sourcePageIndex];
+  const targetPage = pages.value[targetPageIndex];
+
+  // Find the widget in the source page
+  const widgetIndex = sourcePage.widgets.findIndex(w => w.id === selectedWidgetId.value);
+  if (widgetIndex === -1) return;
+
+  // Get the widget to move
+  const widgetToMove = sourcePage.widgets[widgetIndex];
+
+  // Remove widget from source page
+  sourcePage.widgets = sourcePage.widgets.filter(w => w.id !== selectedWidgetId.value);
+
+  // Calculate new position at the end of target page
+  const newPosition = targetPage.widgets.length > 0
+    ? Math.max(...targetPage.widgets.map(w => w.position)) + 1
+    : 0;
+
+  // Update widget's page property
+  widgetToMove.page = targetPageIndex;
+  widgetToMove.position = newPosition;
+
+  // Add widget to target page
+  targetPage.widgets.push(widgetToMove);
+
+  // Navigate to the target page if the widget was on the current page
+  if (sourcePageIndex === currentPageIndex.value) {
+    currentPageIndex.value = targetPageIndex;
   }
 }
 
@@ -277,21 +339,43 @@ function navigatePage(direction: 'prev' | 'next') {
 
           <!-- Widget controls - only show for widgets on the current page -->
           <div
-            class="flex flex-col absolute left-[calc(100%+12px)] gap-2 z-10"
+            class="flex absolute left-[calc(100%+12px)] gap-2 z-10"
             v-if="widget.id === selectedWidgetId && isSelectedWidgetOnCurrentPage">
+            <div class="flex flex-col gap-2">
+              <Button
+                :onClick="() => moveWidget('up')"
+                icon-position="only"
+                icon-type="arrow_upward"
+                size="small"
+                rank="secondary" />
+              <Button
+                :onClick="() => moveWidget('down')"
+                icon-position="only"
+                icon-type="arrow_downward"
+                size="small"
+                rank="secondary" />
+              <Button :onClick="deleteWidget" icon-position="only" icon-type="delete" size="small" rank="secondary" />
+            </div>
+            <div class="flex gap-2">
             <Button
-              :onClick="() => moveWidget('up')"
+              :onClick="() => moveWidgetToPage('prev')"
+              :disabled="selectedWidgetPageIndex <= 0"
               icon-position="only"
-              icon-type="arrow_upward"
+              icon-type="arrow_back"
               size="small"
-              rank="secondary" />
+              rank="secondary">
+              Previous
+            </Button>
             <Button
-              :onClick="() => moveWidget('down')"
+              :onClick="() => moveWidgetToPage('next')"
+              :disabled="selectedWidgetPageIndex >= pages.length - 1"
               icon-position="only"
-              icon-type="arrow_downward"
+              icon-type="arrow_forward"
               size="small"
-              rank="secondary" />
-            <Button :onClick="deleteWidget" icon-position="only" icon-type="delete" size="small" rank="secondary" />
+              rank="secondary">
+              Next
+            </Button>
+            </div>
           </div>
         </div>
       </template>
