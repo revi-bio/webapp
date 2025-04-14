@@ -14,6 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Input from '@/components/global/Input.vue';
 import { LinkWidget } from '@/types/widgets/Link';
 import type { Page } from '@/types/Page';
+import Spotify from '@/components/widget/Spotify.vue';
 
 const route = useRoute();
 const currentPageIndex = ref(0);
@@ -28,6 +29,25 @@ const pages = ref<Page[]>([
     name: 'Page 1',
     icon: 'home',
     widgets: [
+    {
+    id: uuidv4(),
+    type: 'spotify',
+    genericSettings: new WidgetGenericSettings({
+          background: {
+            tint: 340,
+            saturation: 8,
+            opacity: 0.8,
+          },
+        }),
+    specificSettings: {
+      playlistId: '6el3eI1j7EpF2xNpgxUtGj', // alapértelmezett playlist ID
+      // további Spotify-specifikus beállítások
+      theme: 'dark',
+      showArtwork: true
+    },
+    page: 0, // első oldal
+    position: 0 // első pozíció az oldalon
+  },
       {
         id: uuidv4(),
         genericSettings: new WidgetGenericSettings({
@@ -38,7 +58,7 @@ const pages = ref<Page[]>([
           },
         }),
         page: 0,
-        position: 0,
+        position: 1,
         specificSettings: {
           title: 'hello',
           description: 'asdlkasjdlksajdlksajdklsajdkl',
@@ -50,7 +70,7 @@ const pages = ref<Page[]>([
         id: uuidv4(),
         genericSettings: new WidgetGenericSettings({}),
         page: 0,
-        position: 1,
+        position: 2,
         specificSettings: {
           title: 'big gyatt in your area',
           description: 'hahahahahahahahaha',

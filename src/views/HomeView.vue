@@ -8,6 +8,7 @@ import { onMounted,ref } from 'vue';
 import { animate, inView, scroll,stagger } from "motion"
 import { useIntersectionObserver } from '@vueuse/core';
 import Dropdown from '@/components/global/Dropdown.vue';
+import ProfileWidget from '@/components/widget/ProfileWidget.vue';
 onMounted(() => {
   const elements = document.querySelectorAll(".pros h3, .our-goal h3, .our-goal p, .emerge h3, .emerge p, .creating h3, .creating p, .option h3, .option p, .explore h3, .explore p, .revision h3, .start");
 

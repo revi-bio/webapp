@@ -9,9 +9,14 @@ import BioPfpWidget from '../widget/BioPfpWidget.vue';
 import Spotify from '../widget/Spotify.vue';
 import Youtube from '../widget/Youtube.vue';
 import Dropdown from './Dropdown.vue';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 const activeIcon = ref<string | null>(null);
 var selectedColor = ref<string>();
+const handleParam = route.params.handle;
+const currentHandle = ref(Array.isArray(handleParam) ? handleParam[0] : handleParam as string);
+
 
 const handleColorSelection = (baseColor: any, shade: any, opacity: any) => {
   selectedColor.value = `${baseColor}-${shade}/${opacity}`;
@@ -100,8 +105,21 @@ watch(() => widgetStore.selectedId, (newId) => {
         </div>
 
         <div v-else-if="activeIcon == 'Widgets'" class="flex flex-col justify-center content-center items-center gap-5 p-5">
-          <BioPfpWidget></BioPfpWidget>
-          <Spotify></Spotify>
+          <BioPfpWidget :bioHandle="currentHandle"></BioPfpWidget>
+          <!-- Toolbar komponensben -->
+          <Spotify 
+            :data="{
+              id: 'spotify-widget-toolbar', 
+              type: 'link', 
+              genericSettings: {},
+              specificSettings: {
+                playlistId: '6el3eI1j7EpF2xNpgxUtGj'
+              },
+              page: 0,
+              position: 0
+            }" 
+            :is-used="false"
+          />
           <Youtube></Youtube>
         </div>
       </div>
