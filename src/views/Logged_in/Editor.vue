@@ -180,10 +180,18 @@ function moveWidgetToPage(direction: 'prev' | 'next') {
   if (widgetIndex === -1) return;
 
   // Get the widget to move
-  const widgetToMove = sourcePage.widgets[widgetIndex];
+  const widgetToMove = { ...sourcePage.widgets[widgetIndex] };
+  const removedPosition = widgetToMove.position;
 
   // Remove widget from source page
   sourcePage.widgets = sourcePage.widgets.filter(w => w.id !== selectedWidgetId.value);
+
+  // Reindex widgets in the source page to avoid gaps
+  sourcePage.widgets.forEach(widget => {
+    if (widget.position > removedPosition) {
+      widget.position -= 1;
+    }
+  });
 
   // Calculate new position at the end of target page
   const newPosition = targetPage.widgets.length > 0
