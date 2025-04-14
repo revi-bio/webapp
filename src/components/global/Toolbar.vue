@@ -106,7 +106,20 @@ watch(() => widgetStore.selectedId, (newId) => {
 
         <div v-else-if="activeIcon == 'Widgets'" class="flex flex-col justify-center content-center items-center gap-5 p-5">
           <BioPfpWidget :bioHandle="currentHandle"></BioPfpWidget>
-          <Spotify></Spotify>
+          <!-- Toolbar komponensben -->
+          <Spotify 
+            :data="{
+              id: 'spotify-widget-toolbar', 
+              type: 'link', 
+              genericSettings: {},
+              specificSettings: {
+                playlistId: '6el3eI1j7EpF2xNpgxUtGj'
+              },
+              page: 0,
+              position: 0
+            }" 
+            :is-used="false"
+          />
           <Youtube></Youtube>
         </div>
       </div>

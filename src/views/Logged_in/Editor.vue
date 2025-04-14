@@ -9,6 +9,7 @@ import type { Widget as IWidget } from '@/types/Widget';
 import Widget from '@/components/widget/Widget.vue';
 import { v4 as uuidv4 } from 'uuid';
 import { useBioStore } from '@/stores/bio';
+import Spotify from '@/components/widget/Spotify.vue';
 
 const route = useRoute();
 const bioStore = useBioStore();
@@ -103,6 +104,30 @@ onMounted(async () => {
     <div class="w-[50%] flex flex-col gap-3 justify-center z-0">
       <Widget v-for="widget in widgetList" :key="widget.id" :data="widget" />
       <ProfileWidget :data="profileWidgetData[0]" />
+      <Spotify 
+  :data="{
+    id: 'spotify-widget-1', // egyedi azonosító
+    type: 'link', // a WidgetType típusok egyike
+    genericSettings: {
+      borderRadius: 10,
+      rounded: 'rounded-lg',
+      backgroundColor: '#1DB954', // Spotify zöld
+      textColor: '#FFFFFF',
+      opacity: 1,
+      tint: 0,
+      saturation: 100
+    },
+    specificSettings: {
+      playlistId: '6el3eI1j7EpF2xNpgxUtGj', // alapértelmezett playlist ID
+      // további Spotify-specifikus beállítások
+      theme: 'dark',
+      showArtwork: true
+    },
+    page: 0, // első oldal
+    position: 0 // első pozíció az oldalon
+  }" 
+  :is-used="true"
+/>
     </div>
   </div>
 </template>
