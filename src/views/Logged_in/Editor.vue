@@ -79,7 +79,7 @@ function moveUp() {
   if (i == 0) return;
 
   [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
-  selectedWidgetIndex.value = selectedWidgetIndex.value - 1;
+  selectedWidgetIndex.value = selectedWidgetIndex.value! - 1;
 }
 
 function moveDown() {
@@ -88,8 +88,18 @@ function moveDown() {
 
   if (i == arr.length - 1) return;
 
-  [ arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
-  selectedWidgetIndex.value = selectedWidgetIndex.value + 1;
+  [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+  selectedWidgetIndex.value = selectedWidgetIndex.value! + 1;
+}
+
+function del() {
+  if (widgetList.value.length == 1)
+    selectedWidgetIndex.value = null;
+
+  else if (widgetList.value.length - 1 == selectedWidgetIndex.value!)
+    selectedWidgetIndex.value = selectedWidgetIndex.value - 1;
+
+  widgetList.value.splice(selectedWidgetIndex.value!, 1);
 }
 
 const pages = ref([...new Set(widgetList.value.map(x => x.page))]);
@@ -168,7 +178,7 @@ function goRight() {
           <div class="flex flex-col absolute left-[calc(100%+12px)] gap-2 z-10" v-if="i == selectedWidgetIndex">
             <Button :onClick="moveUp" icon-position="only" icon-type="arrow_upward" size="small" rank="secondary" />
             <Button :onClick="moveDown" icon-position="only" icon-type="arrow_downward" size="small" rank="secondary" />
-            <Button :onClick="() => widgetList.splice(selectedWidgetIndex!, 1)" icon-position="only" icon-type="delete" size="small" rank="secondary" />
+            <Button :onClick="del" icon-position="only" icon-type="delete" size="small" rank="secondary" />
           </div>
         </div>
       </template>
