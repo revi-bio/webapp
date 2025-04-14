@@ -23,7 +23,53 @@ export const SPECIFIC_SETTINGS_DEFINITIONS: { [key in WidgetType]: SettingDefini
     },
   ],
   linkContainer: [],
-  profile: [],
+  profile: [
+    {
+      name:'fullAlign',
+      type:'string'
+    },
+    {
+      name:'profileOver',
+      type:'string'
+    },
+    {
+      name:'rounded',
+      type:'string'
+    },
+    {
+      name:'bioAvatarAndName',
+      type:'string'
+    },
+    {
+      name:'nameColor',
+      type:'color'
+    },
+    {
+      name:'name',
+      type:'string'
+    },
+    {
+      name:'badgeColor',
+      type:'color'
+    },
+    {
+      name:'badgeVisible',
+      type:'boolean'
+    },
+    {
+      name:'handleVisible',
+      type: 'boolean'
+    },
+    {
+      name:'handleColor',
+      type:'color'
+    },
+    {
+      name:'handle',
+      type:'string'
+    },
+
+  ],
   spotify: [
     {
       name: 'playlistId',
