@@ -9,6 +9,7 @@ import Widget from '@/components/widget/Widget.vue';
 import { v4 as uuidv4 } from 'uuid';
 import Input from '@/components/global/Input.vue';
 import Icon from '@/components/global/Icon.vue';
+import { LinkWidget } from '@/types/widgets/Link';
 
 const route = useRoute();
 const id = route.params.id;
@@ -71,6 +72,26 @@ const widgetList: Ref<IWidget[]> = ref([
   },
 ]);
 
+function moveUp() {
+  const arr = widgetList.value;
+  const i = selectedWidgetIndex.value!;
+
+  if (i == 0) return;
+
+  [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
+  selectedWidgetIndex.value = selectedWidgetIndex.value - 1;
+}
+
+function moveDown() {
+  const arr = widgetList.value;
+  const i = selectedWidgetIndex.value!;
+
+  if (i == arr.length - 1) return;
+
+  [ arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+  selectedWidgetIndex.value = selectedWidgetIndex.value + 1;
+}
+
 const pages = ref([...new Set(widgetList.value.map(x => x.page))]);
 const currentPageIndex = ref(0);
 
@@ -100,7 +121,6 @@ function goRight() {
     <div class="absolute w-full bottom-0 p-6 justify-between space-x-2 text-zinc-200 grid grid-cols-3">
       <div class="flex gap-2">
         <Button :onClick="openWidgetToolbox" icon-position="only" icon-type="add" size="small" rank="primary" />
-        <Button icon-position="only" icon-type="delete" size="small" rank="secondary" :disabled="selectedWidgetIndex == null"/>
       </div>
       <div class="flex gap-2 items-center justify-center">
         <Button :onClick="goLeft" icon-position="only" icon-type="chevron_left" size="small" rank="secondary" />
@@ -114,6 +134,9 @@ function goRight() {
       <Teleport defer to="#sidebar-right-outlet" v-if="widgetToolboxOpened">
         <div class="sidebar">
           <span class="text-2xl">Widget toolbox</span>
+          <div @click="widgetList.push(new LinkWidget({}))">
+            Add link widget
+          </div>
         </div>
       </Teleport>
       <Teleport defer to="#sidebar-right-outlet" v-if="bioSettingsOpened">
@@ -139,18 +162,27 @@ function goRight() {
         </div>
       </Teleport>
     <div id="widgets" class="w-[50%] flex flex-col gap-3 justify-center z-0">
-      <Widget v-for="(widget, i) in widgetList" :key="widget.id" :data="widget" @click="selectWidget(i)" :selected="i == selectedWidgetIndex"/>
+      <template v-for="(widget, i) in widgetList" :key="widget.id">
+        <div class="flex gap-2 relative">
+          <Widget @click="selectWidget(i)" :data="widget" class="w-full" :selected="i == selectedWidgetIndex" />
+          <div class="flex flex-col absolute left-[calc(100%+12px)] gap-2 z-10" v-if="i == selectedWidgetIndex">
+            <Button :onClick="moveUp" icon-position="only" icon-type="arrow_upward" size="small" rank="secondary" />
+            <Button :onClick="moveDown" icon-position="only" icon-type="arrow_downward" size="small" rank="secondary" />
+            <Button :onClick="() => widgetList.splice(selectedWidgetIndex!, 1)" icon-position="only" icon-type="delete" size="small" rank="secondary" />
+          </div>
+        </div>
+      </template>
     </div>
   </div>
 </template>
 
 <style lang="scss">
-#widgets > *[selected=true] {
+#widgets *[selected=true] {
   @apply border-2 border-dashed border-rose-500;
 }
 
 .sidebar {
-  @apply max-w-[400px] min-w-[300px] h-full bg-zinc-800/80 rounded-2xl z-[20] backdrop-blur-3xl relative p-4 flex flex-col gap-2 overflow-y-auto;
+  @apply max-w-[400px] min-w-[350px] h-full bg-zinc-800/80 rounded-2xl z-[20] backdrop-blur-3xl relative p-4 flex flex-col gap-2 overflow-y-auto;
 
   > span {
     @apply mb-1;
