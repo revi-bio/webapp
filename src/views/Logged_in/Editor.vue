@@ -8,6 +8,7 @@ import {
   SPECIFIC_SETTINGS_DEFINITIONS,
   WidgetGenericSettings,
   type Widget as IWidget,
+  type WidgetType,
 } from '@/types/Widget';
 import Widget from '@/components/widget/Widget.vue';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,7 +16,6 @@ import Input from '@/components/global/Input.vue';
 import { LinkWidget } from '@/types/widgets/Link';
 import type { Page } from '@/types/Page';
 import Spotify from '@/components/widget/Spotify.vue';
-import { title } from 'motion/react-client';
 
 const route = useRoute();
 const handle = route.params.handle as string;
@@ -87,18 +87,6 @@ const pages = ref<Page[]>([
         },
         type: 'link',
       },
-      {
-        id: uuidv4(),
-        genericSettings: new WidgetGenericSettings({}),
-        page: 0,
-        position: 3,
-        specificSettings:{
-          align:'start',
-          title:'xdd',
-          text: '# *Alma* banán \n ```print()```'
-        },
-        type:'markdown'
-      }
     ],
   },
 ]);
@@ -265,15 +253,28 @@ function deleteWidget() {
   }
 }
 
-function addWidget(type: 'link') {
+function addWidget(type: WidgetType) {
   if (!currentPage.value) return;
 
-  const newWidget = new LinkWidget({
+  const data = {
     page: currentPageIndex.value,
     position: getNextPosition(),
-  });
+  };
 
-  currentPage.value.widgets.push(newWidget);
+  switch(type) {
+    case 'link': {
+      currentPage.value.widgets.push(new LinkWidget(data));
+      break;
+    }
+    case 'profile': {
+      currentPage.value.widgets.push(new ProfileWidget(data));
+      break;
+    }
+    case 'youtube': {
+      currentPage.value.widgets.push(new YoutubeWidget(data));
+      break;
+    }
+  }
 }
 
 // Page navigation
@@ -339,7 +340,13 @@ function navigatePage(direction: 'prev' | 'next') {
     <Teleport defer to="#sidebar-right-outlet" v-if="widgetToolboxOpened">
       <div class="sidebar">
         <span class="text-2xl">Widget toolbox</span>
+        <div @click="addWidget('profile')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add profile widget</div>
         <div @click="addWidget('link')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
+        <div @click="addWidget('youtube')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add youtube widget</div>
+        <!--
+        <div @click="addWidget('spotify')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
+        <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
+        -->
       </div>
     </Teleport>
 

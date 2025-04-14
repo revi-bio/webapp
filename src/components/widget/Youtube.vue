@@ -1,26 +1,24 @@
-<script lang="ts" setup>
-import { computed } from 'vue';
+<script setup lang="ts">
+import type { Widget } from '@/types/Widget';
 
-const icons = import.meta.glob('../../assets/LinkIcons/youtube-fill-svgrepo-com.svg', { eager: true, as: 'raw' });
-
-const logo = computed(() => {
-  const iconPath = Object.values(icons)[0];
-  if (!iconPath) return null;
-
-  return iconPath
-    .replace(/<svg/, '<svg width="100%" height="100%" preserveAspectRatio="xMidYMid meet"')
-    .replace(/fill="[^"]*"/g, 'fill="#ee0f0f"')
-    .replace(/stroke="[^"]*"/g, 'stroke="#ee0f0f"');
-});
+defineProps<{
+  data: Widget;
+}>();
 </script>
 
 <template>
-  <div class="w-full py-5 gap-2
-  flex flex-row justify-start content-center items-center rounded-lg px-2
-  border border-zinc-100/30 bg-zinc-200/10 hover:bg-zinc-200/20 active:bg-zinc-200/30 duration-200">
-    <div class="w-20 h-20 "v-html="logo"></div>
-    <h3 class="text-lg">
-      Youtube playlist
-    </h3>
+  <div class="flex flex-col gap-0" :href="data.specificSettings['id']">
+    <span class="text-2xl">{{ data.specificSettings['title'] }}</span>
+    <span class="text-zinc-400">{{ data.specificSettings['description'] }}</span>
+    <iframe
+      class="w-full h-[300px]"
+      :src="`https://www.youtube.com/embed/${data.specificSettings['id']}`"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen></iframe>
   </div>
 </template>
+
+<style lang="scss"></style>
