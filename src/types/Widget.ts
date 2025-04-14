@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export type WidgetType = 'profile' | 'link' | 'linkContainer';
 
 export interface SettingDefinition<T = string> {
@@ -73,10 +75,16 @@ export class WidgetGenericSettings {
   };
 }
 
+export interface WidgetInitializer {
+  type: WidgetType;
+  specificSettings?: object;
+  genericSettings?: Partial<WidgetGenericSettings>;
+}
+
 /** The actual widget placed on the bio site, NOT the widget definition */
-export interface Widget {
+export class Widget {
   /** unique id for a widget */
-  id: string;
+  id: string = uuidv4();
 
   type: WidgetType;
 
@@ -84,11 +92,21 @@ export interface Widget {
   genericSettings: Partial<WidgetGenericSettings>;
 
   /** widget-specific settings */
-  specificSettings: { [key: string]: any };
+  specificSettings: object;
 
   /** the index of the page the widget is on */
-  page: number;
+  page: number = 0;
 
   /** the index of the widget on the page */
-  position: number;
+  position: number = 0;
+
+  constructor(options: WidgetInitializer) {
+    this.type = options.type;
+    this.genericSettings = new WidgetGenericSettings(options.genericSettings ?? {});
+
+    // prevent calling this constructor in a non-abstract way
+    if (!options.specificSettings) throw Error('do not pls');
+
+    this.specificSettings = options.specificSettings;
+  }
 }
