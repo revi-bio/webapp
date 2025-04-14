@@ -148,8 +148,12 @@ onMounted(() => {
 
     <!--Emerge-->
     <div class="emerge flex flex-col w-full justify-center content-start items-start gap-5 h-screen snap-center z-30">
+      <!--
       <h3 class="text-6xl text-zinc-100">Discover your creativity.</h3>
       <h3 class="text-6xl text-zinc-400">Emerge from social media.</h3>
+      -->
+
+      <iframe class="w-full h-full" src="https://www.youtube.com/embed/1U8qUDq3Teo?si=92pSryIPM8J-CWJS&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
 
     <!--Creating-->
