@@ -17,6 +17,7 @@ import type { Page } from '@/types/Page';
 import Spotify from '@/components/widget/Spotify.vue';
 
 const route = useRoute();
+const handle = route.params.handle as string;
 const currentPageIndex = ref(0);
 const selectedWidgetId = ref<string | null>(null);
 const widgetToolboxOpened = ref(false);
@@ -31,7 +32,7 @@ const pages = ref<Page[]>([
     widgets: [
       {
         id: uuidv4(),
-        type: 'spotify',
+        type: 'profile',
         genericSettings: new WidgetGenericSettings({
           background: {
             tint: 340,
@@ -40,8 +41,17 @@ const pages = ref<Page[]>([
           },
         }),
         specificSettings: {
-          playlistId: '6el3eI1j7EpF2xNpgxUtGj',
-          showArtwork: true,
+          fullAlign: 'center',
+          bioAvatarAndName: 'center',
+          profileOver: true,
+          nameColor: 'zinc-100',
+          name: 'Default Name',
+          badgeColor: 'violet-500',
+          badgeVisible: true,
+          handleVisible: true,
+          handleColor: 'violet-500',
+          handle,
+          text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
         },
         page: 0, // első oldal
         position: 0, // első pozíció az oldalon
