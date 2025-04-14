@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export type WidgetType = 'profile' | 'link' | 'linkContainer';
+export type WidgetType = 'profile' | 'link' | 'linkContainer' | 'spotify';
 
 export interface SettingDefinition<T = string> {
   name: T;
-  type: 'string' | 'number' | 'color';
+  type: 'string' | 'number' | 'color' | 'boolean';
 }
 
 export const SPECIFIC_SETTINGS_DEFINITIONS: { [key in WidgetType]: SettingDefinition[] } = {
@@ -24,6 +24,16 @@ export const SPECIFIC_SETTINGS_DEFINITIONS: { [key in WidgetType]: SettingDefini
   ],
   linkContainer: [],
   profile: [],
+  spotify: [
+    {
+      name: 'playlistId',
+      type: 'string',
+    },
+    {
+      name: 'showArtwork',
+      type: 'boolean',
+    },
+  ]
 };
 
 export const GENERIC_SETTINGS_DEFINITIONS: SettingDefinition<keyof (typeof WidgetGenericSettings)['prototype']>[] = [
