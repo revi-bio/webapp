@@ -1,7 +1,7 @@
 import { Widget, type WidgetInitializer } from "../Widget";
 
 export class LinkWidget extends Widget {
-  constructor(options: Omit<WidgetInitializer, 'type'>) {
+  constructor(options: Omit<Partial<WidgetInitializer>, 'type'>) {
     super({
       type: 'link',
       specificSettings: {
@@ -9,7 +9,9 @@ export class LinkWidget extends Widget {
         description: 'This is a description',
         link: 'https://youtu.be/dQw4w9WgXcQ'
       },
-      genericSettings: options.genericSettings,
+      genericSettings: options.genericSettings ?? {},
+      position: options.position!,
+      page: options.page!,
     });
   }
 }

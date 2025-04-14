@@ -16,7 +16,7 @@ let style = computed(() =>
 <template>
   <div class="p-4 relative" :style="style">
     <Link :data="data" v-if="data.type == 'link'" />
-    <!-- <span class="absolute right-4 bottom-2 text-zinc-900/80">meta: {{ data.type }} - {{ data.id }}</span> -->
+    <span class="absolute right-4 bottom-2 text-zinc-900/80">meta: {{ data.type }} - {{ data.id }} - {{ data.page }}:{{ data.position }}</span>
   </div>
 </template>
 

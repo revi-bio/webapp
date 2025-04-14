@@ -77,8 +77,10 @@ export class WidgetGenericSettings {
 
 export interface WidgetInitializer {
   type: WidgetType;
-  specificSettings?: object;
-  genericSettings?: Partial<WidgetGenericSettings>;
+  specificSettings: object;
+  genericSettings: Partial<WidgetGenericSettings>;
+  page: number;
+  position: number;
 }
 
 /** The actual widget placed on the bio site, NOT the widget definition */
@@ -108,5 +110,7 @@ export class Widget {
     if (!options.specificSettings) throw Error('do not pls');
 
     this.specificSettings = options.specificSettings;
+    this.page = options.page;
+    this.position = options.position;
   }
 }
