@@ -15,6 +15,7 @@ import Input from '@/components/global/Input.vue';
 import { LinkWidget } from '@/types/widgets/Link';
 import type { Page } from '@/types/Page';
 import Spotify from '@/components/widget/Spotify.vue';
+import { title } from 'motion/react-client';
 
 const route = useRoute();
 const handle = route.params.handle as string;
@@ -86,6 +87,18 @@ const pages = ref<Page[]>([
         },
         type: 'link',
       },
+      {
+        id: uuidv4(),
+        genericSettings: new WidgetGenericSettings({}),
+        page: 0,
+        position: 3,
+        specificSettings:{
+          align:'start',
+          title:'xdd',
+          text: '# *Alma* banán \n ```print()```'
+        },
+        type:'markdown'
+      }
     ],
   },
 ]);
