@@ -29,7 +29,7 @@
 <template>
   <div class="flex flex-row justify-center content-center items-center w-full h-full py-6 gap-6 px-6 relative overflow-hidden">
     <Sidebar class="w-[80px] h-full"></Sidebar>
-    <main class="w-full h-full relative rounded-2xl z-10">
+    <main id="sidebar-right-outlet" class="w-full h-full relative rounded-2xl z-10 flex gap-4">
       <div class="w-full h-full bg-zinc-800/80 rounded-2xl z-[20] backdrop-blur-3xl relative">
         <!--Content goes here-->
         <span class="absolute text-3xl top-6 left-6"><h3>{{ route.name }}</h3></span>

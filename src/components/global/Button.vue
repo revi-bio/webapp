@@ -6,16 +6,17 @@ const props = defineProps<{
   size: 'small' | 'normal';
   rank: 'primary' | 'secondary' | 'tabItem';
   iconPosition: 'none' | 'only' | 'left' | 'right';
+  disabled?: boolean;
   iconType?: string;
   onClick?: () => void;
-  isActive?: boolean;  
+  isActive?: boolean;
 }>();
 
 </script>
 
 <template>
   <button
-    :class="[size, rank, { 'active': isActive }]"
+    :class="[size, rank, { 'active': isActive, 'disabled': disabled }]"
     @click="onClick"
   >
     <template v-if="iconPosition === 'left'">
@@ -48,7 +49,6 @@ button {
   @apply bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-800 transition duration-200;
 }
 
-
 .small {
   @apply text-base px-2 py-1;
 }
@@ -63,5 +63,9 @@ button {
 
 .tabItem.active {
   @apply bg-zinc-800;
+}
+
+.disabled {
+@apply bg-zinc-700/25 pointer-events-none;
 }
 </style>
