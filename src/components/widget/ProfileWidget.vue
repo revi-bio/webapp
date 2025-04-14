@@ -1,3 +1,4 @@
+
 <script lang="ts" setup>
 import type { Widget } from '@/types/Widget';
 import BioPfp from '../global/BioPfp.vue';
