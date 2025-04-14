@@ -29,25 +29,23 @@ const pages = ref<Page[]>([
     name: 'Page 1',
     icon: 'home',
     widgets: [
-    {
-    id: uuidv4(),
-    type: 'spotify',
-    genericSettings: new WidgetGenericSettings({
+      {
+        id: uuidv4(),
+        type: 'spotify',
+        genericSettings: new WidgetGenericSettings({
           background: {
             tint: 340,
             saturation: 8,
             opacity: 0.8,
           },
         }),
-    specificSettings: {
-      playlistId: '6el3eI1j7EpF2xNpgxUtGj', // alapértelmezett playlist ID
-      // további Spotify-specifikus beállítások
-      theme: 'dark',
-      showArtwork: true
-    },
-    page: 0, // első oldal
-    position: 0 // első pozíció az oldalon
-  },
+        specificSettings: {
+          playlistId: '6el3eI1j7EpF2xNpgxUtGj',
+          showArtwork: true,
+        },
+        page: 0, // első oldal
+        position: 0, // első pozíció az oldalon
+      },
       {
         id: uuidv4(),
         genericSettings: new WidgetGenericSettings({
@@ -112,7 +110,7 @@ const selectedWidgetPageIndex = computed(() => {
   if (!selectedWidgetId.value) return -1;
 
   for (let i = 0; i < pages.value.length; i++) {
-    if (pages.value[i].widgets.some(w => w.id === selectedWidgetId.value)) {
+    if (pages.value[i].widgets.some((w) => w.id === selectedWidgetId.value)) {
       return i;
     }
   }
@@ -185,9 +183,7 @@ function moveWidgetToPage(direction: 'prev' | 'next') {
   if (sourcePageIndex === -1) return;
 
   // Determine target page index
-  const targetPageIndex = direction === 'prev'
-    ? sourcePageIndex - 1
-    : sourcePageIndex + 1;
+  const targetPageIndex = direction === 'prev' ? sourcePageIndex - 1 : sourcePageIndex + 1;
 
   // Check if target page exists
   if (targetPageIndex < 0 || targetPageIndex >= pages.value.length) return;
@@ -196,7 +192,7 @@ function moveWidgetToPage(direction: 'prev' | 'next') {
   const targetPage = pages.value[targetPageIndex];
 
   // Find the widget in the source page
-  const widgetIndex = sourcePage.widgets.findIndex(w => w.id === selectedWidgetId.value);
+  const widgetIndex = sourcePage.widgets.findIndex((w) => w.id === selectedWidgetId.value);
   if (widgetIndex === -1) return;
 
   // Get the widget to move
@@ -204,19 +200,17 @@ function moveWidgetToPage(direction: 'prev' | 'next') {
   const removedPosition = widgetToMove.position;
 
   // Remove widget from source page
-  sourcePage.widgets = sourcePage.widgets.filter(w => w.id !== selectedWidgetId.value);
+  sourcePage.widgets = sourcePage.widgets.filter((w) => w.id !== selectedWidgetId.value);
 
   // Reindex widgets in the source page to avoid gaps
-  sourcePage.widgets.forEach(widget => {
+  sourcePage.widgets.forEach((widget) => {
     if (widget.position > removedPosition) {
       widget.position -= 1;
     }
   });
 
   // Calculate new position at the end of target page
-  const newPosition = targetPage.widgets.length > 0
-    ? Math.max(...targetPage.widgets.map(w => w.position)) + 1
-    : 0;
+  const newPosition = targetPage.widgets.length > 0 ? Math.max(...targetPage.widgets.map((w) => w.position)) + 1 : 0;
 
   // Update widget's page property
   widgetToMove.page = targetPageIndex;
@@ -385,24 +379,24 @@ function navigatePage(direction: 'prev' | 'next') {
               <Button :onClick="deleteWidget" icon-position="only" icon-type="delete" size="small" rank="secondary" />
             </div>
             <div class="flex gap-2">
-            <Button
-              :onClick="() => moveWidgetToPage('prev')"
-              :disabled="selectedWidgetPageIndex <= 0"
-              icon-position="only"
-              icon-type="arrow_back"
-              size="small"
-              rank="secondary">
-              Previous
-            </Button>
-            <Button
-              :onClick="() => moveWidgetToPage('next')"
-              :disabled="selectedWidgetPageIndex >= pages.length - 1"
-              icon-position="only"
-              icon-type="arrow_forward"
-              size="small"
-              rank="secondary">
-              Next
-            </Button>
+              <Button
+                :onClick="() => moveWidgetToPage('prev')"
+                :disabled="selectedWidgetPageIndex <= 0"
+                icon-position="only"
+                icon-type="arrow_back"
+                size="small"
+                rank="secondary">
+                Previous
+              </Button>
+              <Button
+                :onClick="() => moveWidgetToPage('next')"
+                :disabled="selectedWidgetPageIndex >= pages.length - 1"
+                icon-position="only"
+                icon-type="arrow_forward"
+                size="small"
+                rank="secondary">
+                Next
+              </Button>
             </div>
           </div>
         </div>
