@@ -154,8 +154,13 @@ function moveWidget(direction: 'up' | 'down') {
   const widget = currentPage.value.widgets[index];
   const newPosition = direction === 'up' ? widget.position - 1 : widget.position + 1;
 
+  // Find the min and max positions in the current page
+  const positions = currentPage.value.widgets.map(w => w.position);
+  const minPosition = Math.min(...positions);
+  const maxPosition = Math.max(...positions);
+
   // Don't move if at the edge
-  if (newPosition < 0 || newPosition >= currentPage.value.widgets.length) return;
+  if (newPosition < minPosition || newPosition > maxPosition) return;
 
   const swapIndex = findWidgetByPosition(newPosition);
   if (swapIndex !== -1) {
