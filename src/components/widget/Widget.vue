@@ -16,7 +16,7 @@ let style = computed(() =>
 </script>
 
 <template>
-  <div class="p-4 relative" :style="style">
+  <div class="p-4 relative w-full" :style="style">
     <Link :data="data" v-if="data.type == 'link'" />
     <ProfileWidget :data="data" v-if="data.type == 'profile'" />
     <Markdown :data="data" v-if="data.type == 'markdown'"></Markdown>
