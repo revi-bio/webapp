@@ -7,9 +7,7 @@ import Footer from '@/components/global/Footer.vue';
 import { onMounted,ref } from 'vue';
 import { animate, inView, scroll,stagger } from "motion"
 import { useIntersectionObserver } from '@vueuse/core';
-import Dropdown from '@/components/global/Dropdown.vue';
-import ProfileWidget from '@/components/widget/ProfileWidget.vue';
-import ColorPicker from '@/components/global/ColorPicker.vue';
+
 onMounted(() => {
   const elements = document.querySelectorAll(".pros h3, .our-goal h3, .our-goal p, .emerge h3, .emerge p, .creating h3, .creating p, .option h3, .option p, .explore h3, .explore p, .revision h3, .start");
 
@@ -118,7 +116,7 @@ onMounted(() => {
       <h3 class="text-2xl font-light text-zinc-50">A place to unfold</h3>
       <h3 class="text-8xl text-zinc-200 animate-pulse animate-infinite animate-duration-[3000ms]">Supercharge</h3>
       <h3 class="text-8xl text-zinc-400 animate-pulse animate-infinite animate-duration-[3000ms]">your online identity</h3>
-      <ColorPicker type="cigany"></ColorPicker>
+
       <Logo type="revibio"></Logo>
       <span class="flex flex-row justify-center content-center items-center gap-5">
        <RouterLink to="/register"><Button text="Start your journey" size="normal" rank="primary" icon-position="none"></Button></RouterLink>
