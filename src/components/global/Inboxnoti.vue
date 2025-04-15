@@ -40,7 +40,7 @@ watchEffect(() => {
     <p class="text-md truncate w-[80px]">{{ item.title }}</p>
     <p class="text-sm">{{ item.senddate }}</p>
     <Icon v-if="!item.readed" type="mail" size="3xl" class="text-rose-500"></Icon>
-    <Icon v-if="item.readed" type="opened_mail" size="3xl"></Icon>
+    <Icon v-if="item.readed" type="drafts" size="3xl"></Icon>
   </div>
 </div>
 </template>
