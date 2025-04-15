@@ -5,7 +5,7 @@ import type { Bio } from '@/types/Bio';
 
 export const useBioStore = defineStore('bios', () => {
   const bios = ref<Bio[]>([]);
-
+  const currentHandle = ref<string | null>(null);
   async function fetchBios(): Promise<unknown> {
     try {
       const response = await ApiWrapper.get<Bio[]>('bio', {});
@@ -97,6 +97,14 @@ export const useBioStore = defineStore('bios', () => {
     }
   }
 
+  function setCurrentHandle(handle: string) {
+    currentHandle.value = handle;
+  }
+
+  function getCurrentHandle(): string | null {
+    return currentHandle.value;
+  }
+
   return {
     bios,
     fetchBios,
@@ -108,5 +116,7 @@ export const useBioStore = defineStore('bios', () => {
     deleteBio,
     uploadBioPfp,
     deleteBioPfp,
+    getCurrentHandle,
+    setCurrentHandle
   };
 });

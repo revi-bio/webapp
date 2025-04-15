@@ -5,11 +5,10 @@ import BioPfp from './BioPfp.vue';
 import Button from '@/components/global/Button.vue';
 import Modal from './Modal.vue';
 import { useBioStore } from '@/stores/bio';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 const showModal = ref(false);
 const bioStore = useBioStore();
-
 
 const props = defineProps<{
   name: string;
@@ -22,16 +21,20 @@ const props = defineProps<{
 
 const router = useRouter();
 
-
 function deleteBio() {
   showModal.value = true;
 }
 
-
 function openEditor(handle: string) {
-  router.push({ name: 'Editor', params: { handle } });
-}
+  bioStore.setCurrentHandle(handle)
+  router.push({
+    name: 'Editor',
+    params: { handle }
+  });
+  console.log('handle from params: ', handle)
 
+  console.log('handle from getCurrentHandle:', bioStore.getCurrentHandle())
+}
 
 async function confirmDelete() {
   try {
@@ -44,7 +47,6 @@ async function confirmDelete() {
     alert("An error occurred while deleting.");
   }
 }
-
 
 </script>
 
@@ -82,7 +84,6 @@ async function confirmDelete() {
       <Button icon-position="left" icon-type="edit" text="Edit" rank="primary" size="small" v-on:click="openEditor(handle)"></Button>
     </div>
   </div>
-
 
   <Modal
     :show="showModal"

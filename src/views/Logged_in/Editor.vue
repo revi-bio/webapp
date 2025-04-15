@@ -36,32 +36,6 @@ const pages = ref<Page[]>([
     widgets: [
       {
         id: uuidv4(),
-        type: 'profile',
-        genericSettings: new WidgetGenericSettings({
-          background: {
-            tint: 340,
-            saturation: 8,
-            opacity: 0.8,
-          },
-        }),
-        specificSettings: {
-          fullAlign: 'center',
-          bioAvatarAndName: 'center',
-          profileOver: true,
-          nameColor: 'zinc-100',
-          name: 'Default Name',
-          badgeColor: 'violet-500',
-          badgeVisible: true,
-          handleVisible: true,
-          handleColor: 'violet-500',
-          handle,
-          text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-        },
-        page: 0, // első oldal
-        position: 0, // első pozíció az oldalon
-      },
-      {
-        id: uuidv4(),
         genericSettings: new WidgetGenericSettings({
           background: {
             tint: 340,
