@@ -16,6 +16,8 @@ import Input from '@/components/global/Input.vue';
 import { LinkWidget } from '@/types/widgets/Link';
 import type { Page } from '@/types/Page';
 import Spotify from '@/components/widget/Spotify.vue';
+import { GalleryWidget } from '@/types/widgets/Gallery';
+import ColorPicker from '@/components/global/ColorPicker.vue';
 
 const route = useRoute();
 const handle = route.params.handle as string;
@@ -274,6 +276,10 @@ function addWidget(type: WidgetType) {
       currentPage.value.widgets.push(new YoutubeWidget(data));
       break;
     }
+    case 'gallery': {
+      currentPage.value.widgets.push(new GalleryWidget(data));
+      break;
+    }
   }
 }
 
@@ -343,6 +349,7 @@ function navigatePage(direction: 'prev' | 'next') {
         <div @click="addWidget('profile')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add profile widget</div>
         <div @click="addWidget('link')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
         <div @click="addWidget('youtube')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add youtube widget</div>
+        <div @click="addWidget('gallery')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add gallery widget</div>
         <!--
         <div @click="addWidget('spotify')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
         <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
@@ -366,14 +373,25 @@ function navigatePage(direction: 'prev' | 'next') {
         <span>Widget-specific settings</span>
         <span v-for="setting in SPECIFIC_SETTINGS_DEFINITIONS[selectedWidget.type]" :key="setting.name">
           <span class="text-zinc-400">{{ setting.name }}</span>
-          <Input type="text" v-model="(selectedWidget.specificSettings as any)[setting.name]" />
+          <Input v-if="setting.type !== 'color'" type="text" v-model="(selectedWidget.specificSettings as any)[setting.name]" />
+          <ColorPicker v-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
+              (baseColor, shade, opacity) => {
+                (selectedWidget!.specificSettings as any)[setting.name] = { baseColor, shade, opacity };
+              }" />
         </span>
 
         <!-- Generic settings -->
         <span>Generic settings</span>
         <span v-for="setting in GENERIC_SETTINGS_DEFINITIONS" :key="setting.name">
           <span class="text-zinc-400">{{ setting.name }}</span>
-          <Input type="text" v-model="selectedWidget.genericSettings[setting.name]" />
+          <Input v-if="setting.type !== 'color'" type="text" v-model="(selectedWidget.specificSettings as any)[setting.name]" />
+          <ColorPicker v-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
+              (baseColor, shade, opacity) => {
+                const asd = (selectedWidget!.specificSettings as any)[setting.name];
+                (selectedWidget!.genericSettings as any)[setting.name] = { tint: baseColor, saturation: shade, oppacity: opacity };
+                console.log(asd)
+                console.log((selectedWidget!.specificSettings as any)[setting.name])
+              }" />
         </span>
       </div>
     </Teleport>
