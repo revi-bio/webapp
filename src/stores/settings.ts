@@ -74,24 +74,31 @@ export const useSettingsStore = defineStore('settings', () => {
   }
 
   function updateDraft<K extends keyof Draft>(field: K, value: Draft[K]) {
-    if (typeof value === 'object' && value !== null && 'isTrusted' in value) {
+    // Early return for null/undefined values
+    if (value === null || value === undefined) return;
+
+    // Type guard to check if value is an object with isTrusted property (event object)
+    const isEventObject = (val: any): val is { isTrusted: boolean; target?: any } => {
+      return typeof val === 'object' && val !== null && 'isTrusted' in val;
+    };
+
+    if (isEventObject(value)) {
       console.error(`Received event object for ${field} instead of a value:`, value);
 
-      if (field === 'adultContent' && 'target' in value && 'checked' in value.target) {
-        // @ts-ignore - handle event object from checkbox
-        value = value.target.checked;
+      // Handle checkbox event specifically
+      if (field === 'adultContent' && 'target' in value && value.target && 'checked' in value.target) {
+        // Handle event object from checkbox
+        value = value.target.checked as any;
       } else {
         return;
       }
     }
-
 
     if (draft.value[field] === value) {
       return;
     }
 
     draft.value[field] = value;
-
 
     if (field === 'displayName') isDirty.value.displayName = true;
     if (field === 'newEmail' || field === 'currentPasswordForEmail') isDirty.value.email = true;

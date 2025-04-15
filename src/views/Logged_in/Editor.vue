@@ -2,7 +2,6 @@
 import { computed, ref, type Ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Button from '@/components/global/Button.vue';
-import Toolbar from '@/components/global/Toolbar.vue';
 import {
   GENERIC_SETTINGS_DEFINITIONS,
   SPECIFIC_SETTINGS_DEFINITIONS,
