@@ -20,7 +20,7 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'color-selected', baseColor: string, shade: number, opacity: number, hsv: {h: number, s: number, v: number, opacity: number}): void
+  (e: 'color-selected', baseColor: string, shade: number, opacity: number, hsv: {h: number, s: number, l: number, a: number}): void
   (e: 'reset'): void
 }>();
 
@@ -156,7 +156,7 @@ const selectBaseColor = (color: string) => {
 
 const selectShade = (shade: number) => {
   selectedShade.value = shade;
-  const hsvValues = tailwindClassToHsv(baseColor.value, shade, opacity.value);
+  const hsvValues = tailwindClassToHsla(baseColor.value, shade, opacity.value);
   emit('color-selected', baseColor.value, shade, opacity.value, hsvValues);
   console.log('color-selected', baseColor.value, shade, opacity.value, hsvValues);
 };
@@ -182,7 +182,7 @@ const colorWithOpacity = computed(() => {
 
 watch(opacity, (newOpacity) => {
   if (selectedShade.value !== null && baseColor.value) {
-    const hsvValues = tailwindClassToHsv(baseColor.value, selectedShade.value, newOpacity);
+    const hsvValues = tailwindClassToHsla(baseColor.value, selectedShade.value, newOpacity);
     emit('color-selected', baseColor.value, selectedShade.value, newOpacity, hsvValues);
     console.log('color-selected from opacity watch', baseColor.value, selectedShade.value, newOpacity, hsvValues);
   }

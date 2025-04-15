@@ -358,8 +358,8 @@ function navigatePage(direction: 'prev' | 'next') {
           <span class="text-zinc-400">{{ setting.name }}</span>
           <Input v-if="setting.type !== 'color'" type="text" v-model="(selectedWidget.specificSettings as any)[setting.name]" />
           <ColorPicker v-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
-              (_baseColor, _shade, opacity, hsvValues) => {
-                (selectedWidget!.specificSettings as any)[setting.name] = { hue: hsvValues.h, saturation: hsvValues.s, value:hsvValues.v, opacity };
+              (_baseColor, _shade, opacity, hslaValue) => {
+                (selectedWidget!.specificSettings as any)[setting.name] = { hue: hslaValue.h, saturation: hslaValue.s, value:hslaValue.l, opacity: hslaValue.a };
               }" />
         </span>
 
@@ -369,8 +369,8 @@ function navigatePage(direction: 'prev' | 'next') {
           <span class="text-zinc-400">{{ setting.name }}</span>
           <Input v-if="setting.type !== 'color'" type="text" v-model="(selectedWidget.specificSettings as any)[setting.name]" />
           <ColorPicker v-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
-              (_baseColor, _shade, opacity, hsvValues) => {
-                (selectedWidget!.genericSettings as any)[setting.name] = { hue: hsvValues.h, saturation: hsvValues.s, value:hsvValues.v, opacity };
+              (_baseColor, _shade, opacity, hslaValue) => {
+                (selectedWidget!.genericSettings as any)[setting.name] = { hue: hslaValue.h, saturation: hslaValue.s, value:hslaValue.l, opacity: hslaValue.a };
               }" />
         </span>
       </div>
