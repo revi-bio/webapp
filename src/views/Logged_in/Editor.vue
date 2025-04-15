@@ -16,6 +16,9 @@ import Input from '@/components/global/Input.vue';
 import { LinkWidget } from '@/types/widgets/Link';
 import type { Page } from '@/types/Page';
 import Spotify from '@/components/widget/Spotify.vue';
+import { ProfileWidget } from '@/types/widgets/Profile';
+import { YoutubeWidget } from '@/types/widgets/YouTube';
+import { MarkdownWidget } from '@/types/widgets/Markdown';
 
 const route = useRoute();
 const handle = route.params.handle as string;
@@ -274,6 +277,10 @@ function addWidget(type: WidgetType) {
       currentPage.value.widgets.push(new YoutubeWidget(data));
       break;
     }
+    case 'markdown':{
+      currentPage.value.widgets.push(new MarkdownWidget(data));
+      break;
+    }
   }
 }
 
@@ -343,6 +350,7 @@ function navigatePage(direction: 'prev' | 'next') {
         <div @click="addWidget('profile')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add profile widget</div>
         <div @click="addWidget('link')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
         <div @click="addWidget('youtube')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add youtube widget</div>
+        <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add markdown widget</div>
         <!--
         <div @click="addWidget('spotify')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
         <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
