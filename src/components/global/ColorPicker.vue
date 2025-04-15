@@ -20,7 +20,7 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'color-selected', baseColor: string, shade: number, opacity: number): void
+  (e: 'color-selected', baseColor: string, shade: number, opacity: number, hsv: {h: number, s: number, v: number, opacity: number}): void
   (e: 'reset'): void
 }>();
 
@@ -34,6 +34,67 @@ const selectedShade = ref<number | null>(null);
 const colorPickerOpen = ref(false);
 const opacity = ref(100);
 
+function tailwindClassToHsv(colorName, shade, opacity = 100) {
+  const colorHues = {
+    red: 0,
+    orange: 30,
+    amber: 45,
+    yellow: 60,
+    lime: 90,
+    green: 120,
+    emerald: 140,
+    teal: 160,
+    cyan: 180,
+    sky: 200,
+    blue: 220,
+    indigo: 240,
+    violet: 270,
+    purple: 285,
+    fuchsia: 300,
+    pink: 330,
+    rose: 345,
+    slate: 210,
+    gray: 220,
+    zinc: 240,
+    neutral: 0,
+    stone: 20
+  };
+
+  const hue = colorHues[colorName] || 0;
+  const isGrayscale = ['gray', 'zinc', 'neutral', 'stone'].includes(colorName);
+
+  let s = 0;
+  let v = 0;
+
+  if (isGrayscale) {
+    s = 5;
+    v = 100 - (shade - 50) * (90 / 900);
+  } else {
+    s = 30 + (shade - 50) * (70 / 900);
+    v = 100 - (shade - 50) * (70 / 900);
+  }
+
+  // Apply opacity effect to HSV
+  // When opacity decreases, we can:
+  // 1. Decrease saturation proportionally
+  // 2. Increase value/brightness to simulate transparency
+
+  // Adjust saturation based on opacity
+  s = s * (opacity / 100);
+
+  // Adjust value (increase as opacity decreases to simulate transparency blending with white)
+  // This is a simplification - true opacity would depend on background color
+  if (opacity < 100) {
+    // Blend toward white as opacity decreases
+    v = v + ((100 - v) * (1 - opacity / 100));
+  }
+
+  s = Math.max(0, Math.min(100, Math.round(s)));
+  v = Math.max(0, Math.min(100, Math.round(v)));
+
+  return { h: hue, s, v, opacity };
+}
+
 const selectBaseColor = (color: string) => {
   baseColor.value = color;
   const colorShades = TWpalette.find(c => c.name === color);
@@ -45,7 +106,9 @@ const selectBaseColor = (color: string) => {
 
 const selectShade = (shade: number) => {
   selectedShade.value = shade;
-  emit('color-selected', baseColor.value, shade, opacity.value);
+  const hsvValues = tailwindClassToHsv(baseColor.value, shade, opacity.value);
+  emit('color-selected', baseColor.value, shade, opacity.value, hsvValues);
+  console.log('color-selected', baseColor.value, shade, opacity.value, hsvValues);
 };
 
 const toggleColorPicker = (event: Event) => {
@@ -56,24 +119,25 @@ const toggleColorPicker = (event: Event) => {
 const closeColorPicker = (event: Event) => {
   const colorPicker = document.querySelector(".color-picker");
   if(colorPicker && !colorPicker?.contains(event.target as Node)){
-    colorPickerOpen.value = false
+    colorPickerOpen.value = false;
   }
 };
 
 const colorWithOpacity = computed(() => {
   if (selectedShade.value !== null) {
-
     return `bg-${baseColor.value}-${selectedShade.value}/${opacity.value}`;
   }
   return '';
 });
 
-
 watch(opacity, (newOpacity) => {
   if (selectedShade.value !== null && baseColor.value) {
-    emit('color-selected', baseColor.value, selectedShade.value, newOpacity);
+    const hsvValues = tailwindClassToHsv(baseColor.value, selectedShade.value, newOpacity);
+    emit('color-selected', baseColor.value, selectedShade.value, newOpacity, hsvValues);
+    console.log('color-selected from opacity watch', baseColor.value, selectedShade.value, newOpacity, hsvValues);
   }
 });
+
 const goBackToBaseColors = () => {
   shadeChosen.value = false;
   selectedShade.value = null;
@@ -96,7 +160,7 @@ document.addEventListener('click', closeColorPicker);
 
     <div
       v-if="colorPickerOpen && !shadeChosen"
-      class="color-picker flex flex-row flex-wrap justify-center  content-center items-center p-4 gap-4 bg-zinc-900 border-zinc-800 border-[1px] rounded-md z-[200] absolute top-16"
+      class="color-picker flex flex-row flex-wrap justify-center content-center items-center p-4 gap-4 bg-zinc-900 border-zinc-800 border-[1px] rounded-md z-[200] absolute top-16"
     >
       <div
         v-for="color in colorNames"
@@ -161,15 +225,6 @@ document.addEventListener('click', closeColorPicker);
       ></Button>
     </div>
   </div>
-  <!--
-  HOW TO USE:
-  const handleColorSelection = (baseColor: any, shade: any, opacity: any) => {
-    console.log(`Selected color: ${baseColor}-${shade}/${opacity}`);
-
-  };
-
-  <ColorPicker type="tag" @color-selected="handleColorSelection"></ColorPicker>
-  -->
 </template>
 
 <style lang="scss" scoped>
