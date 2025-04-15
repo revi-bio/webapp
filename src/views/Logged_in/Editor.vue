@@ -39,8 +39,9 @@ const pages = ref<Page[]>([
         id: uuidv4(),
         genericSettings: new WidgetGenericSettings({
           background: {
-            tint: 340,
+            hue: 340,
             saturation: 8,
+            value: 16,
             opacity: 0.8,
           },
         }),
@@ -352,8 +353,8 @@ function navigatePage(direction: 'prev' | 'next') {
           <span class="text-zinc-400">{{ setting.name }}</span>
           <Input v-if="setting.type !== 'color'" type="text" v-model="(selectedWidget.specificSettings as any)[setting.name]" />
           <ColorPicker v-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
-              (baseColor, shade, opacity) => {
-                (selectedWidget!.specificSettings as any)[setting.name] = { baseColor, shade, opacity };
+              (_baseColor, _shade, opacity, hsvValues) => {
+                (selectedWidget!.specificSettings as any)[setting.name] = { hue: hsvValues.h, saturation: hsvValues.s, value:hsvValues.v, opacity };
               }" />
         </span>
 
@@ -363,11 +364,8 @@ function navigatePage(direction: 'prev' | 'next') {
           <span class="text-zinc-400">{{ setting.name }}</span>
           <Input v-if="setting.type !== 'color'" type="text" v-model="(selectedWidget.specificSettings as any)[setting.name]" />
           <ColorPicker v-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
-              (baseColor, shade, opacity) => {
-                const asd = (selectedWidget!.specificSettings as any)[setting.name];
-                (selectedWidget!.genericSettings as any)[setting.name] = { tint: baseColor, saturation: shade, oppacity: opacity };
-                console.log(asd)
-                console.log((selectedWidget!.specificSettings as any)[setting.name])
+              (_baseColor, _shade, opacity, hsvValues) => {
+                (selectedWidget!.genericSettings as any)[setting.name] = { hue: hsvValues.h, saturation: hsvValues.s, value:hsvValues.v, opacity };
               }" />
         </span>
       </div>

@@ -95,6 +95,56 @@ function tailwindClassToHsv(colorName, shade, opacity = 100) {
   return { h: hue, s, v, opacity };
 }
 
+function tailwindClassToHsla(colorName: string, shade: number, opacity = 100) {
+  const colorHues: Record<string, number> = {
+    red: 0,
+    orange: 30,
+    amber: 45,
+    yellow: 60,
+    lime: 90,
+    green: 120,
+    emerald: 140,
+    teal: 160,
+    cyan: 180,
+    sky: 200,
+    blue: 220,
+    indigo: 240,
+    violet: 270,
+    purple: 285,
+    fuchsia: 300,
+    pink: 330,
+    rose: 345,
+    slate: 210,
+    gray: 220,
+    zinc: 240,
+    neutral: 0,
+    stone: 20
+  };
+
+  const hue = colorHues[colorName] || 0;
+  const isGrayscale = ['gray', 'zinc', 'neutral', 'stone'].includes(colorName);
+
+  let s = 0;
+  let l = 0;
+
+  if (isGrayscale) {
+    s = 0;
+    l = 100 - (shade - 50) * (60 / 900); // egyszerűsített világosság-gradiens
+  } else {
+    s = 60 - (shade - 50) * (30 / 900); // telítettség csökken a sötétebb árnyalatok felé
+    l = 50 + (shade - 500) * (-40 / 900); // világosság csökken a sötét árnyalatok felé
+  }
+
+  // Alkalmazzuk az opacitást az alpha csatornában
+  const a = parseFloat((opacity / 100).toFixed(2));
+
+  // Szaturáció és világosság korlátozása
+  s = Math.max(0, Math.min(100, Math.round(s)));
+  l = Math.max(0, Math.min(100, Math.round(l)));
+
+  return { h: hue, s, l, a };
+}
+
 const selectBaseColor = (color: string) => {
   baseColor.value = color;
   const colorShades = TWpalette.find(c => c.name === color);

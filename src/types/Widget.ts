@@ -140,9 +140,10 @@ export const GENERIC_SETTINGS_DEFINITIONS: SettingDefinition<keyof (typeof Widge
 
 export interface Color {
   opacity: number;
-  tint: number;
+  hue: number;
   // to be discussed
   saturation: number;
+  value: number;
 }
 
 export class WidgetGenericSettings {
@@ -170,8 +171,9 @@ export class WidgetGenericSettings {
     textColor: string;
     */
   background: Color = {
-    tint: 240,
+    hue: 240,
     saturation: 4,
+    value: 16,
     opacity: 0.8,
   };
 }
