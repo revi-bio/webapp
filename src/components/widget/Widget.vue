@@ -3,6 +3,7 @@ import type { Widget } from '@/types/Widget';
 import Link from '@/components/widget/Link.vue';
 import { computed } from 'vue';
 import ProfileWidget from './ProfileWidget.vue';
+import Markdown from './Markdown.vue';
 
 const props = defineProps<{
   data: Widget;
@@ -15,9 +16,10 @@ let style = computed(() =>
 </script>
 
 <template>
-  <div class="p-4 relative" :style="style">
+  <div class="p-4 relative w-full" :style="style">
     <Link :data="data" v-if="data.type == 'link'" />
     <ProfileWidget :data="data" v-if="data.type == 'profile'" />
+    <Markdown :data="data" v-if="data.type == 'markdown'"></Markdown>
     <!-- <span class="absolute right-4 bottom-2 text-zinc-900/80">meta: {{ data.type }} - {{ data.id }} - {{ data.page }}:{{ data.position }}</span> -->
   </div>
 </template>

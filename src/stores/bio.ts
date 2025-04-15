@@ -5,6 +5,8 @@ import type { Bio } from '@/types/Bio';
 
 export const useBioStore = defineStore('bios', () => {
   const bios = ref<Bio[]>([]);
+  const currentHandle = ref<string | null>(null);
+  const currentDisplayName = ref<string | undefined>(undefined);
 
   async function fetchBios(): Promise<unknown> {
     try {
@@ -97,6 +99,43 @@ export const useBioStore = defineStore('bios', () => {
     }
   }
 
+  function setCurrentHandle(handle: string) {
+    currentHandle.value = handle;
+    currentDisplayName.value = getBioByHandle(handle)?.name;
+
+    localStorage.setItem('currentHandle', handle);
+
+    if (currentDisplayName.value) {
+      localStorage.setItem('currentDisplayName', currentDisplayName.value);
+    }
+  }
+
+  function getCurrentHandle(): string | null {
+    if (!currentHandle.value) {
+      const storedHandle = localStorage.getItem('currentHandle');
+      const storedDisplayName = localStorage.getItem('currentDisplayName');
+
+      if (storedHandle) {
+        currentHandle.value = storedHandle;
+
+        if (storedDisplayName) {
+          currentDisplayName.value = storedDisplayName;
+        }
+      }
+    }
+    return currentHandle.value;
+  }
+
+  function getCurrentDisplayName(): string | undefined {
+    if (!currentDisplayName.value) {
+      const storedDisplayName = localStorage.getItem('currentDisplayName');
+      if (storedDisplayName) {
+        currentDisplayName.value = storedDisplayName;
+      }
+    }
+    return currentDisplayName.value;
+  }
+
   return {
     bios,
     fetchBios,
@@ -108,5 +147,8 @@ export const useBioStore = defineStore('bios', () => {
     deleteBio,
     uploadBioPfp,
     deleteBioPfp,
+    getCurrentHandle,
+    setCurrentHandle,
+    getCurrentDisplayName
   };
 });

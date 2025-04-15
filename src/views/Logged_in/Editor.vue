@@ -2,7 +2,6 @@
 import { computed, ref, type Ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Button from '@/components/global/Button.vue';
-import Toolbar from '@/components/global/Toolbar.vue';
 import {
   GENERIC_SETTINGS_DEFINITIONS,
   SPECIFIC_SETTINGS_DEFINITIONS,
@@ -16,6 +15,9 @@ import Input from '@/components/global/Input.vue';
 import { LinkWidget } from '@/types/widgets/Link';
 import type { Page } from '@/types/Page';
 import Spotify from '@/components/widget/Spotify.vue';
+import { ProfileWidget } from '@/types/widgets/Profile';
+import { YoutubeWidget } from '@/types/widgets/YouTube';
+import { MarkdownWidget } from '@/types/widgets/Markdown';
 import { GalleryWidget } from '@/types/widgets/Gallery';
 import ColorPicker from '@/components/global/ColorPicker.vue';
 
@@ -33,32 +35,6 @@ const pages = ref<Page[]>([
     name: 'Page 1',
     icon: 'home',
     widgets: [
-      {
-        id: uuidv4(),
-        type: 'profile',
-        genericSettings: new WidgetGenericSettings({
-          background: {
-            tint: 340,
-            saturation: 8,
-            opacity: 0.8,
-          },
-        }),
-        specificSettings: {
-          fullAlign: 'center',
-          bioAvatarAndName: 'center',
-          profileOver: true,
-          nameColor: 'zinc-100',
-          name: 'Default Name',
-          badgeColor: 'violet-500',
-          badgeVisible: true,
-          handleVisible: true,
-          handleColor: 'violet-500',
-          handle,
-          text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-        },
-        page: 0, // első oldal
-        position: 0, // első pozíció az oldalon
-      },
       {
         id: uuidv4(),
         genericSettings: new WidgetGenericSettings({
@@ -276,8 +252,8 @@ function addWidget(type: WidgetType) {
       currentPage.value.widgets.push(new YoutubeWidget(data));
       break;
     }
-    case 'gallery': {
-      currentPage.value.widgets.push(new GalleryWidget(data));
+    case 'markdown':{
+      currentPage.value.widgets.push(new MarkdownWidget(data));
       break;
     }
   }
@@ -349,6 +325,7 @@ function navigatePage(direction: 'prev' | 'next') {
         <div @click="addWidget('profile')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add profile widget</div>
         <div @click="addWidget('link')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
         <div @click="addWidget('youtube')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add youtube widget</div>
+        <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add markdown widget</div>
         <div @click="addWidget('gallery')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add gallery widget</div>
         <!--
         <div @click="addWidget('spotify')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
@@ -397,7 +374,7 @@ function navigatePage(direction: 'prev' | 'next') {
     </Teleport>
 
     <!-- Widgets display -->
-    <div id="widgets" class="flex flex-col gap-3 justify-center z-0 h-[80%] overflow-y-auto">
+    <div id="widgets" class="flex flex-col gap-3 justify-center z-0 h-[80%] w-1/2">
       <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
         <div class="flex gap-2 relative">
           <!-- Widget component -->
