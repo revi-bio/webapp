@@ -1,10 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-<<<<<<< HEAD
-export type WidgetType = 'profile' | 'link' | 'linkContainer' | 'spotify' | 'markdown';
-=======
-export type WidgetType = 'profile' | 'link' | 'linkContainer' | 'spotify' | 'youtube';
->>>>>>> deab60d06e13d4ac9e5bc8121eadebc5c7c6b274
+export type WidgetType = 'profile' | 'link' | 'linkContainer' | 'spotify' | 'youtube'| 'markdown';
 
 export interface SettingDefinition<T = string> {
   name: T;
@@ -84,7 +80,7 @@ export const SPECIFIC_SETTINGS_DEFINITIONS: { [key in WidgetType]: SettingDefini
       type: 'boolean',
     },
   ],
-<<<<<<< HEAD
+
   markdown:[
     {
       name:'align',
@@ -94,8 +90,8 @@ export const SPECIFIC_SETTINGS_DEFINITIONS: { [key in WidgetType]: SettingDefini
       name:'title',
       type:'string'
     },
-  ]
-=======
+  ],
+
   youtube: [
     {
       name: 'title',
@@ -110,7 +106,7 @@ export const SPECIFIC_SETTINGS_DEFINITIONS: { [key in WidgetType]: SettingDefini
       type: 'string',
     },
   ],
->>>>>>> deab60d06e13d4ac9e5bc8121eadebc5c7c6b274
+
 };
 
 export const GENERIC_SETTINGS_DEFINITIONS: SettingDefinition<keyof (typeof WidgetGenericSettings)['prototype']>[] = [
