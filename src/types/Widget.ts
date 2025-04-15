@@ -93,6 +93,10 @@ export const SPECIFIC_SETTINGS_DEFINITIONS: { [key in WidgetType]: SettingDefini
       name:'title',
       type:'string'
     },
+    {
+      name:'text',
+      type:'string'
+    },
   ],
 
   youtube: [
