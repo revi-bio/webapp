@@ -361,7 +361,7 @@ function navigatePage(direction: 'prev' | 'next') {
     </Teleport>
 
     <!-- Widgets display -->
-    <div id="widgets" class="flex flex-col gap-3 justify-center z-0 h-[80%] overflow-y-auto">
+    <div id="widgets" class="flex flex-col gap-3 justify-center z-0 h-[80%] w-1/2">
       <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
         <div class="flex gap-2 relative">
           <!-- Widget component -->
