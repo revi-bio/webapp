@@ -14,8 +14,7 @@ export class ProfileWidget extends Widget {
   constructor(options: ProfileWidgetOptions) {
     const bioStore = useBioStore();
     const handle = bioStore.getCurrentHandle();
-    console.log('handle from profile: ', handle)
-    const bio = handle ? bioStore.getBioByHandle(handle) : null;
+    const displayName = bioStore.getCurrentDisplayName();
 
     super({
       type: 'profile',
@@ -25,13 +24,13 @@ export class ProfileWidget extends Widget {
         rounded: 'xl',
         bioAvatarAndName: 'start',
         nameColor: 'violet-500',
-        name: bio?.name,
+        name: displayName || 'Loading profile',
         badgeColor: 'violet-500',
         badgeVisible: true,
         handleVisible: true,
         handleColor: 'violet-500',
         handle: handle,
-        text:'Your text comes here'
+        text: 'Your text comes here'
       },
       genericSettings: options.genericSettings ?? {},
       position: options.position!,
