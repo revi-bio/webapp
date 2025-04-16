@@ -403,7 +403,7 @@ function navigatePage(direction: 'prev' | 'next') {
 
 <style lang="scss">
 #widgets *[selected='true'] {
-  @apply border-2 border-dashed border-rose-500;
+  @apply border-2 border-rose-500;
 }
 
 .sidebar {
@@ -413,4 +413,5 @@ function navigatePage(direction: 'prev' | 'next') {
     @apply mb-1;
   }
 }
+
 </style>
