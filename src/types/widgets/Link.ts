@@ -25,8 +25,6 @@ export class LinkWidget extends Widget {
         link: 'https://youtu.be/dQw4w9WgXcQ',
       },
       genericSettings: options.genericSettings ?? {},
-      position: options.position!,
-      page: options.page!,
     });
   }
 }
