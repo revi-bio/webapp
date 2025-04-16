@@ -47,12 +47,12 @@ export const ProfileSettingDefinitions: SettingDefinition[] = [
     type: 'boolean',
   },
   {
-    name: 'handleColor',
-    type: 'color',
-  },
-  {
     name: 'handle',
     type: 'string',
+  },
+  {
+    name: 'handleColor',
+    type: 'color',
   },
   {
     name: 'text',
