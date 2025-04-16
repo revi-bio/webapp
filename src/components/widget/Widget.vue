@@ -5,6 +5,7 @@ import { computed } from 'vue';
 import ProfileWidget from './ProfileWidget.vue';
 import Markdown from './Markdown.vue';
 import Youtube from './Youtube.vue';
+import Gallery from './Gallery.vue';
 
 const props = defineProps<{
   data: Widget;
@@ -22,6 +23,7 @@ let style = computed(() =>
     <ProfileWidget :data="data" v-if="data.type == 'profile'" />
     <Markdown :data="data" v-if="data.type == 'markdown'" />
     <Youtube :data="data" v-if="data.type == 'youtube'" />
+    <Gallery :data="data" v-if="data.type == 'gallery'" />
     <!-- <span class="absolute right-4 bottom-2 text-zinc-900/80">meta: {{ data.type }} - {{ data.id }} - {{ data.page }}:{{ data.position }}</span> -->
   </div>
 </template>
