@@ -25,8 +25,6 @@ export class YoutubeWidget extends Widget {
         id: 'dQw4w9WgXcQ',
       },
       genericSettings: options.genericSettings ?? {},
-      position: options.position!,
-      page: options.page!,
     });
   }
 }

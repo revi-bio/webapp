@@ -261,6 +261,10 @@ function addWidget(type: WidgetType) {
       currentPage.value.widgets.push(new MarkdownWidget(data));
       break;
     }
+    case 'gallery':{
+      currentPage.value.widgets.push(new GalleryWidget(data));
+      break;
+    }
   }
 }
 
