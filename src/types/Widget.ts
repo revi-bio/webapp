@@ -1,4 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
+import { LinkSettingDefinitions } from './widgets/Link';
+import { ProfileSettingDefinitions } from './widgets/Profile';
+import { SpotifySettingDefinitions } from './widgets/Spotify';
+import { MarkdownSettingDefinitions } from './widgets/Markdown';
+import { YouTubeSettingDefinitions } from './widgets/YouTube';
+import { GallerySettingDefinitions } from './widgets/Gallery';
 
 export type WidgetType = 'profile' | 'link' | 'linkContainer' | 'spotify' | 'youtube' | 'markdown' | 'gallery';
 
@@ -8,122 +14,13 @@ export interface SettingDefinition<T = string> {
 }
 
 export const SPECIFIC_SETTINGS_DEFINITIONS: { [key in WidgetType]: SettingDefinition[] } = {
-  link: [
-    {
-      name: 'title',
-      type: 'string',
-    },
-    {
-      name: 'description',
-      type: 'string',
-    },
-    {
-      name: 'link',
-      type: 'string',
-    },
-  ],
+  link: LinkSettingDefinitions,
   linkContainer: [],
-  profile: [
-    {
-      name: 'fullAlign',
-      type: 'string',
-    },
-    {
-      name: 'profileOver',
-      type: 'string',
-    },
-    {
-      name: 'rounded',
-      type: 'string',
-    },
-    {
-      name: 'bioAvatarAndName',
-      type: 'string',
-    },
-    {
-      name: 'nameColor',
-      type: 'color',
-    },
-    {
-      name: 'name',
-      type: 'string',
-    },
-    {
-      name: 'badgeColor',
-      type: 'color',
-    },
-    {
-      name: 'badgeVisible',
-      type: 'boolean',
-    },
-    {
-      name: 'handleVisible',
-      type: 'boolean',
-    },
-    {
-      name: 'handleColor',
-      type: 'color',
-    },
-    {
-      name: 'handle',
-      type: 'string',
-    },
-    {
-      name: 'text',
-      type: 'string',
-    },
-  ],
-  spotify: [
-    {
-      name: 'playlistId',
-      type: 'string',
-    },
-    {
-      name: 'showArtwork',
-      type: 'boolean',
-    },
-  ],
-
-  markdown: [
-    {
-      name: 'align',
-      type: 'string',
-    },
-    {
-      name: 'title',
-      type: 'string',
-    },
-    {
-      name: 'text',
-      type: 'string',
-    },
-  ],
-
-  youtube: [
-    {
-      name: 'title',
-      type: 'string',
-    },
-    {
-      name: 'description',
-      type: 'string',
-    },
-    {
-      name: 'id',
-      type: 'string',
-    },
-  ],
-
-  gallery: [
-    {
-      name: 'title',
-      type: 'string',
-    },
-    {
-      name: 'images',
-      type: 'string[]',
-    },
-  ],
+  profile: ProfileSettingDefinitions,
+  spotify: SpotifySettingDefinitions,
+  markdown: MarkdownSettingDefinitions,
+  youtube: YouTubeSettingDefinitions,
+  gallery: GallerySettingDefinitions,
 };
 
 export const GENERIC_SETTINGS_DEFINITIONS: SettingDefinition<keyof (typeof WidgetGenericSettings)['prototype']>[] = [
