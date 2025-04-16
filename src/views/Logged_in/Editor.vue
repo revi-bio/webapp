@@ -2,11 +2,7 @@
 import { computed, ref, type Ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Button from '@/components/global/Button.vue';
-import {
-  WidgetGenericSettings,
-  type Widget as IWidget,
-  type WidgetType,
-} from '@/types/Widget';
+import { WidgetGenericSettings, type WidgetType } from '@/types/Widget';
 import Widget from '@/components/widget/Widget.vue';
 import { v4 as uuidv4 } from 'uuid';
 import Input from '@/components/global/Input.vue';
@@ -136,8 +132,7 @@ function moveWidget(direction: 'up' | 'down') {
   if (index === -1) return;
 
   // Don't move if at the edge
-  if ((direction === 'up' && index === 0) ||
-      (direction === 'down' && index === currentPage.value.widgets.length - 1)) {
+  if ((direction === 'up' && index === 0) || (direction === 'down' && index === currentPage.value.widgets.length - 1)) {
     return;
   }
 
@@ -162,11 +157,28 @@ function moveWidgetToPage(direction: 'prev' | 'next') {
   // Determine target page index
   const targetPageIndex = direction === 'prev' ? sourcePageIndex - 1 : sourcePageIndex + 1;
 
-  // Check if target page exists
-  if (targetPageIndex < 0 || targetPageIndex >= pages.value.length) return;
+  // Check if target page is out of bounds
+  if (targetPageIndex < 0) return;
+
+  // Check page limit (max 3 pages)
+  if (direction === 'next' && targetPageIndex >= pages.value.length && pages.value.length >= 3) return;
 
   const sourcePage = pages.value[sourcePageIndex];
-  const targetPage = pages.value[targetPageIndex];
+  let targetPage;
+
+  // Check if target page exists or create a new one if moving to next and at the end
+  if (direction === 'next' && targetPageIndex >= pages.value.length) {
+    // Create a new page
+    targetPage = {
+      id: uuidv4(),
+      name: `Page ${pages.value.length + 1}`,
+      icon: 'page',
+      widgets: [],
+    };
+    pages.value.push(targetPage);
+  } else {
+    targetPage = pages.value[targetPageIndex];
+  }
 
   // Find the widget in the source page
   const widgetIndex = sourcePage.widgets.findIndex((w) => w.id === selectedWidgetId.value);
@@ -178,12 +190,33 @@ function moveWidgetToPage(direction: 'prev' | 'next') {
   // Remove widget from source page
   sourcePage.widgets = sourcePage.widgets.filter((w) => w.id !== selectedWidgetId.value);
 
+  // Check if source page is now empty and remove it if it is
+  if (sourcePage.widgets.length === 0) {
+    // Remove the empty page
+    const pageToRemoveIndex = pages.value.findIndex((p) => p.id === sourcePage.id);
+    if (pageToRemoveIndex !== -1) {
+      pages.value.splice(pageToRemoveIndex, 1);
+
+      // Adjust current page index if needed
+      if (currentPageIndex.value >= pageToRemoveIndex && currentPageIndex.value > 0) {
+        currentPageIndex.value--;
+      }
+
+      // Adjust target page index if it was after the removed page
+      if (targetPageIndex > pageToRemoveIndex) {
+        targetPage = pages.value[targetPageIndex - 1];
+      }
+    }
+  }
+
   // Add widget to target page
   targetPage.widgets.push(widgetToMove);
 
-  // Navigate to the target page if the widget was on the current page
-  if (sourcePageIndex === currentPageIndex.value) {
-    currentPageIndex.value = targetPageIndex;
+  // Always navigate to the target page when moving a widget
+  // This ensures we follow the widget to its new location
+  const newTargetPageIndex = pages.value.findIndex((p) => p.id === targetPage.id);
+  if (newTargetPageIndex !== -1) {
+    currentPageIndex.value = newTargetPageIndex;
   }
 }
 
@@ -209,7 +242,7 @@ function addWidget(type: WidgetType) {
 
   const data = {};
 
-  switch(type) {
+  switch (type) {
     case 'link': {
       currentPage.value.widgets.push(new LinkWidget(data));
       break;
@@ -222,11 +255,11 @@ function addWidget(type: WidgetType) {
       currentPage.value.widgets.push(new YoutubeWidget(data));
       break;
     }
-    case 'markdown':{
+    case 'markdown': {
       currentPage.value.widgets.push(new MarkdownWidget(data));
       break;
     }
-    case 'gallery':{
+    case 'gallery': {
       currentPage.value.widgets.push(new GalleryWidget(data));
       break;
     }
@@ -237,7 +270,15 @@ function addWidget(type: WidgetType) {
 function navigatePage(direction: 'prev' | 'next') {
   if (direction === 'prev') {
     if (currentPageIndex.value > 0) {
-      currentPageIndex.value--;
+      // Check if the current page has no widgets before navigating away
+      if (currentPage.value && currentPage.value.widgets.length === 0) {
+        // Remove the empty page
+        pages.value.splice(currentPageIndex.value, 1);
+        // Adjust the current page index
+        currentPageIndex.value--;
+      } else {
+        currentPageIndex.value--;
+      }
     }
   } else {
     if (currentPageIndex.value >= pages.value.length - 1) {
@@ -299,7 +340,9 @@ function navigatePage(direction: 'prev' | 'next') {
         <div @click="addWidget('profile')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add profile widget</div>
         <div @click="addWidget('link')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
         <div @click="addWidget('youtube')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add youtube widget</div>
-        <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add markdown widget</div>
+        <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">
+          Add markdown widget
+        </div>
         <div @click="addWidget('gallery')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add gallery widget</div>
         <!--
         <div @click="addWidget('spotify')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
@@ -324,22 +367,48 @@ function navigatePage(direction: 'prev' | 'next') {
         <span>Widget-specific settings</span>
         <span v-for="setting in SPECIFIC_SETTINGS_DEFINITIONS[selectedWidget.type]" :key="setting.name">
           <span class="text-zinc-400">{{ setting.name }}</span>
-          <Input v-if="setting.type !== 'color'" type="text" v-model="(selectedWidget.specificSettings as any)[setting.name]" />
-          <ColorPicker v-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
+          <Input
+            v-if="setting.type !== 'color'"
+            type="text"
+            v-model="(selectedWidget.specificSettings as any)[setting.name]" />
+          <ColorPicker
+            v-if="setting.type === 'color'"
+            class="w-full"
+            :type="setting.name"
+            @color-selected="
               (_baseColor, _shade, opacity, hslaValue) => {
-                (selectedWidget!.specificSettings as any)[setting.name] = { hue: hslaValue.h, saturation: hslaValue.s, value:hslaValue.l, opacity: hslaValue.a };
-              }" />
+                (selectedWidget!.specificSettings as any)[setting.name] = {
+                  hue: hslaValue.h,
+                  saturation: hslaValue.s,
+                  value: hslaValue.l,
+                  opacity: hslaValue.a,
+                };
+              }
+            " />
         </span>
 
         <!-- Generic settings -->
         <span>Generic settings</span>
         <span v-for="setting in GENERIC_SETTINGS_DEFINITIONS" :key="setting.name">
           <span class="text-zinc-400">{{ setting.name }}</span>
-          <Input v-if="setting.type !== 'color'" type="text" v-model="(selectedWidget.specificSettings as any)[setting.name]" />
-          <ColorPicker v-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
+          <Input
+            v-if="setting.type !== 'color'"
+            type="text"
+            v-model="(selectedWidget.specificSettings as any)[setting.name]" />
+          <ColorPicker
+            v-if="setting.type === 'color'"
+            class="w-full"
+            :type="setting.name"
+            @color-selected="
               (_baseColor, _shade, opacity, hslaValue) => {
-                (selectedWidget!.genericSettings as any)[setting.name] = { hue: hslaValue.h, saturation: hslaValue.s, value:hslaValue.l, opacity: hslaValue.a };
-              }" />
+                (selectedWidget!.genericSettings as any)[setting.name] = {
+                  hue: hslaValue.h,
+                  saturation: hslaValue.s,
+                  value: hslaValue.l,
+                  opacity: hslaValue.a,
+                };
+              }
+            " />
         </span>
       </div>
     </Teleport>
@@ -377,7 +446,6 @@ function navigatePage(direction: 'prev' | 'next') {
             <div class="flex gap-2">
               <Button
                 :onClick="() => moveWidgetToPage('prev')"
-                :disabled="selectedWidgetPageIndex <= 0"
                 icon-position="only"
                 icon-type="arrow_back"
                 size="small"
@@ -386,7 +454,6 @@ function navigatePage(direction: 'prev' | 'next') {
               </Button>
               <Button
                 :onClick="() => moveWidgetToPage('next')"
-                :disabled="selectedWidgetPageIndex >= pages.length - 1"
                 icon-position="only"
                 icon-type="arrow_forward"
                 size="small"
@@ -413,5 +480,4 @@ function navigatePage(direction: 'prev' | 'next') {
     @apply mb-1;
   }
 }
-
 </style>
