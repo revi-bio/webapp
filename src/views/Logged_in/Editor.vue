@@ -403,7 +403,7 @@ function navigatePage(direction: 'prev' | 'next') {
 
 <style lang="scss">
 #widgets *[selected='true'] {
-  @apply border-2 border-rose-500;
+  @apply ring-2 ring-rose-500;
 }
 
 .sidebar {
