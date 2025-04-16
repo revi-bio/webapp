@@ -3,8 +3,6 @@ import { computed, ref, type Ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Button from '@/components/global/Button.vue';
 import {
-  GENERIC_SETTINGS_DEFINITIONS,
-  SPECIFIC_SETTINGS_DEFINITIONS,
   WidgetGenericSettings,
   type Widget as IWidget,
   type WidgetType,
@@ -20,6 +18,7 @@ import { YoutubeWidget } from '@/types/widgets/YouTube';
 import { MarkdownWidget } from '@/types/widgets/Markdown';
 import { GalleryWidget } from '@/types/widgets/Gallery';
 import ColorPicker from '@/components/global/ColorPicker.vue';
+import { GENERIC_SETTINGS_DEFINITIONS, SPECIFIC_SETTINGS_DEFINITIONS } from '@/types/WidgetSettings';
 
 const route = useRoute();
 const handle = route.params.handle as string;
@@ -231,7 +230,7 @@ function deleteWidget() {
 
   // Select another widget if available
   if (currentPage.value.widgets.length > 0) {
-    selectedWidgetId.value = currentPage.value.widgets[0].id;
+    selectedWidgetId.value = currentPage.value.widgets[index - 1].id;
   } else {
     selectedWidgetId.value = null;
   }

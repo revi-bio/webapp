@@ -1,3 +1,5 @@
+import type { SettingDefinition } from '../Widget';
+
 export interface TrackItem {
   track: {
     name: string;
@@ -5,7 +7,7 @@ export interface TrackItem {
       name: string;
       external_urls: {
         spotify: string;
-      }
+      };
     }[];
     album: {
       images: {
@@ -17,7 +19,7 @@ export interface TrackItem {
     external_urls: {
       spotify: string;
     };
-  }
+  };
 }
 
 export interface Spotify {
@@ -31,8 +33,19 @@ export interface Spotify {
       displayName: string;
     };
     tracks?: {
-      items: TrackItem[]
-    }
+      items: TrackItem[];
+    };
     playlistUrl?: string;
   };
 }
+
+export const SpotifySettingDefinitions: SettingDefinition[] = [
+  {
+    name: 'playlistId',
+    type: 'string',
+  },
+  {
+    name: 'showArtwork',
+    type: 'boolean',
+  },
+];
