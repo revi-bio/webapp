@@ -24,8 +24,6 @@ export class MarkdownWidget extends Widget {
         text: 'This is the *text*',
       },
       genericSettings: options.genericSettings ?? {},
-      position: options.position!,
-      page: options.page!,
     });
   }
 }

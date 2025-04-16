@@ -88,8 +88,6 @@ export class ProfileWidget extends Widget {
         text: 'Your text comes here',
       },
       genericSettings: options.genericSettings ?? {},
-      position: options.position!,
-      page: options.page!,
     });
   }
 }

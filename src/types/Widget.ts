@@ -51,8 +51,6 @@ export interface WidgetInitializer {
   type: WidgetType;
   specificSettings: object;
   genericSettings: Partial<WidgetGenericSettings>;
-  page: number;
-  position: number;
 }
 
 /** The actual widget placed on the bio site, NOT the widget definition */
@@ -68,12 +66,6 @@ export class Widget {
   /** widget-specific settings */
   specificSettings: object;
 
-  /** the index of the page the widget is on */
-  page: number = 0;
-
-  /** the index of the widget on the page */
-  position: number = 0;
-
   constructor(options: WidgetInitializer) {
     this.type = options.type;
     this.genericSettings = new WidgetGenericSettings(options.genericSettings ?? {});
@@ -82,7 +74,5 @@ export class Widget {
     if (!options.specificSettings) throw Error('do not pls');
 
     this.specificSettings = options.specificSettings;
-    this.page = options.page;
-    this.position = options.position;
   }
 }

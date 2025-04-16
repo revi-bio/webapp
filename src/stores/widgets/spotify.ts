@@ -10,7 +10,7 @@ export const useSpotifyStore = defineStore('spotify', () => {
 
   const spotifyData = ref<Spotify>({
     accessToken: '',
-    data: undefined
+    data: undefined,
   });
 
   const tokenExpiresAt = ref<number>(0);
@@ -32,16 +32,12 @@ export const useSpotifyStore = defineStore('spotify', () => {
 
     try {
       const credentials = btoa(`${clientId}:${clientSecret}`);
-      const response = await axios.post(
-        TOKENURL,
-        new URLSearchParams({ grant_type: 'client_credentials' }),
-        {
-          headers: {
-            Authorization: `Basic ${credentials}`,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }
-      );
+      const response = await axios.post(TOKENURL, new URLSearchParams({ grant_type: 'client_credentials' }), {
+        headers: {
+          Authorization: `Basic ${credentials}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
 
       const { access_token, expires_in } = response.data;
       setToken(access_token, Date.now() + expires_in * 1000);
@@ -71,7 +67,7 @@ export const useSpotifyStore = defineStore('spotify', () => {
       const response = await SpotifyApi.get(`playlists/${playlistId}/tracks`, {
         params: {
           fields: 'items(track(name,artists(name,external_urls),album(images),external_urls))',
-        }
+        },
       });
 
       return { items: response.data.items };
@@ -93,7 +89,7 @@ export const useSpotifyStore = defineStore('spotify', () => {
       const { SpotifyApi } = await import('@/composables/widgets/SpotifyApi');
 
       const response = await SpotifyApi.get(`playlists/${playlistId}`, {
-        fields: 'id,name,images,owner(display_name,external_urls),external_urls'
+        fields: 'id,name,images,owner(display_name,external_urls),external_urls',
       });
 
       const data = response.data;
@@ -106,10 +102,10 @@ export const useSpotifyStore = defineStore('spotify', () => {
         image: data.images[0]?.url || '',
         owner: {
           displayName: data.owner.display_name,
-          href: data.owner.external_urls.spotify
+          href: data.owner.external_urls.spotify,
         },
         playlistUrl: data.external_urls.spotify,
-        tracks: tracksData || undefined
+        tracks: tracksData || undefined,
       };
 
       setPlaylistData(playlistData);
@@ -135,6 +131,6 @@ export const useSpotifyStore = defineStore('spotify', () => {
     setPlaylistData,
     getPlaylist,
     getPlaylistTracks,
-    refreshSpotifyData
+    refreshSpotifyData,
   };
 });

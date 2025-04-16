@@ -20,8 +20,6 @@ export class GalleryWidget extends Widget {
         images: []
       },
       genericSettings: options.genericSettings ?? {},
-      position: options.position!,
-      page: options.page!,
     });
   }
 }
