@@ -52,9 +52,9 @@ const countOfUnreaded = computed(() =>
         <div class="cursor-pointer" @click="deleteMsg()"><Icon size="text-sm" type="delete"></Icon> Delete this mail</div>
       </div>
     </div>
-    <div v-if="!selectedMsg" class="space-y-4 text-4xl flex items-center justify-center flex-col text-center">
-      <div>Keep</div>
-      <div>track of <span class="text-rose-500">your</span> notifications</div>
+    <div v-if="!selectedMsg" class="space-y-4 text-3xl flex items-center justify-center flex-col text-center">
+      <h3>Keep</h3>
+      <h3>track of <span class="text-rose-500">your</span> notifications</h3>
       <Button icon-position="none" rank="primary" size="normal" text="Have any question?" @click=""></Button>
       <div>(Looks like you have <span class="text-rose-500">{{ countOfUnreaded }} unread</span> message)</div>
     </div>

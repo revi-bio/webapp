@@ -1,29 +1,78 @@
 <script lang="ts" setup>
-import { onMounted, ref, watchEffect } from 'vue';
+import { onMounted, ref, watchEffect, computed } from 'vue';
 import Searchbar from '@/components/global/Searchbar.vue';
 import BioListItem from '@/components/global/BioListItem.vue';
 import Button from '@/components/global/Button.vue';
 import type { Bio } from '@/types/Bio';
 import router from '@/router';
 import { useBioStore } from '@/stores/bio';
+import Modal from '@/components/global/Modal.vue';
 
 const bioStore = useBioStore();
 const search = ref('');
 const biolists = ref<Bio[]>([]);
 const filteredData = ref<Bio[]>([]);
+const showModal = ref(false);
+
+const bioName = ref('');
+const bioHandle = ref('');
+
+const modalActions = [
+  {
+    text: "Create",
+    icon: "add",
+    rank: "primary",
+    callback: "submit"
+  },
+  {
+    text: "Cancel",
+    icon: "close",
+    rank: "secondary",
+    callback: "close"
+  }
+];
+
+const modalInputs = computed(() => [
+  {
+    placeholder: "Enter bio name",
+    label: "Bio Name",
+    modelValue: bioName.value,
+    type: "text",
+  },
+  {
+    placeholder: "Enter handle (without @)",
+    label: "Bio Handle",
+    modelValue: bioHandle.value,
+    type: "text",
+  }
+]);
+
+const handleModelValueUpdate = (data: { index: number, value: string }) => {
+  if (data.index === 0) {
+    bioName.value = data.value;
+  } else if (data.index === 1) {
+    bioHandle.value = data.value;
+  }
+};
+
+const openCreateModal = () => {
+  bioName.value = '';
+  bioHandle.value = '';
+  showModal.value = true;
+};
 
 const createBio = async () => {
-  const name = prompt("Enter the name for the new bio:");
-  if (!name) return; 
-
-  const handle = prompt("Enter the handle for the new bio (e.g., @username):");
-  if (!handle) return;
-
-  const newBio = await bioStore.createBio(name, handle);
+  if (!bioName.value || !bioHandle.value) {
+    alert("Name and handle are required!");
+    return;
+  }
+  const newBio = await bioStore.createBio(bioName.value, bioHandle.value);
 
   if (newBio) {
-    biolists.value.push(newBio);
-    filteredData.value = [...biolists.value];
+    showModal.value = false;
+    bioName.value=''
+    bioHandle.value = '';
+
     openEditor(newBio.handle);
   }
 };
@@ -53,7 +102,14 @@ watchEffect(() => {
   <div class="w-full h-full flex flex-col space-y-6 p-6 pt-20">
     <div class="flex flex-row justify-between content-center items-center w-full rounded-[16px] p-4 bg-zinc-700/50">
       <Searchbar v-model="search" :basearray="biolists" @filtered="changeSearch"></Searchbar>
-      <Button @click.prevent="createBio" rank="primary" size="small" text="Create bio" icon-position="right" icon-type="add"></Button>
+      <Button
+        rank="primary"
+        size="small"
+        text="Create bio"
+        icon-position="right"
+        icon-type="add"
+        @click="openCreateModal"
+      ></Button>
     </div>
 
     <div class="w-full h-full baseDash overflow-y-auto flex-col space-y-6">
@@ -69,6 +125,18 @@ watchEffect(() => {
       </div>
     </div>
   </div>
+
+  <!-- Bio létrehozás Modal -->
+  <Modal
+    :show="showModal"
+    @close="showModal = false"
+    primaryMsg="Create a new Bio"
+    secondaryMsg="Set your bio's display name and handle"
+    :inputs="modalInputs"
+    :actions="modalActions"
+    @update:modelValue="handleModelValueUpdate"
+    @submit="createBio"
+  ></Modal>
 </template>
 
 <style>

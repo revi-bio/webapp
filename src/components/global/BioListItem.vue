@@ -32,7 +32,6 @@ function openEditor(handle: string) {
     params: { handle }
   });
   console.log('handle from params: ', handle)
-
   console.log('handle from getCurrentHandle:', bioStore.getCurrentHandle())
 }
 
@@ -47,7 +46,20 @@ async function confirmDelete() {
     alert("An error occurred while deleting.");
   }
 }
-
+const modalActions = [
+  {
+    text: "Delete",
+    icon: "delete",
+    rank: "primary",
+    callback: "delete"
+  },
+  {
+    text: "Cancel",
+    icon: "close",
+    rank: "secondary",
+    callback: "close"
+  }
+];
 </script>
 
 <template>
@@ -56,7 +68,7 @@ async function confirmDelete() {
       <BioPfp class="w-[64px] h-[64px]" :bioHandle="handle"></BioPfp>
       <div class="flex flex-col">
         <h3 class="text-2xl text-zinc-100 w-full">{{ name }}</h3>
-        <h3 class="text-md text-zinc-500">{{ handle }}</h3>
+        <h3 class="text-md text-zinc-500">@{{ handle }}</h3>
       </div>
       <div class="flex space-x-1">
         <div class="stats">
@@ -90,7 +102,7 @@ async function confirmDelete() {
     @close="showModal = false"
     :primaryMsg="`Delete ${name}?`"
     :secondaryMsg="`Are you sure you want to delete ${handle}?`"
-    :showDeleteButton="true"
+    :actions="modalActions"
     @delete="confirmDelete"
   ></Modal>
 </template>
