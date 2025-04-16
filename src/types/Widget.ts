@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export type WidgetType = 'profile' | 'link' | 'linkContainer' | 'spotify' | 'youtube'| 'markdown' | 'gallery';
+export type WidgetType = 'profile' | 'link' | 'linkContainer' | 'spotify' | 'youtube' | 'markdown' | 'gallery';
 
 export interface SettingDefinition<T = string> {
   name: T;
@@ -25,52 +25,52 @@ export const SPECIFIC_SETTINGS_DEFINITIONS: { [key in WidgetType]: SettingDefini
   linkContainer: [],
   profile: [
     {
-      name:'fullAlign',
-      type:'string'
+      name: 'fullAlign',
+      type: 'string',
     },
     {
-      name:'profileOver',
-      type:'string'
+      name: 'profileOver',
+      type: 'string',
     },
     {
-      name:'rounded',
-      type:'string'
+      name: 'rounded',
+      type: 'string',
     },
     {
-      name:'bioAvatarAndName',
-      type:'string'
+      name: 'bioAvatarAndName',
+      type: 'string',
     },
     {
-      name:'nameColor',
-      type:'color'
+      name: 'nameColor',
+      type: 'color',
     },
     {
-      name:'name',
-      type:'string'
+      name: 'name',
+      type: 'string',
     },
     {
-      name:'badgeColor',
-      type:'color'
+      name: 'badgeColor',
+      type: 'color',
     },
     {
-      name:'badgeVisible',
-      type:'boolean'
+      name: 'badgeVisible',
+      type: 'boolean',
     },
     {
-      name:'handleVisible',
-      type: 'boolean'
+      name: 'handleVisible',
+      type: 'boolean',
     },
     {
-      name:'handleColor',
-      type:'color'
+      name: 'handleColor',
+      type: 'color',
     },
     {
-      name:'handle',
-      type:'string'
+      name: 'handle',
+      type: 'string',
     },
     {
-      name:'text',
-      type:'string'
+      name: 'text',
+      type: 'string',
     },
   ],
   spotify: [
@@ -84,18 +84,18 @@ export const SPECIFIC_SETTINGS_DEFINITIONS: { [key in WidgetType]: SettingDefini
     },
   ],
 
-  markdown:[
+  markdown: [
     {
-      name:'align',
-      type:'string'
+      name: 'align',
+      type: 'string',
     },
     {
-      name:'title',
-      type:'string'
+      name: 'title',
+      type: 'string',
     },
     {
-      name:'text',
-      type:'string'
+      name: 'text',
+      type: 'string',
     },
   ],
 
@@ -114,7 +114,7 @@ export const SPECIFIC_SETTINGS_DEFINITIONS: { [key in WidgetType]: SettingDefini
     },
   ],
 
-  gallery:[
+  gallery: [
     {
       name: 'title',
       type: 'string',
@@ -124,7 +124,6 @@ export const SPECIFIC_SETTINGS_DEFINITIONS: { [key in WidgetType]: SettingDefini
       type: 'string[]',
     },
   ],
-
 };
 
 export const GENERIC_SETTINGS_DEFINITIONS: SettingDefinition<keyof (typeof WidgetGenericSettings)['prototype']>[] = [
