@@ -231,7 +231,7 @@ function deleteWidget() {
 
   // Select another widget if available
   if (currentPage.value.widgets.length > 0) {
-    selectedWidgetId.value = currentPage.value.widgets[0].id;
+    selectedWidgetId.value = currentPage.value.widgets[index - 1].id;
   } else {
     selectedWidgetId.value = null;
   }
