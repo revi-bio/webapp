@@ -38,7 +38,7 @@ const countOfUnreaded = computed(() =>
 
 <template>
 <div class="flex h-full justify-center content-center items-center flex-row gap-4 p-6">
-  <div class="w-full h-full flex-col bg-zinc-800 rounded-2xl flex items-center justify-center">
+  <div class="w-full h-full flex-col flex items-center justify-center">
     <div v-if="selectedMsg" class="space-y-6 ">
       <div class="max-w-[800px] w-full bg-zinc-700 rounded-2xl p-6">{{ selectedMsg.title }}</div>
       <div class="max-w-[800px] w-full bg-zinc-700 rounded-2xl p-6 text-justify">{{ selectedMsg.text }}</div>
