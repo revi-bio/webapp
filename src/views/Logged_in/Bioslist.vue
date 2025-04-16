@@ -55,10 +55,19 @@ const handleModelValueUpdate = (data: { index: number, value: string }) => {
   }
 };
 
-const openCreateModal = () => {
+const resetBioInputs = () => {
   bioName.value = '';
   bioHandle.value = '';
+};
+
+const openCreateModal = () => {
+  resetBioInputs();
   showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
+  resetBioInputs();
 };
 
 const createBio = async () => {
@@ -69,10 +78,7 @@ const createBio = async () => {
   const newBio = await bioStore.createBio(bioName.value, bioHandle.value);
 
   if (newBio) {
-    showModal.value = false;
-    bioName.value=''
-    bioHandle.value = '';
-
+    closeModal();
     openEditor(newBio.handle);
   }
 };
@@ -128,8 +134,9 @@ watchEffect(() => {
 
   <!-- Bio létrehozás Modal -->
   <Modal
+    v-if="showModal"
     :show="showModal"
-    @close="showModal = false"
+    @close="closeModal"
     primaryMsg="Create a new Bio"
     secondaryMsg="Set your bio's display name and handle"
     :inputs="modalInputs"
