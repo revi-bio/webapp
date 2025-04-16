@@ -44,8 +44,6 @@ const pages = ref<Page[]>([
             opacity: 0.8,
           },
         }),
-        page: 0,
-        position: 1,
         specificSettings: {
           title: 'hello',
           description: 'asdlkasjdlksajdlksajdklsajdkl',
@@ -56,8 +54,6 @@ const pages = ref<Page[]>([
       {
         id: uuidv4(),
         genericSettings: new WidgetGenericSettings({}),
-        page: 0,
-        position: 2,
         specificSettings: {
           title: 'big gyatt in your area',
           description: 'hahahahahahahahaha',
@@ -74,7 +70,7 @@ const currentPage = computed(() =>
   currentPageIndex.value < pages.value.length ? pages.value[currentPageIndex.value] : null,
 );
 
-const widgetsOnCurrentPage = computed(() => currentPage.value?.widgets.sort((a, b) => a.position - b.position) || []);
+const widgetsOnCurrentPage = computed(() => currentPage.value?.widgets || []);
 
 const selectedWidget = computed(() => {
   if (!selectedWidgetId.value) return null;
@@ -108,20 +104,9 @@ const selectedWidgetPageIndex = computed(() => {
 });
 
 // Helper functions
-function getNextPosition(): number {
-  if (!currentPage.value || currentPage.value.widgets.length === 0) return 0;
-
-  return Math.max(...currentPage.value.widgets.map((w) => w.position)) + 1;
-}
-
 function findWidgetIndex(id: string): number {
   if (!currentPage.value) return -1;
   return currentPage.value.widgets.findIndex((w) => w.id === id);
-}
-
-function findWidgetByPosition(position: number): number {
-  if (!currentPage.value) return -1;
-  return currentPage.value.widgets.findIndex((w) => w.position === position);
 }
 
 // UI interaction functions
@@ -150,23 +135,21 @@ function moveWidget(direction: 'up' | 'down') {
   const index = findWidgetIndex(selectedWidgetId.value);
   if (index === -1) return;
 
-  const widget = currentPage.value.widgets[index];
-  const newPosition = direction === 'up' ? widget.position - 1 : widget.position + 1;
-
-  // Find the min and max positions in the current page
-  const positions = currentPage.value.widgets.map(w => w.position);
-  const minPosition = Math.min(...positions);
-  const maxPosition = Math.max(...positions);
-
   // Don't move if at the edge
-  if (newPosition < minPosition || newPosition > maxPosition) return;
-
-  const swapIndex = findWidgetByPosition(newPosition);
-  if (swapIndex !== -1) {
-    // Swap positions
-    currentPage.value.widgets[swapIndex].position = widget.position;
-    widget.position = newPosition;
+  if ((direction === 'up' && index === 0) ||
+      (direction === 'down' && index === currentPage.value.widgets.length - 1)) {
+    return;
   }
+
+  const newIndex = direction === 'up' ? index - 1 : index + 1;
+
+  // Swap widgets in the array
+  const widgets = [...currentPage.value.widgets];
+  const temp = widgets[newIndex];
+  widgets[newIndex] = widgets[index];
+  widgets[index] = temp;
+
+  currentPage.value.widgets = widgets;
 }
 
 function moveWidgetToPage(direction: 'prev' | 'next') {
@@ -191,24 +174,9 @@ function moveWidgetToPage(direction: 'prev' | 'next') {
 
   // Get the widget to move
   const widgetToMove = { ...sourcePage.widgets[widgetIndex] };
-  const removedPosition = widgetToMove.position;
 
   // Remove widget from source page
   sourcePage.widgets = sourcePage.widgets.filter((w) => w.id !== selectedWidgetId.value);
-
-  // Reindex widgets in the source page to avoid gaps
-  sourcePage.widgets.forEach((widget) => {
-    if (widget.position > removedPosition) {
-      widget.position -= 1;
-    }
-  });
-
-  // Calculate new position at the end of target page
-  const newPosition = targetPage.widgets.length > 0 ? Math.max(...targetPage.widgets.map((w) => w.position)) + 1 : 0;
-
-  // Update widget's page property
-  widgetToMove.page = targetPageIndex;
-  widgetToMove.position = newPosition;
 
   // Add widget to target page
   targetPage.widgets.push(widgetToMove);
@@ -230,7 +198,7 @@ function deleteWidget() {
 
   // Select another widget if available
   if (currentPage.value.widgets.length > 0) {
-    selectedWidgetId.value = currentPage.value.widgets[index - 1].id;
+    selectedWidgetId.value = currentPage.value.widgets[Math.max(0, index - 1)].id;
   } else {
     selectedWidgetId.value = null;
   }
@@ -239,10 +207,7 @@ function deleteWidget() {
 function addWidget(type: WidgetType) {
   if (!currentPage.value) return;
 
-  const data = {
-    page: currentPageIndex.value,
-    position: getNextPosition(),
-  };
+  const data = {};
 
   switch(type) {
     case 'link': {
