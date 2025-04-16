@@ -23,6 +23,11 @@ let nameStyle = computed(
     `color: hsla(${props.data.specificSettings['nameColor'].hue}, ${props.data.specificSettings['nameColor'].saturation}%, ${props.data.specificSettings['nameColor'].value}%, ${props.data.specificSettings['nameColor'].opacity});`,
 );
 
+let textStyle = computed(
+  () =>
+    `color: hsla(${props.data.specificSettings['textColor'].hue}, ${props.data.specificSettings['textColor'].saturation}%, ${props.data.specificSettings['textColor'].value}%, ${props.data.specificSettings['textColor'].opacity});`,
+);
+
 
 
 </script>
@@ -62,7 +67,7 @@ let nameStyle = computed(
 
       <!--Text-->
       <div
-        class="flex flex-col justify-center content-start items-start w-full">
+        class="flex flex-col justify-center content-start items-start w-full" :style=textStyle>
         <p>{{ data.specificSettings['text'] }}</p>
       </div>
     </div>

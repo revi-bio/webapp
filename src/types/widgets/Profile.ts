@@ -58,6 +58,10 @@ export const ProfileSettingDefinitions: SettingDefinition[] = [
     name: 'text',
     type: 'string',
   },
+  {
+    name: 'textColor',
+    type: 'color',
+  },
 ];
 
 export class ProfileWidget extends Widget {
@@ -74,6 +78,7 @@ export class ProfileWidget extends Widget {
         rounded: 'xl',
         bioAvatarAndName: 'start',
         nameColor: 'violet-500',
+        textColor: 'violet-500',
         name: displayName || 'Loading profile',
         badgeColor: 'violet-500',
         badgeVisible: true,
