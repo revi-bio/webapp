@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { ApiWrapper } from '@/composables/ApiWrapper';
 import type { Bio } from '@/types/Bio';
+import type { Page } from '@/types/Page';
 
 export const useBioStore = defineStore('bios', () => {
   const bios = ref<Bio[]>([]);
@@ -136,6 +137,17 @@ export const useBioStore = defineStore('bios', () => {
     return currentDisplayName.value;
   }
 
+  async function saveBioPages(handle: string, pages: Page[]) {
+    console.log(pages);
+    const response = await ApiWrapper.post<[Page]>(`bio/${handle}/pages`, pages);
+    return response.data;
+  }
+
+  async function getBioPages(handle: string) {
+    const response = await ApiWrapper.get<object[]>(`bio/${handle}/pages`, null);
+    return response.data as Page[];
+  }
+
   return {
     bios,
     fetchBios,
@@ -149,6 +161,8 @@ export const useBioStore = defineStore('bios', () => {
     deleteBioPfp,
     getCurrentHandle,
     setCurrentHandle,
-    getCurrentDisplayName
+    getCurrentDisplayName,
+    saveBioPages,
+    getBioPages,
   };
 });

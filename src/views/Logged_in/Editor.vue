@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, type Ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, onMounted, ref, type Ref } from 'vue';
 import Button from '@/components/global/Button.vue';
 import { WidgetGenericSettings, type WidgetType } from '@/types/Widget';
 import Widget from '@/components/widget/Widget.vue';
@@ -15,6 +14,9 @@ import { MarkdownWidget } from '@/types/widgets/Markdown';
 import { GalleryWidget } from '@/types/widgets/Gallery';
 import ColorPicker from '@/components/global/ColorPicker.vue';
 import { GENERIC_SETTINGS_DEFINITIONS, SPECIFIC_SETTINGS_DEFINITIONS } from '@/types/WidgetSettings';
+import { useBioStore } from '@/stores/bio';
+import { useRoute } from 'vue-router';
+
 
 const route = useRoute();
 const handle = route.params.handle as string;
@@ -22,14 +24,17 @@ const currentPageIndex = ref(0);
 const selectedWidgetId = ref<string | null>(null);
 const widgetToolboxOpened = ref(false);
 const bioSettingsOpened = ref(false);
+const bioStore = useBioStore();
 
 // Initialize pages with sample widgets
-const pages = ref<Page[]>([
-  {
-    id: uuidv4(),
-    name: 'Page 1',
-    icon: 'home',
-    widgets: [
+const pages = ref<Page[]>(
+  [
+    {
+      id: uuidv4(),
+      name: 'Page 1',
+      icon: 'home',
+      widgets: [
+/*
       {
         id: uuidv4(),
         genericSettings: new WidgetGenericSettings({
@@ -57,9 +62,15 @@ const pages = ref<Page[]>([
         },
         type: 'link',
       },
+*/
     ],
   },
-]);
+]
+);
+
+onMounted(async () => {
+  pages.value = await bioStore.getBioPages(handle);
+})
 
 // Computed properties
 const currentPage = computed(() =>
@@ -297,6 +308,11 @@ function navigatePage(direction: 'prev' | 'next') {
     currentPageIndex.value++;
   }
 }
+
+function savePages(){
+  console.log(pages.value)
+  bioStore.saveBioPages(handle, pages.value);
+}
 </script>
 
 <template>
@@ -464,6 +480,10 @@ function navigatePage(direction: 'prev' | 'next') {
           </div>
         </div>
       </template>
+    </div>
+
+    <div class="top-0 right-0 m-6 absolute">
+      <Button :onClick="savePages" icon-position="only" icon-type="save" size="small" rank="primary" />
     </div>
   </div>
 </template>
