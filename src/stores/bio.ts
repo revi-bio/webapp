@@ -148,6 +148,29 @@ export const useBioStore = defineStore('bios', () => {
     return response.data as Page[];
   }
 
+  async function uploadWidgetImmage(file: File) {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      console.log('File being uploaded:', file.name, file.size, file.type);
+
+      const response = await ApiWrapper.patch(`bio/${handle}/bioPfp`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log('Upload response:', response);
+
+      return response.data;
+    } catch (error) {
+      console.error('Failed to upload profile picture. Error details:', error);
+      throw error;
+    }
+  }
+
+
   return {
     bios,
     fetchBios,

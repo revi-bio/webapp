@@ -4,6 +4,10 @@ import type { Widget } from '@/types/Widget';
 const props = defineProps<{
   data: Widget;
 }>();
+
+function getWidgetImg(image: string): string{
+  return `${import.meta.env.VITE_API_BASE_URL}/file/${image}`
+}
 </script>
 
 <template>
@@ -12,7 +16,7 @@ const props = defineProps<{
     <img
         v-for="image in data.specificSettings['images']"
         :key="image"
-        :src="image"
+        :src="getWidgetImg(image)"
         alt="Gallery image"
         class="rounded-lg shadow-md"
       />
