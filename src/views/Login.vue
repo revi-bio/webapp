@@ -8,38 +8,52 @@
   import { useUserStore } from '@/stores/user';
   import { ApiWrapper } from '@/composables/ApiWrapper';
   import { computed, reactive, ref, watch } from 'vue';
-import router from '@/router';
+  import router from '@/router';
+  import Alert from '@/components/global/Alert.vue';
 
   const userStore = useUserStore();
   const email = ref('');
   const password = ref('');
-  const errorMsg = ref()
+  const errorMsg = ref();
+
+  const alertStatus = ref<number>(0);
+  const alertError = ref<string>('');
+  const alertMessage = ref<string>('');
+  const alertActive = ref<boolean>(false);
 
   const errorClass = computed(() => {
     return errorMsg.value ? 'error' : 'none';
   });
 
+  const onAlertHide = () => {
+    alertActive.value = false;
+  };
+
   const onLogIn = async () => {
-  try {
-    const res = await ApiWrapper.post<{ jwt: string }>('auth/login', {
-      email: email.value,
-      password: password.value
-    });
+    try {
+      const res = await ApiWrapper.post<{ jwt: string }>('auth/login', {
+        email: email.value,
+        password: password.value
+      });
 
-    if (res.status === 200) {
+      if (res.status === 200) {
+        userStore.setJwt(res.data.jwt);
+        userStore.setStatus(200);
+        router.push('/baseDash/overview');
+      }
+    } catch (error: any) {
+      errorMsg.value = error.status;
 
-      userStore.setJwt(res.data.jwt);
-      userStore.setStatus(200);
-      console.log('Login successful, status:', userStore.getStatus());
-      router.push('/baseDash/overview');
-    } else {
-      console.log("Hello I'm under the water please help me!")
+      if (error.response && error.response.data) {
+        alertStatus.value = error.response.data.statusCode;
+        alertError.value = error.response.data.error;
+        alertMessage.value = error.response.data.message;
+        alertActive.value = true;
+      }
     }
-  } catch (error: any) {
-    errorMsg.value = error.status
-    console.log(errorMsg)
-  }}
+  }
 </script>
+
 <template>
   <div class="flex flex-row w-full h-full p-5">
     <div class="w-2/5 h-full flex flex-row justify-center content-center items-center relative">
@@ -47,7 +61,7 @@ import router from '@/router';
       <div class="w-3/4 h-full flex flex-col justify-center content-center items-center gap-[3rem] ">
         <div class="w-full flex flex-col justify-center content-center items-start gap-3">
           <h3 class="text-6xl">Welcome back!</h3>
-          <p class="text-[#52525B]">Let’s continue where you left off. Forgot your password? Click here to start the password reset process.</p>
+          <p class="text-[#52525B]">Let's continue where you left off. Forgot your password? Click here to start the password reset process.</p>
         </div>
         <form class="w-full flex flex-col justify-start content-center items-center gap-3">
           <Input placeholder="Email" v-model="email" type="email" :styleclass="errorClass"></Input>
@@ -57,11 +71,15 @@ import router from '@/router';
           <Button text="Log in" rank="primary" size="normal" icon-position="none" @click.prevent="onLogIn"></Button>
           <p class="text-[#71717A]"><RouterLink to="register">- or Create an account</RouterLink></p>
         </div>
-
       </div>
-
     </div>
     <AuthBanner class="w-3/5"></AuthBanner>
+    <Alert
+      :status="alertStatus"
+      :error="alertError"
+      :message="alertMessage"
+      :active="alertActive"
+      @hide="onAlertHide"
+    />
   </div>
-
 </template>
