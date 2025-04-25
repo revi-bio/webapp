@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { animate } from "motion";
 import Icon from "./Icon.vue";
-import { ref, watch, onMounted, nextTick } from "vue";
+import { ref, watch, onMounted, nextTick, computed } from "vue";
 
 const props = defineProps<{
   status: number,
@@ -13,6 +13,10 @@ const props = defineProps<{
 const emit = defineEmits(['hide']);
 const isVisible = ref(props.active);
 const alertRef = ref<HTMLElement | null>(null);
+
+const isError = computed(() => {
+  return (props.error && props.error.trim() !== '') || (props.status < 200 || props.status >= 300);
+});
 
 const animateIn = async () => {
   await nextTick();
@@ -81,18 +85,20 @@ onMounted(async () => {
     <div
       v-if="isVisible"
       ref="alertRef"
-      :class="`w-1/4 min-w-[25rem] min-h-32 flex flex-row justify-between content-center items-center p-5 relative ${props.error ? 'bg-red-500' : 'bg-green-500'} overflow-clip rounded-lg`"
+      :class="`w-1/4 min-w-[25rem] min-h-32 flex flex-row justify-between content-center items-center p-5 relative ${isError ? 'bg-red-500/90' : 'bg-green-500/90'} overflow-clip rounded-lg shadow-lg`"
     >
       <div class="flex flex-col justify-center content-start items-start gap-2">
-        <h3 class="text-xl text-zinc-300">{{ props.status }}</h3>
-        <span class="flex flex-row justify-center content-start items-start gap-2 text-zinc-300 text-base">
-          <h3 v-if="props.error">{{ props.error }}</h3>
-          <h3 v-if="props.error"> - </h3>
-          <h3>{{ props.message }}</h3>
+        <h3 class="text-xl text-white font-medium">{{ status === 200 ? 'Success' : status }}</h3>
+        <span class="flex flex-row justify-center content-start items-start gap-2 text-white text-base">
+          <template v-if="isError">
+            <h3 v-if="error">{{ error }}</h3>
+            <h3 v-if="error"> - </h3>
+          </template>
+          <h3>{{ message }}</h3>
         </span>
       </div>
-      <Icon :type="props.error ? 'error' : 'check'" size="3xl"></Icon>
-      <span :class="`w-16 h-16 ${props.error? 'bg-red-300' : 'bg-green-300'} blur-3xl absolute right-0 top-0`">
+      <Icon :type="isError ? 'error' : 'check'" size="3xl" class="text-white"></Icon>
+      <span :class="`w-16 h-16 ${isError ? 'bg-red-300' : 'bg-green-300'} blur-3xl absolute right-0 top-0`">
         <!--Blob-->
       </span>
     </div>

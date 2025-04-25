@@ -17,6 +17,7 @@ import { GENERIC_SETTINGS_DEFINITIONS, SPECIFIC_SETTINGS_DEFINITIONS } from '@/t
 import { useBioStore } from '@/stores/bio';
 import { useRoute } from 'vue-router';
 import ImagePicker from '@/components/global/ImagePicker.vue';
+import Alert from '@/components/global/Alert.vue';
 
 const route = useRoute();
 const handle = route.params.handle as string;
@@ -25,6 +26,11 @@ const selectedWidgetId = ref<string | null>(null);
 const widgetToolboxOpened = ref(false);
 const bioSettingsOpened = ref(false);
 const bioStore = useBioStore();
+const alertStatus = ref<number>(0);
+const alertError = ref<string>('');
+const alertMessage = ref<string>('');
+const alertActive = ref<boolean>(false);
+
 
 // Initialize pages with sample widgets
 const pages = ref<Page[]>([
@@ -67,9 +73,18 @@ const pages = ref<Page[]>([
 ]);
 
 onMounted(async () => {
-  const stored = await bioStore.getBioPages(handle);
-  if (stored.length != 0) {
-    pages.value = stored;
+  try {
+    const stored = await bioStore.getBioPages(handle);
+    if (stored.length != 0) {
+      pages.value = stored;
+    }
+  } catch (error: any) {
+    console.error("Error fetching bio pages:", error);
+    showAlert(
+      error.response?.status || 500,
+      error.response?.data?.error || "Error",
+      error.response?.data?.message || "Failed to fetch bio pages"
+    );
   }
 });
 
@@ -138,25 +153,37 @@ function toggleBioSettings() {
 
 // Widget manipulation functions
 function moveWidget(direction: 'up' | 'down') {
-  if (!selectedWidgetId.value || !currentPage.value) return;
+  try {
+    if (!selectedWidgetId.value || !currentPage.value) return;
 
-  const index = findWidgetIndex(selectedWidgetId.value);
-  if (index === -1) return;
+    const index = findWidgetIndex(selectedWidgetId.value);
+    if (index === -1) return;
 
-  // Don't move if at the edge
-  if ((direction === 'up' && index === 0) || (direction === 'down' && index === currentPage.value.widgets.length - 1)) {
-    return;
+    // Don't move if at the edge
+    if ((direction === 'up' && index === 0) || (direction === 'down' && index === currentPage.value.widgets.length - 1)) {
+      return;
+    }
+
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+
+    // Swap widgets in the array
+    const widgets = [...currentPage.value.widgets];
+    const temp = widgets[newIndex];
+    widgets[newIndex] = widgets[index];
+    widgets[index] = temp;
+
+    currentPage.value.widgets = widgets;
+
+    // Show success alert
+    showAlert(200, '', `Widget moved ${direction} successfully!`);
+  } catch (error: any) {
+    console.error(`Error moving widget ${direction}:`, error);
+    showAlert(
+      error.response?.status || 500,
+      error.response?.data?.error || "Error",
+      error.response?.data?.message || `Failed to move widget ${direction}`
+    );
   }
-
-  const newIndex = direction === 'up' ? index - 1 : index + 1;
-
-  // Swap widgets in the array
-  const widgets = [...currentPage.value.widgets];
-  const temp = widgets[newIndex];
-  widgets[newIndex] = widgets[index];
-  widgets[index] = temp;
-
-  currentPage.value.widgets = widgets;
 }
 
 function moveWidgetToPage(direction: 'prev' | 'next') {
@@ -233,48 +260,74 @@ function moveWidgetToPage(direction: 'prev' | 'next') {
 }
 
 function deleteWidget() {
-  if (!selectedWidgetId.value || !currentPage.value) return;
+  try {
+    if (!selectedWidgetId.value || !currentPage.value) return;
 
-  const index = findWidgetIndex(selectedWidgetId.value);
-  if (index === -1) return;
+    const index = findWidgetIndex(selectedWidgetId.value);
+    if (index === -1) return;
 
-  // Remove the widget
-  currentPage.value.widgets = currentPage.value.widgets.filter((w) => w.id !== selectedWidgetId.value);
+    // Remove the widget
+    currentPage.value.widgets = currentPage.value.widgets.filter((w) => w.id !== selectedWidgetId.value);
 
-  // Select another widget if available
-  if (currentPage.value.widgets.length > 0) {
-    selectedWidgetId.value = currentPage.value.widgets[Math.max(0, index - 1)].id;
-  } else {
-    selectedWidgetId.value = null;
+    // Select another widget if available
+    if (currentPage.value.widgets.length > 0) {
+      selectedWidgetId.value = currentPage.value.widgets[Math.max(0, index - 1)].id;
+    } else {
+      selectedWidgetId.value = null;
+    }
+
+    // Show success alert
+    showAlert(200, '', 'Widget deleted successfully!');
+  } catch (error: any) {
+    console.error("Error deleting widget:", error);
+    showAlert(
+      error.response?.status || 500,
+      error.response?.data?.error || "Error",
+      error.response?.data?.message || "Failed to delete widget"
+    );
   }
 }
 
 function addWidget(type: WidgetType) {
-  if (!currentPage.value) return;
+  try {
+    if (!currentPage.value) return;
 
-  const data = {};
+    const data = {};
 
-  switch (type) {
-    case 'link': {
-      currentPage.value.widgets.push(new LinkWidget(data));
-      break;
+    switch (type) {
+      case 'link': {
+        currentPage.value.widgets.push(new LinkWidget(data));
+        showAlert(200, '', `Link widget added successfully!`);
+        break;
+      }
+      case 'profile': {
+        currentPage.value.widgets.push(new ProfileWidget(data));
+        showAlert(200, '', `Profile widget added successfully!`);
+        break;
+      }
+      case 'youtube': {
+        currentPage.value.widgets.push(new YoutubeWidget(data));
+        showAlert(200, '', `YouTube widget added successfully!`);
+        break;
+      }
+      case 'markdown': {
+        currentPage.value.widgets.push(new MarkdownWidget(data));
+        showAlert(200, '', `Markdown widget added successfully!`);
+        break;
+      }
+      case 'gallery': {
+        currentPage.value.widgets.push(new GalleryWidget(data));
+        showAlert(200, '', `Gallery widget added successfully!`);
+        break;
+      }
     }
-    case 'profile': {
-      currentPage.value.widgets.push(new ProfileWidget(data));
-      break;
-    }
-    case 'youtube': {
-      currentPage.value.widgets.push(new YoutubeWidget(data));
-      break;
-    }
-    case 'markdown': {
-      currentPage.value.widgets.push(new MarkdownWidget(data));
-      break;
-    }
-    case 'gallery': {
-      currentPage.value.widgets.push(new GalleryWidget(data));
-      break;
-    }
+  } catch (error: any) {
+    console.error(`Error adding ${type} widget:`, error);
+    showAlert(
+      error.response?.status || 500,
+      error.response?.data?.error || "Error",
+      error.response?.data?.message || `Failed to add ${type} widget`
+    );
   }
 }
 
@@ -310,10 +363,32 @@ function navigatePage(direction: 'prev' | 'next') {
   }
 }
 
-function savePages() {
+const showAlert = (status: number, error: string, message: string) => {
+  alertStatus.value = status;
+  alertError.value = status === 200 ? '' : error;
+  alertMessage.value = message;
+  alertActive.value = true;
+};
+const onAlertHide = () => {
+  alertActive.value = false;
+};
+async function savePages() {
   console.log(pages.value);
-  bioStore.saveBioPages(handle, pages.value);
+  try {
+    const response = await bioStore.saveBioPages(handle, pages.value);
+    showAlert(200, '', "Bio saved successfully!");
+  } catch (error: any) {
+    console.error("Error saving bio pages:", error);
+    showAlert(
+      error.response?.status || 500,
+      error.response?.data?.error || "Error",
+      error.response?.data?.message || "Failed to save bio pages"
+    );
+  }
 }
+
+
+
 </script>
 
 <template>
@@ -495,6 +570,13 @@ function savePages() {
       <Button :onClick="savePages" icon-position="only" icon-type="save" size="small" rank="primary" />
     </div>
   </div>
+  <Alert
+    :status="alertStatus"
+    :error="alertError"
+    :message="alertMessage"
+    :active="alertActive"
+    @hide="onAlertHide"
+  />
 </template>
 
 <style lang="scss">

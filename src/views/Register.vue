@@ -7,14 +7,28 @@
   import { RouterLink } from 'vue-router';
   import { ApiWrapper } from '@/composables/ApiWrapper';
   import { useUserStore } from '@/stores/user';
-  import { ref } from 'vue'
-import router from '@/router';
+  import { computed, ref } from 'vue'
+  import router from '@/router';
+  import Alert from '@/components/global/Alert.vue';
 
   const userStore = useUserStore();
   const displayName = ref('');
   const email = ref('');
   const password = ref('');
   const confPassword = ref('');
+  const errorMsg = ref();
+  const alertStatus = ref<number>(0);
+  const alertError = ref<string>('');
+  const alertMessage = ref<string>('');
+  const alertActive = ref<boolean>(false);
+
+  const errorClass = computed(() => {
+    return errorMsg.value ? 'error' : 'none';
+  });
+
+  const onAlertHide = () => {
+    alertActive.value = false;
+  };
 
   const onRegister = async () => {
   try {
@@ -38,8 +52,15 @@ import router from '@/router';
       console.error("Registration failed:", res);
     }
 
-  } catch (error) {
-    console.error("Error during registration:", error);
+  } catch (error : any) {
+    errorMsg.value = error.status;
+
+    if (error.response && error.response.data) {
+      alertStatus.value = error.response.data.statusCode;
+      alertError.value = error.response.data.error;
+      alertMessage.value = error.response.data.message;
+      alertActive.value = true;
+    }
   }
 };
 
@@ -55,10 +76,10 @@ import router from '@/router';
           <p class="text-[#52525B]">Welcome to revi.bio! You can start by completing the form below to register your account.</p>
         </div>
         <form class="w-full flex flex-col justify-center content-start items-start gap-3">
-          <Input type="text" placeholder="Display name" v-model="displayName"></Input>
-          <Input type="email" placeholder="Email" v-model="email"></Input>
-          <Input type="password" placeholder="Password" v-model="password"></Input>
-          <Input type="password" placeholder="Confirm password" v-model="confPassword"></Input>
+          <Input type="text" placeholder="Display name" v-model="displayName" :styleclass="errorClass"></Input>
+          <Input type="email" placeholder="Email" v-model="email" :styleclass="errorClass"></Input>
+          <Input type="password" placeholder="Password" v-model="password" :styleclass="errorClass"></Input>
+          <Input type="password" placeholder="Confirm password" v-model="confPassword" :styleclass="errorClass"></Input>
           <Checkbox text="I agree to sell my insides to revi.bio"></Checkbox>
         </form>
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
@@ -70,6 +91,13 @@ import router from '@/router';
 
     </div>
     <AuthBanner class="w-3/5"></AuthBanner>
+    <Alert
+      :status="alertStatus"
+      :error="alertError"
+      :message="alertMessage"
+      :active="alertActive"
+      @hide="onAlertHide"
+    />
   </div>
 
 </template>

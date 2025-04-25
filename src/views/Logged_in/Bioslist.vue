@@ -7,12 +7,36 @@ import type { Bio } from '@/types/Bio';
 import router from '@/router';
 import { useBioStore } from '@/stores/bio';
 import Modal from '@/components/global/Modal.vue';
+import Alert from '@/components/global/Alert.vue';
 
 const bioStore = useBioStore();
 const search = ref('');
 const biolists = ref<Bio[]>([]);
 const filteredData = ref<Bio[]>([]);
 const showModal = ref(false);
+const alertStatus = ref<number>(0);
+const alertError = ref<string>('');
+const alertMessage = ref<string>('');
+const alertActive = ref<boolean>(false);
+
+
+const pendingBioHandle = ref<string | null>(null);
+
+const onAlertHide = () => {
+  alertActive.value = false;
+
+  if (pendingBioHandle.value) {
+    openEditor(pendingBioHandle.value);
+    pendingBioHandle.value = null;
+  }
+};
+
+const showAlert = (status: number, error: string, message: string) => {
+  alertStatus.value = status;
+  alertError.value = status === 200 ? '' : error;
+  alertMessage.value = message;
+  alertActive.value = true;
+};
 
 const bioName = ref('');
 const bioHandle = ref('');
@@ -72,14 +96,24 @@ const closeModal = () => {
 
 const createBio = async () => {
   if (!bioName.value || !bioHandle.value) {
-    alert("Name and handle are required!");
+    showAlert(400, "Error", "Name and handle are required!");
     return;
   }
-  const newBio = await bioStore.createBio(bioName.value, bioHandle.value);
 
-  if (newBio) {
-    closeModal();
-    openEditor(newBio.handle);
+  try {
+    const newBio = await bioStore.createBio(bioName.value, bioHandle.value);
+
+    if (newBio) {
+      closeModal();
+      showAlert(200, "Success", "Bio created successfully!");
+      pendingBioHandle.value = newBio.handle;
+    }
+  } catch (error: any) {
+    showAlert(
+      error.response?.status || 500,
+      error.response?.data?.error || "Error",
+      error.response?.data?.message || "Failed to create bio"
+    );
   }
 };
 
@@ -92,10 +126,22 @@ function changeSearch(filtered: Bio[]) {
   filteredData.value = filtered;
 }
 
+const handleBioDeleted = (data: { handle: string, name: string }) => {
+  showAlert(200, '', `Bio "${data.name}" deleted successfully!`);
+};
+
 onMounted(async () => {
-  await bioStore.fetchBios();
-  biolists.value = [...bioStore.bios];
-  filteredData.value = [...biolists.value];
+  try {
+    await bioStore.fetchBios();
+    biolists.value = [...bioStore.bios];
+    filteredData.value = [...biolists.value];
+  } catch (error: any) {
+    showAlert(
+      error.response?.status || 500,
+      error.response?.data?.error || "Error",
+      error.response?.data?.message || "Failed to fetch bios"
+    );
+  }
 });
 
 watchEffect(() => {
@@ -127,12 +173,12 @@ watchEffect(() => {
           :widgets="item.widgets"
           :createdAt="item.createdAt"
           :updatedAt="item.updatedAt"
+          @bioDeleted="handleBioDeleted"
         ></BioListItem>
       </div>
     </div>
   </div>
 
-  <!-- Bio létrehozás Modal -->
   <Modal
     v-if="showModal"
     :show="showModal"
@@ -144,6 +190,14 @@ watchEffect(() => {
     @update:modelValue="handleModelValueUpdate"
     @submit="createBio"
   ></Modal>
+
+  <Alert
+    :status="alertStatus"
+    :error="alertError"
+    :message="alertMessage"
+    :active="alertActive"
+    @hide="onAlertHide"
+  />
 </template>
 
 <style>

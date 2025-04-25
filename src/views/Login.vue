@@ -14,16 +14,11 @@
   const userStore = useUserStore();
   const email = ref('');
   const password = ref('');
-  const errorMsg = ref();
 
   const alertStatus = ref<number>(0);
   const alertError = ref<string>('');
   const alertMessage = ref<string>('');
   const alertActive = ref<boolean>(false);
-
-  const errorClass = computed(() => {
-    return errorMsg.value ? 'error' : 'none';
-  });
 
   const onAlertHide = () => {
     alertActive.value = false;
@@ -39,14 +34,18 @@
       if (res.status === 200) {
         userStore.setJwt(res.data.jwt);
         userStore.setStatus(200);
-        router.push('/baseDash/overview');
+        alertError.value = '';
+        alertMessage.value = 'Login successful!';
+        alertActive.value = true;
+
+        setTimeout(() => {
+          router.push('/baseDash/overview');
+        }, 1000);
       }
     } catch (error: any) {
-      errorMsg.value = error.status;
-
       if (error.response && error.response.data) {
         alertStatus.value = error.response.data.statusCode;
-        alertError.value = error.response.data.error;
+        alertError.value = error.response.data.statusCode === 200 ? '' : error.response.data.error;
         alertMessage.value = error.response.data.message;
         alertActive.value = true;
       }
@@ -64,8 +63,8 @@
           <p class="text-[#52525B]">Let's continue where you left off. Forgot your password? Click here to start the password reset process.</p>
         </div>
         <form class="w-full flex flex-col justify-start content-center items-center gap-3">
-          <Input placeholder="Email" v-model="email" type="email" :styleclass="errorClass"></Input>
-          <Input placeholder="Password" v-model="password" type="password" :styleclass="errorClass"></Input>
+          <Input placeholder="Email" v-model="email" type="email"></Input>
+          <Input placeholder="Password" v-model="password" type="password"></Input>
         </form>
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
           <Button text="Log in" rank="primary" size="normal" icon-position="none" @click.prevent="onLogIn"></Button>
