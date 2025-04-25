@@ -16,7 +16,7 @@ import ColorPicker from '@/components/global/ColorPicker.vue';
 import { GENERIC_SETTINGS_DEFINITIONS, SPECIFIC_SETTINGS_DEFINITIONS } from '@/types/WidgetSettings';
 import { useBioStore } from '@/stores/bio';
 import { useRoute } from 'vue-router';
-
+import ImagePicker from '@/components/global/ImagePicker.vue';
 
 const route = useRoute();
 const handle = route.params.handle as string;
@@ -27,14 +27,13 @@ const bioSettingsOpened = ref(false);
 const bioStore = useBioStore();
 
 // Initialize pages with sample widgets
-const pages = ref<Page[]>(
-  [
-    {
-      id: uuidv4(),
-      name: 'Page 1',
-      icon: 'home',
-      widgets: [
-/*
+const pages = ref<Page[]>([
+  {
+    id: uuidv4(),
+    name: 'Page 1',
+    icon: 'home',
+    widgets: [
+      /*
       {
         id: uuidv4(),
         genericSettings: new WidgetGenericSettings({
@@ -65,12 +64,14 @@ const pages = ref<Page[]>(
 */
     ],
   },
-]
-);
+]);
 
 onMounted(async () => {
-  pages.value = await bioStore.getBioPages(handle);
-})
+  const stored = await bioStore.getBioPages(handle);
+  if (stored.length != 0) {
+    pages.value = stored;
+  }
+});
 
 // Computed properties
 const currentPage = computed(() =>
@@ -309,8 +310,8 @@ function navigatePage(direction: 'prev' | 'next') {
   }
 }
 
-function savePages(){
-  console.log(pages.value)
+function savePages() {
+  console.log(pages.value);
   bioStore.saveBioPages(handle, pages.value);
 }
 </script>
@@ -384,11 +385,11 @@ function savePages(){
         <span v-for="setting in SPECIFIC_SETTINGS_DEFINITIONS[selectedWidget.type]" :key="setting.name">
           <span class="text-zinc-400">{{ setting.name }}</span>
           <Input
-            v-if="setting.type !== 'color'"
+            v-if="setting.type === 'number' || setting.type === 'string'"
             type="text"
             v-model="(selectedWidget.specificSettings as any)[setting.name]" />
           <ColorPicker
-            v-if="setting.type === 'color'"
+            v-else-if="setting.type === 'color'"
             class="w-full"
             :type="setting.name"
             @color-selected="
@@ -401,6 +402,14 @@ function savePages(){
                 };
               }
             " />
+          <ImagePicker
+            :widgetId="selectedWidgetId"
+            :images="selectedWidget.specificSettings['images']"
+            v-else-if="setting.type === 'Image[]'"
+            @change-images="(images) => {
+              selectedWidget.specificSettings['images'] = images
+            }"
+          />
         </span>
 
         <!-- Generic settings -->

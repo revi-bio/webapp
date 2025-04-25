@@ -4,7 +4,7 @@ export type WidgetType = 'profile' | 'link' | 'linkContainer' | 'spotify' | 'you
 
 export interface SettingDefinition<T = string> {
   name: T;
-  type: 'string' | 'number' | 'color' | 'boolean' | 'string[]';
+  type: 'string' | 'number' | 'color' | 'boolean' | 'Image[]';
 }
 
 export interface Color {
