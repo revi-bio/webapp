@@ -7,7 +7,7 @@ export const GallerySettingDefinitions: SettingDefinition[] = [
   },
   {
     name: 'images',
-    type: 'Image[]',
+    type: 'images',
   },
 ];
 

@@ -405,7 +405,7 @@ function savePages() {
           <ImagePicker
             :widgetId="selectedWidgetId"
             :images="selectedWidget.specificSettings['images']"
-            v-else-if="setting.type === 'Image[]'"
+            v-else-if="setting.type === 'images'"
             @change-images="(images) => {
               selectedWidget.specificSettings['images'] = images
             }"

@@ -51,7 +51,7 @@ function prevImage() {
         type="chevron_right" />
 
       <p
-        v-if="images.length"
+        v-if="images.length > 1"
         class="absolute bottom-1 left-1/2 text-zinc-200 text-sm bg-black/50 px-3 py-1 rounded-full">
         {{ currentIndex + 1 }} / {{ images.length }}
       </p>
