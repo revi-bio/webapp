@@ -14,9 +14,7 @@ watch(
   () => props.data.specificSettings['images'],
   (newImages) => {
     images.value = newImages || [];
-    console.log('update');
     currentIndex.value = 0;
-    console.log(currentIndex.value);
   },
   { immediate: true },
 );
