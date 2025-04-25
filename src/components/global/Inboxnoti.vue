@@ -35,6 +35,7 @@ watchEffect(() => {
     <div class="flex flex-row items-center justify-between">
       <Logo type="revi" width="40"></Logo>
       <p class="text-md truncate w-[80px]">{{ item.title }}</p>
+      <p class="text-md w-[80px]">{{ item.createdAt.split('T')[0] }}</p>
       <Icon v-if="!item.isRead" type="mail" size="3xl" class="text-rose-500"></Icon>
       <Icon v-if="item.isRead" type="drafts" size="3xl"></Icon>
     </div>

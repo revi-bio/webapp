@@ -5,4 +5,5 @@ export interface InboxMessage {
   text: string;
   user: User;
   isRead: boolean;
+  createdAt: string;
 }

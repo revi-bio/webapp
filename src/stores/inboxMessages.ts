@@ -13,7 +13,7 @@ export const useInboxStore = defineStore('inboxMessages', () => {
       inboxMessages.value = res.data;
       return res.data;
     } catch (error) {
-      console.error('Failed to load inbox messages');
+      console.error('Failed to load inbox messages', error);
     }
   }
 
@@ -25,7 +25,7 @@ export const useInboxStore = defineStore('inboxMessages', () => {
     return inboxMessages.value.length > 0 ? inboxMessages.value[0] : undefined;
   }
 
-  async function createInboxMessageForUser(title: string, text: string, user: User) {
+  async function createInboxMessageForUser(title: string, text: string, user: string) {
     try {
       const newInboxMessage = {
         title,
@@ -53,6 +53,15 @@ export const useInboxStore = defineStore('inboxMessages', () => {
     }
   }
 
+  async function markAsRead(id: string) {
+    try{
+      await ApiWrapper.patch<InboxMessage>(`message/${id}`, {})
+    }catch(error){
+      console.error('Failed to mark as read message:', error)
+      return null
+    }
+  }
+
   return {
     inboxMessages,
     fetchInbox,
@@ -60,5 +69,6 @@ export const useInboxStore = defineStore('inboxMessages', () => {
     getInboxMessagesById,
     createInboxMessageForUser,
     deleteInboxMessage,
+    markAsRead,
   };
 });
