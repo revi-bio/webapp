@@ -1,58 +1,65 @@
 <script lang="ts" setup>
-  import AuthBanner from '@/components/authentication/AuthBanner.vue';
-  import Input from '@/components/global/Input.vue';
-  import Button from '@/components/global/Button.vue';
-  import Logo from '@/components/global/Logo.vue';
-  import Checkbox from '@/components/global/Checkbox.vue';
-  import { RouterLink } from 'vue-router';
-  import { ApiWrapper } from '@/composables/ApiWrapper';
-  import { useUserStore } from '@/stores/user';
-  import { computed, ref } from 'vue'
-  import router from '@/router';
-  import Alert from '@/components/global/Alert.vue';
+import AuthBanner from '@/components/authentication/AuthBanner.vue';
+import Input from '@/components/global/Input.vue';
+import Button from '@/components/global/Button.vue';
+import Logo from '@/components/global/Logo.vue';
+import Checkbox from '@/components/global/Checkbox.vue';
+import { RouterLink } from 'vue-router';
+import { ApiWrapper } from '@/composables/ApiWrapper';
+import { useUserStore } from '@/stores/user';
+import { computed, ref } from 'vue';
+import router from '@/router';
+import Alert from '@/components/global/Alert.vue';
+import { useInboxStore } from '@/stores/inboxMessages';
+import type { User } from '@/types/User';
 
-  const userStore = useUserStore();
-  const displayName = ref('');
-  const email = ref('');
-  const password = ref('');
-  const confPassword = ref('');
-  const errorMsg = ref();
-  const alertStatus = ref<number>(0);
-  const alertError = ref<string>('');
-  const alertMessage = ref<string>('');
-  const alertActive = ref<boolean>(false);
+const inboxStore = useInboxStore();
+const userStore = useUserStore();
+const displayName = ref('');
+const email = ref('');
+const password = ref('');
+const confPassword = ref('');
+const errorMsg = ref();
+const alertStatus = ref<number>(0);
+const alertError = ref<string>('');
+const alertMessage = ref<string>('');
+const alertActive = ref<boolean>(false);
 
-  const errorClass = computed(() => {
-    return errorMsg.value ? 'error' : 'none';
-  });
+const errorClass = computed(() => {
+  return errorMsg.value ? 'error' : 'none';
+});
 
-  const onAlertHide = () => {
-    alertActive.value = false;
-  };
+const onAlertHide = () => {
+  alertActive.value = false;
+};
 
-  const onRegister = async () => {
+const onRegister = async () => {
   try {
     if (confPassword.value !== password.value) {
-      alert("The given passwords are not the same!");
+      alert('The given passwords are not the same!');
       return;
     }
 
     console.log(displayName.value, email.value, password.value, confPassword.value);
 
-    const res = await ApiWrapper.post<{jwt: string }>('auth/register', {
+    const res = await ApiWrapper.post<{ jwt: string }>('auth/register', {
       displayName: displayName.value,
       email: email.value,
-      password: password.value
+      password: password.value,
     });
 
     if (res.status === 201 && res.data.jwt) {
       userStore.setJwt(res.data.jwt);
       router.push('baseDash/overview');
+      inboxStore.createInboxMessageForUser(
+        'Welcome! 🎉',
+        "Thank you for registering with us! We're excited to have you as part of our community. Your account has been successfully created, and you're now ready to explore everything we have to offer. \nIf you have any questions or need assistance, feel free to reach out — we're here to help!",
+        userStore.getUserData().id,
+      );
     } else {
-      console.error("Registration failed:", res);
+      console.error('Registration failed:', res);
     }
-
-  } catch (error : any) {
+  } catch (error: any) {
     errorMsg.value = error.status;
 
     if (error.response && error.response.data) {
@@ -63,17 +70,17 @@
     }
   }
 };
-
 </script>
 <template>
   <div class="flex flex-row w-full h-full p-5">
     <div class="w-2/5 h-full flex flex-row justify-center content-center items-center relative">
       <RouterLink to="/"><Logo type="revibio" class="absolute top-4 left-4"></Logo></RouterLink>
       <div class="w-3/4 h-full flex flex-col justify-center content-center items-center gap-[3rem]">
-
         <div class="w-full flex flex-col justify-center content-center items-start gap-3">
           <h3 class="text-6xl">Create an account</h3>
-          <p class="text-[#52525B]">Welcome to revi.bio! You can start by completing the form below to register your account.</p>
+          <p class="text-[#52525B]">
+            Welcome to revi.bio! You can start by completing the form below to register your account.
+          </p>
         </div>
         <form class="w-full flex flex-col justify-center content-start items-start gap-3">
           <Input type="text" placeholder="Display name" v-model="displayName" :styleclass="errorClass"></Input>
@@ -83,12 +90,15 @@
           <Checkbox text="I agree to sell my insides to revi.bio"></Checkbox>
         </form>
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
-          <Button text="Register" rank="primary" size="normal" icon-position="none" @click.prevent="onRegister"></Button>
+          <Button
+            text="Register"
+            rank="primary"
+            size="normal"
+            icon-position="none"
+            @click.prevent="onRegister"></Button>
           <p class="text-[#71717A]"><RouterLink to="login">- or Log in</RouterLink></p>
         </div>
-
       </div>
-
     </div>
     <AuthBanner class="w-3/5"></AuthBanner>
     <Alert
@@ -96,8 +106,6 @@
       :error="alertError"
       :message="alertMessage"
       :active="alertActive"
-      @hide="onAlertHide"
-    />
+      @hide="onAlertHide" />
   </div>
-
 </template>
