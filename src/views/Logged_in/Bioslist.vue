@@ -45,13 +45,13 @@ const modalActions = [
   {
     text: "Create",
     icon: "add",
-    rank: "primary",
+    rank: "primary" as const,
     callback: "submit"
   },
   {
     text: "Cancel",
     icon: "close",
-    rank: "secondary",
+    rank: "secondary" as const,
     callback: "close"
   }
 ];
@@ -61,13 +61,13 @@ const modalInputs = computed(() => [
     placeholder: "Enter bio name",
     label: "Bio Name",
     modelValue: bioName.value,
-    type: "text",
+    type: "text" as "text" | "password" | "email",
   },
   {
     placeholder: "Enter handle (without @)",
     label: "Bio Handle",
     modelValue: bioHandle.value,
-    type: "text",
+    type: "text" as "text" | "password" | "email",
   }
 ]);
 
