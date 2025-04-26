@@ -45,6 +45,8 @@ export class WidgetGenericSettings {
     value: 16,
     opacity: 0.8,
   };
+
+  sex: string = 'asasd';
 }
 
 export interface WidgetInitializer {

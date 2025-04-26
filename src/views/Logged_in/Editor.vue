@@ -5,9 +5,8 @@ import { WidgetGenericSettings, type WidgetType } from '@/types/Widget';
 import Widget from '@/components/widget/Widget.vue';
 import { v4 as uuidv4 } from 'uuid';
 import Input from '@/components/global/Input.vue';
-import { LinkWidget } from '@/types/widgets/Link';
 import type { Page } from '@/types/Page';
-import Spotify from '@/components/widget/Spotify.vue';
+import { LinkWidget } from '@/types/widgets/Link';
 import { ProfileWidget } from '@/types/widgets/Profile';
 import { YoutubeWidget } from '@/types/widgets/YouTube';
 import { MarkdownWidget } from '@/types/widgets/Markdown';
@@ -402,20 +401,12 @@ async function savePages() {
 
       <!-- Page navigation -->
       <div class="flex gap-2 items-center justify-center">
-        <Button
-          :onClick="() => navigatePage('prev')"
-          icon-position="only"
-          icon-type="chevron_left"
-          size="small"
+        <Button :onClick="() => navigatePage('prev')" icon-position="only" icon-type="chevron_left" size="small"
           rank="secondary" />
         <span v-for="(page, index) in pages" :key="page.id">
           {{ currentPageIndex === index ? 'x' : '-' }}
         </span>
-        <Button
-          :onClick="() => navigatePage('next')"
-          icon-position="only"
-          icon-type="chevron_right"
-          size="small"
+        <Button :onClick="() => navigatePage('next')" icon-position="only" icon-type="chevron_right" size="small"
           rank="secondary" />
       </div>
 
@@ -459,56 +450,40 @@ async function savePages() {
         <span>Widget-specific settings</span>
         <span v-for="setting in SPECIFIC_SETTINGS_DEFINITIONS[selectedWidget.type]" :key="setting.name">
           <span class="text-zinc-400">{{ setting.name }}</span>
-          <Input
-            v-if="setting.type === 'number' || setting.type === 'string'"
-            type="text"
+          <Input v-if="setting.type === 'number' || setting.type === 'string'" type="text"
             v-model="(selectedWidget.specificSettings as any)[setting.name]" />
-          <ColorPicker
-            v-else-if="setting.type === 'color'"
-            class="w-full"
-            :type="setting.name"
-            @color-selected="
-              (_baseColor, _shade, opacity, hslaValue) => {
-                (selectedWidget!.specificSettings as any)[setting.name] = {
-                  hue: hslaValue.h,
-                  saturation: hslaValue.s,
-                  value: hslaValue.l,
-                  opacity: hslaValue.a,
-                };
-              }
-            " />
-          <ImagePicker
-            :widgetId="selectedWidgetId"
-            :images="selectedWidget.specificSettings['images']"
-            v-else-if="setting.type === 'images'"
-            @change-images="(images) => {
+          <ColorPicker v-else-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
+            (_baseColor, _shade, opacity, hslaValue) => {
+              (selectedWidget!.specificSettings as any)[setting.name] = {
+                hue: hslaValue.h,
+                saturation: hslaValue.s,
+                value: hslaValue.l,
+                opacity: hslaValue.a,
+              };
+            }
+          " />
+          <ImagePicker :widgetId="selectedWidgetId" :images="selectedWidget.specificSettings['images']"
+            v-else-if="setting.type === 'images'" @change-images="(images) => {
               selectedWidget.specificSettings['images'] = images
-            }"
-          />
+            }" />
         </span>
 
         <!-- Generic settings -->
         <span>Generic settings</span>
         <span v-for="setting in GENERIC_SETTINGS_DEFINITIONS" :key="setting.name">
           <span class="text-zinc-400">{{ setting.name }}</span>
-          <Input
-            v-if="setting.type !== 'color'"
-            type="text"
-            v-model="(selectedWidget.specificSettings as any)[setting.name]" />
-          <ColorPicker
-            v-if="setting.type === 'color'"
-            class="w-full"
-            :type="setting.name"
-            @color-selected="
-              (_baseColor, _shade, opacity, hslaValue) => {
-                (selectedWidget!.genericSettings as any)[setting.name] = {
-                  hue: hslaValue.h,
-                  saturation: hslaValue.s,
-                  value: hslaValue.l,
-                  opacity: hslaValue.a,
-                };
-              }
-            " />
+          <Input v-if="setting.type !== 'color'" type="text"
+            v-model="(page.widgets.find((w) => w.id === selectedWidgetId).specificSettings as any)[setting.name]" />
+          <ColorPicker v-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
+            (_baseColor, _shade, opacity, hslaValue) => {
+              (selectedWidget!.genericSettings as any)[setting.name] = {
+                hue: hslaValue.h,
+                saturation: hslaValue.s,
+                value: hslaValue.l,
+                opacity: hslaValue.a,
+              };
+            }
+          " />
         </span>
       </div>
     </Teleport>
@@ -518,46 +493,26 @@ async function savePages() {
       <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
         <div class="flex gap-2 relative">
           <!-- Widget component -->
-          <Widget
-            @click="toggleSelection(widget.id)"
-            :data="widget"
-            class="w-full"
+          <Widget @click="toggleSelection(widget.id)" :data="widget" class="w-full"
             :selected="widget.id === selectedWidgetId" />
 
           <!-- Widget controls - only show for widgets on the current page -->
-          <div
-            class="flex absolute left-[calc(100%+12px)] gap-2 z-10"
+          <div class="flex absolute left-[calc(100%+12px)] gap-2 z-10"
             v-if="widget.id === selectedWidgetId && isSelectedWidgetOnCurrentPage">
             <div class="flex flex-col gap-2">
-              <Button
-                :onClick="() => moveWidget('up')"
-                icon-position="only"
-                icon-type="arrow_upward"
-                size="small"
+              <Button :onClick="() => moveWidget('up')" icon-position="only" icon-type="arrow_upward" size="small"
                 rank="secondary" />
-              <Button
-                :onClick="() => moveWidget('down')"
-                icon-position="only"
-                icon-type="arrow_downward"
-                size="small"
+              <Button :onClick="() => moveWidget('down')" icon-position="only" icon-type="arrow_downward" size="small"
                 rank="secondary" />
               <Button :onClick="deleteWidget" icon-position="only" icon-type="delete" size="small" rank="secondary" />
             </div>
             <div class="flex gap-2">
-              <Button
-                :onClick="() => moveWidgetToPage('prev')"
-                icon-position="only"
-                icon-type="arrow_back"
-                size="small"
+              <Button :onClick="() => moveWidgetToPage('prev')" icon-position="only" icon-type="arrow_back" size="small"
                 rank="secondary">
                 Previous
               </Button>
-              <Button
-                :onClick="() => moveWidgetToPage('next')"
-                icon-position="only"
-                icon-type="arrow_forward"
-                size="small"
-                rank="secondary">
+              <Button :onClick="() => moveWidgetToPage('next')" icon-position="only" icon-type="arrow_forward"
+                size="small" rank="secondary">
                 Next
               </Button>
             </div>
@@ -570,13 +525,7 @@ async function savePages() {
       <Button :onClick="savePages" icon-position="only" icon-type="save" size="small" rank="primary" />
     </div>
   </div>
-  <Alert
-    :status="alertStatus"
-    :error="alertError"
-    :message="alertMessage"
-    :active="alertActive"
-    @hide="onAlertHide"
-  />
+  <Alert :status="alertStatus" :error="alertError" :message="alertMessage" :active="alertActive" @hide="onAlertHide" />
 </template>
 
 <style lang="scss">
@@ -587,7 +536,7 @@ async function savePages() {
 .sidebar {
   @apply max-w-[400px] min-w-[350px] h-full bg-zinc-800/80 rounded-2xl z-[20] backdrop-blur-3xl relative p-4 flex flex-col gap-2 overflow-y-auto;
 
-  > span {
+  >span {
     @apply mb-1;
   }
 }

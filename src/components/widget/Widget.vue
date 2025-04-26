@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Widget } from '@/types/Widget';
 import Link from '@/components/widget/Link.vue';
-import { computed } from 'vue';
+import { computed, watchEffect } from 'vue';
 import ProfileWidget from './ProfileWidget.vue';
 import Markdown from './Markdown.vue';
 import Youtube from './Youtube.vue';
@@ -15,6 +15,7 @@ let style = computed(() =>
   `border-radius: ${props.data.genericSettings.borderRadius}px;` +
   `background-color: hsla(${props.data.genericSettings.background?.hue}, ${props.data.genericSettings.background?.saturation}%, ${props.data.genericSettings.background?.value}%, ${props.data.genericSettings.background?.opacity});`
 );
+
 </script>
 
 <template>

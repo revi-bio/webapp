@@ -25,4 +25,8 @@ export const GENERIC_SETTINGS_DEFINITIONS: SettingDefinition<keyof (typeof Widge
     name: 'background',
     type: 'color',
   },
+  {
+    name: 'sex',
+    type: 'string',
+  },
 ];
