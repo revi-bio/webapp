@@ -473,7 +473,7 @@ async function savePages() {
         <span v-for="setting in GENERIC_SETTINGS_DEFINITIONS" :key="setting.name">
           <span class="text-zinc-400">{{ setting.name }}</span>
           <Input v-if="setting.type !== 'color'" type="text"
-            v-model="(page.widgets.find((w) => w.id === selectedWidgetId).specificSettings as any)[setting.name]" />
+            v-model="(currentPage?.widgets.find((w) => w.id === selectedWidgetId)?.specificSettings as any)[setting.name]" />
           <ColorPicker v-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
             (_baseColor, _shade, opacity, hslaValue) => {
               (selectedWidget!.genericSettings as any)[setting.name] = {
