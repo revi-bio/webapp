@@ -155,7 +155,7 @@ export const useBioStore = defineStore('bios', () => {
 
       console.log('File being uploaded:', file.name, file.size, file.type);
 
-      const response = await ApiWrapper.patch(`bio/${handle}/bioPfp`, formData, {
+      const response = await ApiWrapper.post(`bio/widgetImg`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -187,5 +187,6 @@ export const useBioStore = defineStore('bios', () => {
     getCurrentDisplayName,
     saveBioPages,
     getBioPages,
+    uploadWidgetImmage,
   };
 });
