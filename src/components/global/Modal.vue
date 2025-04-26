@@ -71,7 +71,7 @@ const executeAction = (callback: 'delete' | 'close' | 'submit' | 'confirm' | 'ca
               :icon-type="action.icon"
               :text="action.text"
               :rank="action.rank || 'primary'"
-              @click="executeAction(action.callback)"></Button>
+              @click="executeAction(action.callback as 'close' | 'delete' | 'submit' | 'confirm' | 'cancel' | 'action' | 'update:modelValue')"></Button>
             <slot name="buttons"></slot>
           </div>
 
