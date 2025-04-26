@@ -16,6 +16,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@motionone/dom": "^10.18.0",
     "@motionone/vue": "^10.16.4",
     "@vueuse/core": "^12.5.0",
     "axios": "^1.7.9",

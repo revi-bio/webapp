@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { animate } from "motion";
+import { animate } from "@motionone/dom";
 import Icon from "./Icon.vue";
 import { ref, watch, onMounted, nextTick, computed } from "vue";
 
@@ -22,16 +22,10 @@ const animateIn = async () => {
   await nextTick();
 
   if (alertRef.value) {
-    animate(
+    await animate(
       alertRef.value,
-      {
-        y: ['-100px', '0px'],
-        opacity: [0, 1]
-      },
-      {
-        duration: 0.5,
-        easing: 'ease-out'
-      }
+      { transform: "translateY(100px)", opacity: [0, 1] },
+      { duration: 0.5, easing: "ease-out" }
     );
   }
 };
@@ -41,7 +35,7 @@ const animateOut = async () => {
     await animate(
       alertRef.value,
       {
-        y: ['0px', '-100px'],
+        transform: 'translateY(-100px)',
         opacity: [1, 0]
       },
       {
@@ -81,7 +75,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="alert fixed z-[1000] top-10 left-0 right-0 flex justify-center">
+  <div class="alert fixed z-[1000] -top-[50px] left-0 right-0 flex justify-center">
     <div
       v-if="isVisible"
       ref="alertRef"
