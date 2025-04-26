@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import { useUserStore } from '@/stores/user';
+import Page from '@/views/Page.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -85,19 +86,24 @@ const router = createRouter({
           meta: { public: false },
           component: () => import('../views/Logged_in/Editor.vue'),
         },
+        {
+          path: ':pathMatch(.*)*',
+          redirect: (to) => {
+            const userStore = useUserStore();
+            if (userStore.loggedIn()) {
+              return '/baseDash/overview';
+            } else {
+              return '/login';
+            }
+          },
+        },
       ],
     },
-
     {
-      path: '/:pathMatch(.*)*',
-      redirect: (to) => {
-        const userStore = useUserStore();
-        if (userStore.loggedIn()) {
-          return '/baseDash/overview';
-        } else {
-          return '/login';
-        }
-      },
+      path: '/:handle',
+      name: 'Page',
+      meta: { public: true },
+      component: Page,
     },
   ],
 });
