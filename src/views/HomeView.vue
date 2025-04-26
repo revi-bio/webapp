@@ -40,7 +40,7 @@ onMounted(() => {
 <template>
 <div class="overflow-y-scroll flex flex-col  snap-mandatory snap-y scroll-container relative">
 <!--SVGs-->
-<svg class="absolute right-0 top-[600px]" width="808" height="811" viewBox="0 0 808 811" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg class="absolute right-0 top-[600px] w-full sm:w-auto" width="808" height="811" viewBox="0 0 808 811" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M783.036 40.7627C779.833 6.3474 832.352 -14.6125 850.22 14.9751L1018.67 293.912C1025.37 305.014 1024.18 319.167 1015.72 328.995L701.714 693.686C701.156 694.334 700.696 694.911 700.186 695.597C688.394 711.462 528.252 920.739 420.622 733.726C343.901 600.419 248.226 681.79 195.742 745.974C179.282 766.104 144.128 761.5 136.209 736.733L2.4521 318.379C-7.56684 287.042 34.6824 263.351 57.9075 286.652C197.273 426.476 296.242 440.416 435.933 252.689C443.011 243.177 455.147 238.369 466.786 240.628C699.633 285.815 803.192 257.333 783.036 40.7627Z" fill="url(#paint0_linear_626_1167)"/>
 <defs>
 <linearGradient id="paint0_linear_626_1167" x1="765.042" y1="-145.78" x2="120.055" y2="775.357" gradientUnits="userSpaceOnUse">
@@ -51,7 +51,7 @@ onMounted(() => {
 </linearGradient>
 </defs>
 </svg>
-<svg class="absolute left-0 top-[1500px]" width="691" height="811" viewBox="0 0 691 811" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg class="absolute left-0 top-[1500px] w-full sm:w-auto" width="691" height="811" viewBox="0 0 691 811" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M451.036 40.7627C447.833 6.3474 500.352 -14.6125 518.22 14.9751L686.665 293.912C693.369 305.014 692.181 319.167 683.719 328.995L369.714 693.686C369.156 694.334 368.696 694.911 368.186 695.597C356.394 711.462 196.252 920.739 88.6223 733.726C11.9011 600.419 -83.7736 681.79 -136.258 745.974C-152.718 766.104 -187.872 761.5 -195.791 736.733L-329.548 318.379C-339.567 287.042 -297.318 263.351 -274.093 286.652C-134.727 426.476 -35.7579 440.416 103.933 252.689C111.011 243.177 123.147 238.369 134.786 240.628C367.633 285.815 471.192 257.333 451.036 40.7627Z" fill="url(#paint0_linear_626_1166)"/>
 <defs>
 <linearGradient id="paint0_linear_626_1166" x1="433.042" y1="-145.78" x2="-211.945" y2="775.357" gradientUnits="userSpaceOnUse">
@@ -98,8 +98,6 @@ onMounted(() => {
 </defs>
 </svg>
 
-
-
 <!--Main content-->
   <main class="flex flex-col justify-center content-start items-center w-full min-h-full p-5 snap-center z-50">
 
@@ -113,9 +111,9 @@ onMounted(() => {
     </nav>
 
     <div class="flex flex-col w-full justify-center content-center h-full items-center gap-5">
-      <h3 class="text-2xl font-light text-zinc-50">A place to unfold</h3>
-      <h3 class="text-8xl text-zinc-200 animate-pulse animate-infinite animate-duration-[3000ms]">Supercharge</h3>
-      <h3 class="text-8xl text-zinc-400 animate-pulse animate-infinite animate-duration-[3000ms]">your online identity</h3>
+      <h3 class="sm:text-2xl text-xl font-light text-zinc-50 w-full text-center">A place to unfold</h3>
+      <h3 class="sm:text-8xl text-6xl text-zinc-200 animate-pulse animate-infinite animate-duration-[3000ms] w-full text-center">Supercharge</h3>
+      <h3 class="sm:text-8xl text-6xl text-zinc-400 animate-pulse animate-infinite animate-duration-[3000ms] w-full text-center">your online identity</h3>
 
       <Logo type="revibio"></Logo>
       <span class="flex flex-row justify-center content-center items-center gap-5">
@@ -131,10 +129,10 @@ onMounted(() => {
 
     <!--Pros-->
     <div class="pros flex flex-col w-full justify-center content-center items-center gap-5 h-screen snap-center z-30">
-      <h3 class="text-4xl text-rose-500">Free to use.</h3>
-      <h3  class="text-4xl text-zinc-200">Easy to handle.</h3>
-      <h3  class="text-4xl text-zinc-300">Made for inviduals like you.</h3>
-      <h3  class="text-4xl text-zinc-400">Open source.</h3>
+      <h3 class="text-4xl text-rose-500 w-full text-center">Free to use.</h3>
+      <h3  class="text-4xl text-zinc-200 w-full text-center">Easy to handle.</h3>
+      <h3  class="text-4xl text-zinc-300 w-full text-center">Made for inviduals like you.</h3>
+      <h3  class="text-4xl text-zinc-400 w-full text-center">Open source.</h3>
 
     </div>
 
@@ -142,41 +140,40 @@ onMounted(() => {
     <!--Our goal-->
     <div class="our-goal flex flex-col w-full justify-center content-end items-end gap-5 h-screen snap-center z-30">
       <h3 class="text-4xl text-rose-600">Our goal</h3>
-      <p class="text-2xl text-right text-rose-100 w-3/5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Et distinctio ex rem illum dolorum unde non molestiae ducimus dolorem tempora ut quis obcaecati nobis impedit aperiam, facere enim dignissimos illo! Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+      <p class="text-2xl text-right text-rose-100 sm:w-3/5 w-4/5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Et distinctio ex rem illum dolorum unde non molestiae ducimus dolorem tempora ut quis obcaecati nobis impedit aperiam, facere enim dignissimos illo! Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
     </div>
 
     <!--Emerge-->
     <div class="emerge flex flex-col w-full justify-center content-start items-start gap-5 h-screen snap-center z-30">
-      <!--
-      <h3 class="text-6xl text-zinc-100">Discover your creativity.</h3>
-      <h3 class="text-6xl text-zinc-400">Emerge from social media.</h3>
-      -->
+      <h3 class="sm:text-6xl text-5xl text-zinc-100">Discover your creativity.</h3>
+      <h3 class="sm:text-6xl text-5xl text-zinc-400">Emerge from social media.</h3>
 
-      <iframe class="w-full h-full" src="https://www.youtube.com/embed/1U8qUDq3Teo?si=92pSryIPM8J-CWJS&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+      <!--<iframe class="w-full h-full" src="https://www.youtube.com/embed/1U8qUDq3Teo?si=92pSryIPM8J-CWJS&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>-->
     </div>
 
     <!--Creating-->
     <div class="creating flex flex-col w-full justify-center content-end items-end gap-5 h-screen snap-center z-30">
       <h3 class="text-4xl text-rose-500">Creating a bio site</h3>
-      <p class="text-2xl text-right text-rose-100 w-3/4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Et distinctio ex rem illum dolorum unde non molestiae ducimus dolorem tempora ut quis obcaecati nobis impedit aperiam, facere enim dignissimos illo! Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum tempora excepturi voluptates reiciendis repellat a nihil consectetur. Fuga sapiente expedita doloremque alias unde consequatur velit. Vel odit eveniet fugiat quasi.</p>
+      <p class="text-2xl text-right text-rose-100 sm:w-3/5 w-4/5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Et distinctio ex rem illum dolorum unde non molestiae ducimus dolorem tempora ut quis obcaecati nobis impedit aperiam, facere enim dignissimos illo! Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum tempora excepturi voluptates reiciendis repellat a nihil consectetur. Fuga sapiente expedita doloremque alias unde consequatur velit. Vel odit eveniet fugiat quasi.</p>
     </div>
 
     <!--Option-->
     <div class="option flex flex-col w-full justify-center content-start items-start gap-5 h-screen snap-center z-30">
-      <h3 class="text-6xl text-zinc-200">It is not just an option,</h3>
-      <h3 class="text-6xl text-zinc-400">but a solution.</h3>
+      <h3 class="sm:text-6xl text-5xl text-zinc-200">It is not just an option,</h3>
+      <h3 class="sm:text-6xl text-5xl text-zinc-400">but a solution.</h3>
     </div>
 
     <!--Explore-->
     <div class="explore flex flex-col w-full justify-center content-end items-end gap-5 h-screen snap-center z-30">
       <h3 class="text-4xl text-rose-400">Explore our services</h3>
-      <p class="text-2xl text-right text-rose-50 w-3/4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Et distinctio ex rem illum dolorum unde non molestiae ducimus dolorem tempora ut quis obcaecati nobis impedit aperiam, facere enim dignissimos illo! Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum tempora excepturi voluptates reiciendis repellat a nihil consectetur. Fuga sapiente expedita doloremque alias unde consequatur velit. Vel odit eveniet fugiat quasi.</p>
+      <p class="text-2xl text-right text-rose-50 sm:w-3/5 w-4/5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Et distinctio ex rem illum dolorum unde non molestiae ducimus dolorem tempora ut quis obcaecati nobis impedit aperiam, facere enim dignissimos illo! Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum tempora excepturi voluptates reiciendis repellat a nihil consectetur. Fuga sapiente expedita doloremque alias unde consequatur velit. Vel odit eveniet fugiat quasi.</p>
     </div>
 
     <div class="revision flex flex-col w-full justify-center content-center items-center gap-5 h-screen snap-center z-30">
-      <h3 class="text-4xl"><span class="text-rose-500">Revi</span><span class="text-zinc-200">sion</span></h3>
-      <h3 class="text-4xl text-zinc-200">You are not just a user.</h3>
-      <h3 class="text-4xl text-zinc-400">But a <span class="text-rose-500">true invidual.</span></h3>
+      <h3 class="text-4xl"><span class="text-rose-500 w-full text-center">Revi</span><span class="text-zinc-200">sion</span></h3>
+      <h3 class="text-4xl text-zinc-200 w-full text-center">You are not just a user.</h3>
+      <h3 class="text-4xl text-zinc-400 w-full text-center">But a <span class="text-rose-500">true invidual.</span></h3>
       <RouterLink to="register" class="start"><Button text="Start your journey" size="normal" rank="primary" icon-position="none"></Button></RouterLink>
     </div>
   </section>
