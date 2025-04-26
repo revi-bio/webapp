@@ -79,7 +79,7 @@ onMounted(async () => {
     <div
       v-if="isVisible"
       ref="alertRef"
-      :class="`w-1/4 min-w-[25rem] min-h-32 flex flex-row justify-between content-center items-center p-5 relative ${isError ? 'bg-red-500/90' : 'bg-green-500/90'} overflow-clip rounded-lg shadow-lg`"
+      :class="`w-1/4 min-w-[25rem] min-h-16 flex flex-row justify-between content-center items-center p-5 relative ${isError ? 'bg-red-500/90' : 'bg-green-500/90'} overflow-clip rounded-lg shadow-lg`"
     >
       <div class="flex flex-col justify-center content-start items-start gap-2">
         <h3 class="text-xl text-white font-medium">{{ status === 200 ? 'Success' : status }}</h3>
