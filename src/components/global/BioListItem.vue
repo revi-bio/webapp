@@ -50,13 +50,13 @@ const modalActions = [
   {
     text: "Delete",
     icon: "delete",
-    rank: "primary",
+    rank: "primary" as const,
     callback: "delete"
   },
   {
     text: "Cancel",
     icon: "close",
-    rank: "secondary",
+    rank: "secondary" as const,
     callback: "close"
   }
 ];

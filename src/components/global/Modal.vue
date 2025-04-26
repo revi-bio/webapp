@@ -30,7 +30,7 @@ const handleInputChange = (value: any, index: number) => {
   }
 };
 
-const executeAction = (callback: string) => {
+const executeAction = (callback: 'delete' | 'close' | 'submit' | 'confirm' | 'cancel' | 'action' | 'update:modelValue') => {
   emit(callback);
 };
 </script>
