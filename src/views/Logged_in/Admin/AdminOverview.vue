@@ -1,3 +1,7 @@
+<script lang="ts" setup>
+import Users from './Users.vue';
+</script>
+
 <template>
-  adminoverview
+  <Users></Users>
 </template>

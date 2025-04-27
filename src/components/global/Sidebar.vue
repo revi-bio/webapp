@@ -76,6 +76,7 @@ const toggleLogoutWindow = (event: Event) => {
         <Avatar
           @click.stop="toggleLogoutWindow"
           class="w-[48px] h-[48px] cursor-pointer"
+          :avatar-url="userStore.getUserData().avatar"
         ></Avatar>
       </div>
     </div>

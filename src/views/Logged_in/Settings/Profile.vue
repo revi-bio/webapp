@@ -54,7 +54,7 @@ const handleDisplayNameChange = (event: Event) => {
     <h3 class="text-lg text-zinc-300 text-left w-full">Profile picture</h3>
 
     <div class="flex flex-row justify-center content-center items-center gap-10">
-      <Avatar class="w-[9rem] h-[9rem]"></Avatar>
+      <Avatar :avatar-url="userStore.getUserData().avatar" class="w-[9rem] h-[9rem]"></Avatar>
 
       <div class="flex flex-col justify-center content-center items-start gap-2">
         <Button
