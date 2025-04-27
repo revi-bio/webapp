@@ -37,37 +37,7 @@ const pages = ref<Page[]>([
     id: uuidv4(),
     name: 'Page 1',
     icon: 'home',
-    widgets: [
-      /*
-      {
-        id: uuidv4(),
-        genericSettings: new WidgetGenericSettings({
-          background: {
-            hue: 340,
-            saturation: 8,
-            value: 16,
-            opacity: 0.8,
-          },
-        }),
-        specificSettings: {
-          title: 'hello',
-          description: 'asdlkasjdlksajdlksajdklsajdkl',
-          link: 'https://youtube.com/',
-        },
-        type: 'link',
-      },
-      {
-        id: uuidv4(),
-        genericSettings: new WidgetGenericSettings({}),
-        specificSettings: {
-          title: 'big gyatt in your area',
-          description: 'hahahahahahahahaha',
-          link: 'https://youtube.com/',
-        },
-        type: 'link',
-      },
-*/
-    ],
+    widgets: [],
   },
 ]);
 
@@ -76,6 +46,7 @@ onMounted(async () => {
     const stored = await bioStore.getBioPages(handle);
     if (stored.length != 0) {
       pages.value = stored;
+      console.log(pages.value)
     }
   } catch (error: any) {
     console.error("Error fetching bio pages:", error);
@@ -332,6 +303,9 @@ function addWidget(type: WidgetType) {
 
 // Page navigation
 function navigatePage(direction: 'prev' | 'next') {
+  if (selectedWidgetId.value != null)
+    selectedWidgetId.value = null;
+
   if (direction === 'prev') {
     if (currentPageIndex.value > 0) {
       // Check if the current page has no widgets before navigating away

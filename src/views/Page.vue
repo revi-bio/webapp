@@ -22,39 +22,9 @@ const pages = ref<Page[]>(
       id: uuidv4(),
       name: 'Page 1',
       icon: 'home',
-      widgets: [
-/*
-      {
-        id: uuidv4(),
-        genericSettings: new WidgetGenericSettings({
-          background: {
-            hue: 340,
-            saturation: 8,
-            value: 16,
-            opacity: 0.8,
-          },
-        }),
-        specificSettings: {
-          title: 'hello',
-          description: 'asdlkasjdlksajdlksajdklsajdkl',
-          link: 'https://youtube.com/',
-        },
-        type: 'link',
-      },
-      {
-        id: uuidv4(),
-        genericSettings: new WidgetGenericSettings({}),
-        specificSettings: {
-          title: 'big gyatt in your area',
-          description: 'hahahahahahahahaha',
-          link: 'https://youtube.com/',
-        },
-        type: 'link',
-      },
-*/
-    ],
-  },
-]
+      widgets: [],
+    },
+  ]
 );
 
 onMounted(async () => {
@@ -81,10 +51,7 @@ function findWidgetIndex(id: string): number {
       <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
         <div class="flex gap-2 relative">
           <!-- Widget component -->
-          <Widget
-            :data="widget"
-            class="w-full"
-            />
+          <Widget :data="widget" class="w-full" />
         </div>
       </template>
     </div>
@@ -95,7 +62,7 @@ function findWidgetIndex(id: string): number {
 .sidebar {
   @apply max-w-[400px] min-w-[350px] h-full bg-zinc-800/80 rounded-2xl z-[20] backdrop-blur-3xl relative p-4 flex flex-col gap-2 overflow-y-auto;
 
-  > span {
+  >span {
     @apply mb-1;
   }
 }
