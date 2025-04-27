@@ -13,7 +13,8 @@ const props = defineProps<{
 
 let style = computed(() =>
   `border-radius: ${props.data.genericSettings.borderRadius}px;` +
-  `background-color: hsla(${props.data.genericSettings.background?.hue}, ${props.data.genericSettings.background?.saturation}%, ${props.data.genericSettings.background?.value}%, ${props.data.genericSettings.background?.opacity});`
+  `background-color: hsla(${props.data.genericSettings.background?.hue}, ${props.data.genericSettings.background?.saturation}%, ${props.data.genericSettings.background?.value}%, ${props.data.genericSettings.background?.opacity});` +
+  `backdrop-filter: blur(${props.data.genericSettings.blurAmount}px);`
 );
 
 </script>

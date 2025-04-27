@@ -46,6 +46,8 @@ export class WidgetGenericSettings {
     opacity: 0.8,
   };
 
+  blurAmount: number = 12;
+
   sex: string = 'asasd';
 }
 
