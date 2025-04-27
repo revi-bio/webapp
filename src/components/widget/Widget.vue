@@ -6,6 +6,7 @@ import ProfileWidget from './ProfileWidget.vue';
 import Markdown from './Markdown.vue';
 import Youtube from './Youtube.vue';
 import Gallery from './Gallery.vue';
+import LinkContainer from './LinkContainer.vue';
 
 const props = defineProps<{
   data: Widget;
@@ -26,6 +27,7 @@ let style = computed(() =>
     <Markdown :data="data" v-if="data.type == 'markdown'" />
     <Youtube :data="data" v-if="data.type == 'youtube'" />
     <Gallery :data="data" v-if="data.type == 'gallery'" />
+    <LinkContainer :data="data" v-if="data.type == 'linkContainer'" />
     <!-- <span class="absolute right-4 bottom-2 text-zinc-900/80">meta: {{ data.type }} - {{ data.id }} - {{ data.page }}:{{ data.position }}</span> -->
   </div>
 </template>
