@@ -11,12 +11,14 @@ import { ProfileWidget } from '@/types/widgets/Profile';
 import { YoutubeWidget } from '@/types/widgets/YouTube';
 import { MarkdownWidget } from '@/types/widgets/Markdown';
 import { GalleryWidget } from '@/types/widgets/Gallery';
+import { LinkContainerWidget } from '@/types/widgets/LinkContainer';
 import ColorPicker from '@/components/global/ColorPicker.vue';
 import { GENERIC_SETTINGS_DEFINITIONS, SPECIFIC_SETTINGS_DEFINITIONS } from '@/types/WidgetSettings';
 import { useBioStore } from '@/stores/bio';
 import { useRoute } from 'vue-router';
 import ImagePicker from '@/components/global/ImagePicker.vue';
 import Alert from '@/components/global/Alert.vue';
+import LinkSelector from '@/components/global/LinkSelector.vue';
 
 const route = useRoute();
 const handle = route.params.handle as string;
@@ -136,6 +138,8 @@ function toggleSelection(id: string) {
   selectedWidgetId.value = selectedWidgetId.value === id ? null : id;
   widgetToolboxOpened.value = false;
   bioSettingsOpened.value = false;
+
+  console.log(selectedWidget.value)
 }
 
 function toggleWidgetToolbox() {
@@ -319,6 +323,11 @@ function addWidget(type: WidgetType) {
         showAlert(200, '', `Gallery widget added successfully!`);
         break;
       }
+      case 'linkContainer': {
+        currentPage.value.widgets.push(new LinkContainerWidget(data));
+        showAlert(200, '', `Link container widget added successfully!`);
+        break;
+      }
     }
   } catch (error: any) {
     console.error(`Error adding ${type} widget:`, error);
@@ -423,10 +432,9 @@ async function savePages() {
         <div @click="addWidget('profile')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add profile widget</div>
         <div @click="addWidget('link')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
         <div @click="addWidget('youtube')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add youtube widget</div>
-        <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">
-          Add markdown widget
-        </div>
+        <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add markdown widget</div>
         <div @click="addWidget('gallery')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add gallery widget</div>
+        <div @click="addWidget('linkContainer')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link container widget</div>
         <!--
         <div @click="addWidget('spotify')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
         <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
@@ -466,6 +474,14 @@ async function savePages() {
             v-else-if="setting.type === 'images'" @change-images="(images) => {
               selectedWidget.specificSettings['images'] = images
             }" />
+          <LinkSelector
+            :widgetId="selectedWidgetId"
+            :links="selectedWidget.specificSettings['links']"
+            v-else-if="setting.type === 'links'"
+            @change-links="(links) => {
+              selectedWidget.specificSettings['links'] = links;
+            }"
+          />
         </span>
 
         <!-- Generic settings -->
