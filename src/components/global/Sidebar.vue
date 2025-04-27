@@ -40,7 +40,7 @@ const toggleLogoutWindow = (event: Event) => {
           <Icon size="3xl" type="person"></Icon>
         </span>
       </RouterLink>
-      <RouterLink to="" class="navItem">
+      <RouterLink to="/baseDash/admin" class="navItem">
         <span>
           <Icon size="3xl" type="shield_person"></Icon>
         </span>

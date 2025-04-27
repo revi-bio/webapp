@@ -85,9 +85,40 @@ const router = createRouter({
           meta: { public: false },
           component: () => import('../views/Logged_in/Editor.vue'),
         },
+        {
+          path: 'admin',
+          name: 'Admin',
+          meta:{public: false},
+          component: ()=> import('../views/Logged_in/Admin.vue'),
+          children:[
+            {
+              path: 'adminOverview',
+              name: 'App overview',
+              meta:{public: false},
+              component: ()=> import('../views/Logged_in/Admin/AdminOverview.vue'),
+            },
+            {
+              path: 'adminUsers',
+              name: 'Users',
+              meta:{public: false},
+              component: ()=> import('../views/Logged_in/Admin/Users.vue'),
+            },
+            {
+              path: 'adminBios',
+              name: 'Bios',
+              meta:{public: false},
+              component: ()=> import('../views/Logged_in/Admin/Bios.vue'),
+            },
+            {
+              path: 'adminMail',
+              name: 'Mail',
+              meta:{public: false},
+              component: ()=> import('../views/Logged_in/Admin/Mail.vue'),
+            },
+          ]
+        }
       ],
     },
-
     {
       path: '/:pathMatch(.*)*',
       redirect: (to) => {
