@@ -1,6 +1,7 @@
 import type { SettingDefinition, WidgetGenericSettings, WidgetType } from './Widget';
 import { GallerySettingDefinitions } from './widgets/Gallery';
 import { LinkSettingDefinitions } from './widgets/Link';
+import { LinkContainerSettingDefinitions } from './widgets/LinkContainer';
 import { MarkdownSettingDefinitions } from './widgets/Markdown';
 import { ProfileSettingDefinitions } from './widgets/Profile';
 import { SpotifySettingDefinitions } from './widgets/Spotify';
@@ -8,7 +9,7 @@ import { YouTubeSettingDefinitions } from './widgets/YouTube';
 
 export const SPECIFIC_SETTINGS_DEFINITIONS: { [key in WidgetType]: SettingDefinition[] } = {
   link: LinkSettingDefinitions,
-  linkContainer: [],
+  linkContainer: LinkContainerSettingDefinitions,
   profile: ProfileSettingDefinitions,
   spotify: SpotifySettingDefinitions,
   markdown: MarkdownSettingDefinitions,

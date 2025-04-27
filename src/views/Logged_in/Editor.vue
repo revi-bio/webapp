@@ -11,12 +11,14 @@ import { ProfileWidget } from '@/types/widgets/Profile';
 import { YoutubeWidget } from '@/types/widgets/YouTube';
 import { MarkdownWidget } from '@/types/widgets/Markdown';
 import { GalleryWidget } from '@/types/widgets/Gallery';
+import { LinkContainerWidget } from '@/types/widgets/LinkContainer';
 import ColorPicker from '@/components/global/ColorPicker.vue';
 import { GENERIC_SETTINGS_DEFINITIONS, SPECIFIC_SETTINGS_DEFINITIONS } from '@/types/WidgetSettings';
 import { useBioStore } from '@/stores/bio';
 import { useRoute } from 'vue-router';
 import ImagePicker from '@/components/global/ImagePicker.vue';
 import Alert from '@/components/global/Alert.vue';
+import LinkSelector from '@/components/global/LinkSelector.vue';
 
 const route = useRoute();
 const handle = route.params.handle as string;
@@ -37,37 +39,7 @@ const pages = ref<Page[]>([
     id: uuidv4(),
     name: 'Page 1',
     icon: 'home',
-    widgets: [
-      /*
-      {
-        id: uuidv4(),
-        genericSettings: new WidgetGenericSettings({
-          background: {
-            hue: 340,
-            saturation: 8,
-            value: 16,
-            opacity: 0.8,
-          },
-        }),
-        specificSettings: {
-          title: 'hello',
-          description: 'asdlkasjdlksajdlksajdklsajdkl',
-          link: 'https://youtube.com/',
-        },
-        type: 'link',
-      },
-      {
-        id: uuidv4(),
-        genericSettings: new WidgetGenericSettings({}),
-        specificSettings: {
-          title: 'big gyatt in your area',
-          description: 'hahahahahahahahaha',
-          link: 'https://youtube.com/',
-        },
-        type: 'link',
-      },
-*/
-    ],
+    widgets: [],
   },
 ]);
 
@@ -76,6 +48,7 @@ onMounted(async () => {
     const stored = await bioStore.getBioPages(handle);
     if (stored.length != 0) {
       pages.value = stored;
+      console.log(pages.value)
     }
   } catch (error: any) {
     console.error("Error fetching bio pages:", error);
@@ -136,6 +109,8 @@ function toggleSelection(id: string) {
   selectedWidgetId.value = selectedWidgetId.value === id ? null : id;
   widgetToolboxOpened.value = false;
   bioSettingsOpened.value = false;
+
+  console.log(selectedWidget.value)
 }
 
 function toggleWidgetToolbox() {
@@ -319,6 +294,11 @@ function addWidget(type: WidgetType) {
         showAlert(200, '', `Gallery widget added successfully!`);
         break;
       }
+      case 'linkContainer': {
+        currentPage.value.widgets.push(new LinkContainerWidget(data));
+        showAlert(200, '', `Link container widget added successfully!`);
+        break;
+      }
     }
   } catch (error: any) {
     console.error(`Error adding ${type} widget:`, error);
@@ -332,6 +312,9 @@ function addWidget(type: WidgetType) {
 
 // Page navigation
 function navigatePage(direction: 'prev' | 'next') {
+  if (selectedWidgetId.value != null)
+    selectedWidgetId.value = null;
+
   if (direction === 'prev') {
     if (currentPageIndex.value > 0) {
       // Check if the current page has no widgets before navigating away
@@ -423,10 +406,9 @@ async function savePages() {
         <div @click="addWidget('profile')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add profile widget</div>
         <div @click="addWidget('link')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
         <div @click="addWidget('youtube')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add youtube widget</div>
-        <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">
-          Add markdown widget
-        </div>
+        <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add markdown widget</div>
         <div @click="addWidget('gallery')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add gallery widget</div>
+        <div @click="addWidget('linkContainer')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link container widget</div>
         <!--
         <div @click="addWidget('spotify')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
         <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
@@ -466,6 +448,14 @@ async function savePages() {
             v-else-if="setting.type === 'images'" @change-images="(images) => {
               selectedWidget.specificSettings['images'] = images
             }" />
+          <LinkSelector
+            :widgetId="selectedWidgetId"
+            :links="selectedWidget.specificSettings['links']"
+            v-else-if="setting.type === 'links'"
+            @change-links="(links) => {
+              selectedWidget.specificSettings['links'] = links;
+            }"
+          />
         </span>
 
         <!-- Generic settings -->
@@ -473,7 +463,7 @@ async function savePages() {
         <span v-for="setting in GENERIC_SETTINGS_DEFINITIONS" :key="setting.name">
           <span class="text-zinc-400">{{ setting.name }}</span>
           <Input v-if="setting.type !== 'color'" type="text"
-            v-model="(currentPage?.widgets.find((w) => w.id === selectedWidgetId)?.specificSettings as any)[setting.name]" />
+            v-model="(currentPage?.widgets.find((w) => w.id === selectedWidgetId)?.genericSettings as any)[setting.name]" />
           <ColorPicker v-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
             (_baseColor, _shade, opacity, hslaValue) => {
               (selectedWidget!.genericSettings as any)[setting.name] = {
