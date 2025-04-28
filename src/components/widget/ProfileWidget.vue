@@ -2,7 +2,10 @@
 import type { Widget } from '@/types/Widget';
 import BioPfp from '../global/BioPfp.vue';
 import Icon from '../global/Icon.vue';
-import { computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+
+const handle = ref('');
 
 const props = defineProps<{
   data: Widget;
@@ -28,7 +31,10 @@ let textStyle = computed(
     `color: hsla(${props.data.specificSettings['textColor'].hue}, ${props.data.specificSettings['textColor'].saturation}%, ${props.data.specificSettings['textColor'].value}%, ${props.data.specificSettings['textColor'].opacity});`,
 );
 
-
+onMounted(() => {
+  const route = useRoute();
+  handle.value = route.params.handle;
+});
 
 </script>
 
@@ -42,16 +48,12 @@ let textStyle = computed(
       <div
         :class="`flex flex-col justify-center content-${data.specificSettings['bioAvatarAndName']} items-${data.specificSettings['bioAvatarAndName']}`">
         <!--Bio avatar - only show if NOT profileOver-->
-        <BioPfp
-          v-if="!data.specificSettings['profileOver']"
-          class="w-20 h-20"
-          :bioHandle="data.specificSettings['handle']"></BioPfp>
+        <BioPfp v-if="!data.specificSettings['profileOver']" class="w-20 h-20" :bioHandle="handle"></BioPfp>
 
         <!--Bio name/badge, BADGE VISIBLE / BADGE INVISIBLE-->
         <div class="flex flex-row justify-center content-center items-center text-xl gap-2 mt-2">
-          <h3 :style=nameStyle >{{ data.specificSettings['name'] }}</h3>
-          <div
-            v-if="data.specificSettings['badgeVisible']"
+          <h3 :style=nameStyle>{{ data.specificSettings['name'] }}</h3>
+          <div v-if="data.specificSettings['badgeVisible']"
             class="flex flex-row justify-center content-center items-center" :style=badgeStyle>
             <Icon type="shield_person" size="2xl"></Icon>
             <Icon type="apps" size="2xl"></Icon>
@@ -62,12 +64,11 @@ let textStyle = computed(
 
       <!--Bio handle VISIBLE/INVISIBLE-->
       <h3 v-if="data.specificSettings['handleVisible']" :style=handleStyle>
-        @{{ data.specificSettings['handle'] }}
+        @{{ handle }}
       </h3>
 
       <!--Text-->
-      <div
-        class="flex flex-col justify-center content-start items-start w-full" :style=textStyle>
+      <div class="flex flex-col justify-center content-start items-start w-full" :style=textStyle>
         <p>{{ data.specificSettings['text'] }}</p>
       </div>
     </div>
