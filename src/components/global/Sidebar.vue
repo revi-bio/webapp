@@ -40,7 +40,7 @@ const toggleLogoutWindow = (event: Event) => {
           <Icon size="3xl" type="person"></Icon>
         </span>
       </RouterLink>
-      <RouterLink v-if="userStore.isAdmin" to="/baseDash/admin" class="navItem">
+      <RouterLink v-if="userStore.isAdmin()" to="/baseDash/admin" class="navItem">
         <span>
           <Icon size="3xl" type="shield_person"></Icon>
         </span>
