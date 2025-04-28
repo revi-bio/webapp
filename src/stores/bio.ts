@@ -9,7 +9,7 @@ export const useBioStore = defineStore('bios', () => {
   const currentHandle = ref<string | null>(null);
   const currentDisplayName = ref<string | undefined>(undefined);
 
-  async function fetchBios(): Promise<unknown> {
+  async function fetchBios(): Promise<Bio[]> {
     try {
       const response = await ApiWrapper.get<Bio[]>('bio', {});
       bios.value = response.data;
@@ -17,6 +17,16 @@ export const useBioStore = defineStore('bios', () => {
     } catch (error) {
       console.error('Failed to fetch bios:', error);
       return [];
+    }
+  }
+
+  async function fetchBio(handle: string): Promise<Bio | undefined> {
+    try {
+      const response = await ApiWrapper.get<Bio>(`bio/${handle}`, {});
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch bio:', error);
+      return undefined;
     }
   }
 
@@ -173,6 +183,7 @@ export const useBioStore = defineStore('bios', () => {
 
   return {
     bios,
+    fetchBio,
     fetchBios,
     getBios,
     getBioByHandle,
