@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref, type Ref } from 'vue';
+import { computed, onMounted, ref, watchEffect, type Ref } from 'vue';
 import Button from '@/components/global/Button.vue';
 import { WidgetGenericSettings, type WidgetType } from '@/types/Widget';
 import Widget from '@/components/widget/Widget.vue';
@@ -19,7 +19,9 @@ import { useRoute } from 'vue-router';
 import ImagePicker from '@/components/global/ImagePicker.vue';
 import Alert from '@/components/global/Alert.vue';
 import LinkSelector from '@/components/global/LinkSelector.vue';
+import { ApiWrapper } from '@/composables/ApiWrapper';
 
+const loaded = ref(false);
 const route = useRoute();
 const handle = route.params.handle as string;
 const currentPageIndex = ref(0);
@@ -31,7 +33,7 @@ const alertStatus = ref<number>(0);
 const alertError = ref<string>('');
 const alertMessage = ref<string>('');
 const alertActive = ref<boolean>(false);
-
+const backgroundStyle = ref(``);
 
 // Initialize pages with sample widgets
 const pages = ref<Page[]>([
@@ -43,6 +45,12 @@ const pages = ref<Page[]>([
   },
 ]);
 
+async function updateBackgroundStyle() {
+  const currentBio = await bioStore.fetchBio(handle);
+
+  backgroundStyle.value = `background-image: url(${import.meta.env.VITE_API_BASE_URL}/file/${currentBio.backgroundImage});`;
+}
+
 onMounted(async () => {
   try {
     const stored = await bioStore.getBioPages(handle);
@@ -50,6 +58,9 @@ onMounted(async () => {
       pages.value = stored;
       console.log(pages.value)
     }
+
+    loaded.value = true;
+    await updateBackgroundStyle();
   } catch (error: any) {
     console.error("Error fetching bio pages:", error);
     showAlert(
@@ -58,17 +69,12 @@ onMounted(async () => {
       error.response?.data?.message || "Failed to fetch bio pages"
     );
   }
+
 });
+
+watchEffect(loaded, updateBackgroundStyle);
 
 // Computed properties
-const backgroundStyle = computed(async () => {
-  const currentBio = await bioStore.getBioByHandle(handle);
-
-  return currentBio.backroundImage
-    ? `background-image: url(${currentBio.backgroundImage});`
-    : '';
-});
-
 const currentPage = computed(() =>
   currentPageIndex.value < pages.value.length ? pages.value[currentPageIndex.value] : null,
 );
