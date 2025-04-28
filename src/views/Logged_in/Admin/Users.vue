@@ -17,7 +17,6 @@ const alertError = ref<string>('');
 const alertMessage = ref<string>('');
 const alertActive = ref<boolean>(false);
 
-// Modal state
 const showBiosModal = ref(false);
 const selectedUserBios = ref<Bio[]>([]);
 const selectedUser = ref<UserForAdmin | null>(null);
@@ -44,13 +43,32 @@ const needsEmailVerification = (user: UserForAdmin): boolean => {
 const openBiosModal = async (user: UserForAdmin) => {
   try {
     selectedUser.value = user;
-    const bios = await adminStore.getUserBios(user._id);
+    await refreshUserBios(user._id);
+  } catch (error) {
+    console.error('Error fetching user bios:', error);
+  }
+};
+
+const refreshUserBios = async (userId: string) => {
+  try {
+    const bios = await adminStore.getUserBios(userId);
     if (bios) {
       selectedUserBios.value = bios;
       showBiosModal.value = true;
     }
   } catch (error) {
-    console.error('Error fetching user bios:', error);
+    console.error('Error refreshing user bios:', error);
+  }
+};
+
+const handleDeleteBio = async (bioId: string) => {
+  try {
+    if (selectedUser.value) {
+      await adminStore.deleteBio(bioId);
+      await refreshUserBios(selectedUser.value._id);
+    }
+  } catch (error) {
+    console.error('Error deleting bio:', error);
   }
 };
 
@@ -96,13 +114,13 @@ const modalActions = [
       :primaryMsg="selectedUser ? `${selectedUser.displayName}'s Bios` : 'User Bios'"
       :secondaryMsg="selectedUserBios.length ? `${selectedUserBios.length} bios found` : 'No bios found'"
       :actions="modalActions">
-      <div class="w-full max-h-96 overflow-y-auto">
+      <div class="w-full h-full">
         <div v-if="selectedUserBios.length === 0" class="text-center text-zinc-400 my-4">
           This user hasn't created any bios yet.
         </div>
-        <div v-else>
-          <div v-for="(bio, index) in selectedUserBios" :key="index" class="p-3 mb-2 bg-zinc-700 rounded-lg">
-            <div class="flex justify-between items-center">
+        <div v-else class="flex w-full h-full flex-col justify-center content-center gap-5 overflow-y-auto">
+          <div v-for="(bio, index) in selectedUserBios" :key="bio?._id || index" class="p-3 gap-2 bg-zinc-700 rounded-lg">
+            <div class="flex flex-row justify-between items-center mb-2">
               <div>
                 <h4 class="text-lg text-zinc-200">{{ bio.name || 'Unnamed Bio' }}</h4>
                 <p class="text-sm text-zinc-400">@{{ bio.handle }}</p>
@@ -116,10 +134,12 @@ const modalActions = [
                 </span>
               </div>
             </div>
-            <div class="flex justify-between mt-2 text-xs text-zinc-500">
+            <div class="flex justify-between text-xs text-zinc-500 mb-2">
               <div>Created: {{ new Date(bio.createdAt).toLocaleString() }}</div>
               <div>Updated: {{ new Date(bio.updatedAt).toLocaleString() }}</div>
             </div>
+            <Button rank="primary" size="small" text="Delete" icon-position="right" icon-type="delete"
+            @click.prevent="handleDeleteBio(bio._id)"></Button>
           </div>
         </div>
       </div>
