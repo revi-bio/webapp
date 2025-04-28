@@ -167,6 +167,7 @@ watchEffect(() => {
     <div class="w-full h-full baseDash overflow-y-auto flex-col space-y-6">
       <div v-for="item in filteredData" :key="item.handle">
         <BioListItem
+          :avatar="item.handle"
           :name="item.name"
           :handle="item.handle"
           :views="item.views"
