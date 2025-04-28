@@ -61,6 +61,14 @@ onMounted(async () => {
 });
 
 // Computed properties
+const backgroundStyle = computed(async () => {
+  const currentBio = await bioStore.getBioByHandle(handle);
+
+  return currentBio.backroundImage
+    ? `background-image: url(${currentBio.backgroundImage});`
+    : '';
+});
+
 const currentPage = computed(() =>
   currentPageIndex.value < pages.value.length ? pages.value[currentPageIndex.value] : null,
 );
@@ -374,8 +382,7 @@ async function savePages() {
 </script>
 
 <template>
-  <div class="flex justify-center items-center h-full w-full relative rounded-2xl"
-    style="background-image: url(https://w.wallhaven.cc/full/nr/wallhaven-nrddrm.png);">
+  <div class="flex justify-center items-center h-full w-full relative rounded-2xl" :style="backgroundStyle">
     <!-- Bottom toolbar -->
     <div class="absolute w-full bottom-0 p-6 justify-between space-x-2 text-zinc-200 grid grid-cols-3">
       <!-- Add widget button -->
