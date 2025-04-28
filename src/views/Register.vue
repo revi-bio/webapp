@@ -51,11 +51,6 @@ const onRegister = async () => {
     if (res.status === 201 && res.data.jwt) {
       userStore.setJwt(res.data.jwt);
       router.push('baseDash/overview');
-      inboxStore.createInboxMessageForUser(
-        'Welcome! 🎉',
-        "Thank you for registering with us! We're excited to have you as part of our community. Your account has been successfully created, and you're now ready to explore everything we have to offer. \nIf you have any questions or need assistance, feel free to reach out — we're here to help!",
-        userStore.getUserData().id,
-      );
     } else {
       console.error('Registration failed:', res);
     }

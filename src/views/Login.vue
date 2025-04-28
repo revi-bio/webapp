@@ -34,6 +34,7 @@
       if (res.status === 200) {
         userStore.setJwt(res.data.jwt);
         userStore.setStatus(200);
+        alertStatus.value = res.status
         alertError.value = '';
         alertMessage.value = 'Login successful!';
         alertActive.value = true;
