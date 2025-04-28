@@ -3,6 +3,7 @@ import Button from './Button.vue';
 import Icon from './Icon.vue';
 import { onMounted, onUnmounted, ref, watch } from 'vue';
 import Input from './Input.vue';
+import BioListItem from './BioListItem.vue';
 
 const props = defineProps<{
   show: boolean;
@@ -20,6 +21,14 @@ const props = defineProps<{
     modelValue: any,
     type: "text" | "password" | "email",
   }[];
+  bios?:{
+    name: string;
+    handle: string;
+    views: number;
+    widgets: number;
+    createdAt: string;
+    updatedAt: string;
+  }
 }>();
 
 const emit = defineEmits(['close', 'delete', 'submit', 'confirm', 'cancel', 'action', 'update:modelValue']);
