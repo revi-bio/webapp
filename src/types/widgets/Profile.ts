@@ -31,10 +31,6 @@ export const ProfileSettingDefinitions: SettingDefinition[] = [
     type: 'color',
   },
   {
-    name: 'name',
-    type: 'string',
-  },
-  {
     name: 'badgeColor',
     type: 'color',
   },
@@ -45,10 +41,6 @@ export const ProfileSettingDefinitions: SettingDefinition[] = [
   {
     name: 'handleVisible',
     type: 'boolean',
-  },
-  {
-    name: 'handle',
-    type: 'string',
   },
   {
     name: 'handleColor',
@@ -67,8 +59,6 @@ export const ProfileSettingDefinitions: SettingDefinition[] = [
 export class ProfileWidget extends Widget {
   constructor(options: ProfileWidgetOptions) {
     const bioStore = useBioStore();
-    const handle = bioStore.getCurrentHandle();
-    const displayName = bioStore.getCurrentDisplayName();
 
     super({
       type: 'profile',
@@ -79,12 +69,12 @@ export class ProfileWidget extends Widget {
         bioAvatarAndName: 'start',
         nameColor: 'violet-500',
         textColor: 'violet-500',
-        name: displayName || 'Loading profile',
+        name: '',
         badgeColor: 'violet-500',
         badgeVisible: true,
         handleVisible: true,
         handleColor: 'violet-500',
-        handle: handle,
+        handle: '',
         text: 'Your text comes here',
       },
       genericSettings: options.genericSettings ?? {},
