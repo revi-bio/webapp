@@ -1,14 +1,5 @@
-import Profile from '@/views/Logged_in/Settings/Profile.vue';
 import { Widget, type SettingDefinition, type WidgetInitializer } from '../Widget';
-import { useBioStore } from '@/stores/bio';
-import router from '@/router';
-import { useRoute, useRouter } from 'vue-router';
-import { onMounted } from 'vue';
 
-interface ProfileWidgetOptions extends Omit<Partial<WidgetInitializer>, 'type'> {
-  handle?: string;
-}
-const route = useRoute();
 export const ProfileSettingDefinitions: SettingDefinition[] = [
   {
     name: 'fullAlign',
@@ -57,9 +48,7 @@ export const ProfileSettingDefinitions: SettingDefinition[] = [
 ];
 
 export class ProfileWidget extends Widget {
-  constructor(options: ProfileWidgetOptions) {
-    const bioStore = useBioStore();
-
+  constructor(options: Omit<Partial<WidgetInitializer>, 'type'>) {
     super({
       type: 'profile',
       specificSettings: {
