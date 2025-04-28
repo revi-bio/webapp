@@ -1,14 +1,5 @@
-import Profile from '@/views/Logged_in/Settings/Profile.vue';
 import { Widget, type SettingDefinition, type WidgetInitializer } from '../Widget';
-import { useBioStore } from '@/stores/bio';
-import router from '@/router';
-import { useRoute, useRouter } from 'vue-router';
-import { onMounted } from 'vue';
 
-interface ProfileWidgetOptions extends Omit<Partial<WidgetInitializer>, 'type'> {
-  handle?: string;
-}
-const route = useRoute();
 export const ProfileSettingDefinitions: SettingDefinition[] = [
   {
     name: 'fullAlign',
@@ -31,10 +22,6 @@ export const ProfileSettingDefinitions: SettingDefinition[] = [
     type: 'color',
   },
   {
-    name: 'name',
-    type: 'string',
-  },
-  {
     name: 'badgeColor',
     type: 'color',
   },
@@ -45,10 +32,6 @@ export const ProfileSettingDefinitions: SettingDefinition[] = [
   {
     name: 'handleVisible',
     type: 'boolean',
-  },
-  {
-    name: 'handle',
-    type: 'string',
   },
   {
     name: 'handleColor',
@@ -65,11 +48,7 @@ export const ProfileSettingDefinitions: SettingDefinition[] = [
 ];
 
 export class ProfileWidget extends Widget {
-  constructor(options: ProfileWidgetOptions) {
-    const bioStore = useBioStore();
-    const handle = bioStore.getCurrentHandle();
-    const displayName = bioStore.getCurrentDisplayName();
-
+  constructor(options: Omit<Partial<WidgetInitializer>, 'type'>) {
     super({
       type: 'profile',
       specificSettings: {
@@ -79,12 +58,10 @@ export class ProfileWidget extends Widget {
         bioAvatarAndName: 'start',
         nameColor: 'violet-500',
         textColor: 'violet-500',
-        name: displayName || 'Loading profile',
         badgeColor: 'violet-500',
         badgeVisible: true,
         handleVisible: true,
         handleColor: 'violet-500',
-        handle: handle,
         text: 'Your text comes here',
       },
       genericSettings: options.genericSettings ?? {},
