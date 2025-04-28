@@ -35,6 +35,7 @@ export const useUserStore = defineStore('user', () => {
       avatar: string;
       displayName: string;
       email: string;
+      role?: string;
     }>('user/@me', {});
 
     if (currentUser.value) {
@@ -63,6 +64,12 @@ export const useUserStore = defineStore('user', () => {
     return undefined;
   }
 
+  function isAdmin(): boolean {
+    if (!loggedIn() || !currentUser.value?.data) return false;
+    if (currentUser.value.data.role === 'admin') return true;
+    return false;
+  }
+
   function setStatus(code: number | null): void {
     currentStatus.value = code;
   }
@@ -76,11 +83,24 @@ export const useUserStore = defineStore('user', () => {
     refreshUserData();
   }
 
+
   if (currentUser.value == null) {
     const lsUser = localStorage.getItem('user');
 
     currentUser.value = lsUser ? JSON.parse(lsUser) : null;
   }
 
-  return { xd, loggedIn, getUserData, getJwt, setJwt, clearUser, getStatus, setStatus, clearStatus, refreshUserData};
+  return {
+    xd,
+    loggedIn,
+    getUserData,
+    getJwt,
+    setJwt,
+    clearUser,
+    getStatus,
+    setStatus,
+    clearStatus,
+    refreshUserData,
+    isAdmin
+  };
 });

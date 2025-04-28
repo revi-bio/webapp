@@ -37,7 +37,7 @@ const needsEmailVerification = (user: UserForAdmin): boolean => {
 
 <template>
   <div class="w-full h-full flex flex-col justify-start content-center items-center overflow-y-auto">
-    <div v-for="user in usersList" :key="user?.id" class="w-full flex flex-row justify-between content-center items-center p-4 bg-zinc-700/50 rounded-xl mb-2">
+    <div v-for="user in usersList" :key="user?._id" class="w-full flex flex-row justify-between content-center items-center p-4 bg-zinc-700/50 rounded-xl mb-2">
       <div class="w-full flex flex-row justify-start content-center items-center gap-5">
         <Avatar class="w-16 h-16" :avatar-url="user?.avatar"/>
         <div class="flex flex-col justify-center content-start items-start">
@@ -53,7 +53,7 @@ const needsEmailVerification = (user: UserForAdmin): boolean => {
         <Button v-if="needsEmailVerification(user)" rank="primary" size="small" text="verify" icon-position="right" icon-type="verified"></Button>
         <Button rank="primary" size="small" text="Bios" icon-position="right" icon-type="recent_actors"></Button>
         <Button rank="primary" size="small" text="Mail" icon-position="right" icon-type="mail"></Button>
-        <Button rank="primary" size="small" text="Delete" icon-position="right" icon-type="delete"></Button>
+        <Button rank="primary" size="small" text="Delete" icon-position="right" icon-type="delete" @click.prevent="adminStore.deleteUser(user._id)"></Button>
       </div>
     </div>
   </div>

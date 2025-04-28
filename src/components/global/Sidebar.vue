@@ -17,7 +17,7 @@ const logoutUser = () => {
 };
 
 const toggleLogoutWindow = (event: Event) => {
-  event.stopPropagation(); // Prevent event from bubbling
+  event.stopPropagation();
   toggleLogout.value = !toggleLogout.value;
 };
 </script>
@@ -40,7 +40,7 @@ const toggleLogoutWindow = (event: Event) => {
           <Icon size="3xl" type="person"></Icon>
         </span>
       </RouterLink>
-      <RouterLink to="/baseDash/admin" class="navItem">
+      <RouterLink v-if="userStore.isAdmin" to="/baseDash/admin" class="navItem">
         <span>
           <Icon size="3xl" type="shield_person"></Icon>
         </span>

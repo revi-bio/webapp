@@ -89,31 +89,31 @@ const router = createRouter({
         {
           path: 'admin',
           name: 'Admin',
-          meta:{public: false},
+          meta: { public: false, requiresAdmin: true },
           component: ()=> import('../views/Logged_in/Admin.vue'),
           children:[
             {
               path: 'adminOverview',
               name: 'App overview',
-              meta:{public: false},
+              meta: { public: false, requiresAdmin: true },
               component: ()=> import('../views/Logged_in/Admin/AdminOverview.vue'),
             },
             {
               path: 'adminUsers',
               name: 'Users',
-              meta:{public: false},
+              meta: { public: false, requiresAdmin: true },
               component: ()=> import('../views/Logged_in/Admin/Users.vue'),
             },
             {
               path: 'adminBios',
               name: 'Bios',
-              meta:{public: false},
+              meta: { public: false, requiresAdmin: true },
               component: ()=> import('../views/Logged_in/Admin/Bios.vue'),
             },
             {
               path: 'adminMail',
               name: 'Mail',
-              meta:{public: false},
+              meta: { public: false, requiresAdmin: true },
               component: ()=> import('../views/Logged_in/Admin/Mail.vue'),
             },
           ]
@@ -143,10 +143,22 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
 
-  if (to.meta.public || userStore.loggedIn()) {
+  if (to.meta.public) {
     next();
-  } else {
+    return;
+  }
+
+  if (!userStore.loggedIn()) {
     next('/login');
+    return;
+  }
+
+  if (to.meta.requiresAdmin) {
+    if (userStore.isAdmin()) {
+      next();
+    }
+  } else {
+    next();
   }
 });
 

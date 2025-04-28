@@ -5,7 +5,7 @@ import type { Bio } from "@/types/Bio";
 
 
 export interface UserForAdmin {
-  id: string,
+  _id: string,
   displayName: string,
   email:string,
   role: string,
@@ -33,6 +33,7 @@ export const useAdminStore =  defineStore('admin', ()=>{
 
   async function deleteUser(userId: string) {
     try {
+      console.log('user to be deleted:', userId)
       const res = await ApiWrapper.delete<Bio>(`admin/users/${userId}`, null);
       fetchAllUsers();
       return res.data;
