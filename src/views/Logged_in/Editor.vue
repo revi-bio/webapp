@@ -377,7 +377,24 @@ async function savePages() {
   }
 }
 
+function handleChangeWallpaper() {
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = 'image/*';
 
+  fileInput.onchange = async (event) => {
+    const target = event.target as HTMLInputElement;
+
+    if (target.files && target.files[0]) {
+      const formData = new FormData();
+      formData.append('file', target.files[0]);
+      await ApiWrapper.patch(`bio/${handle}/bioWallpaper`, formData);
+
+    }
+  };
+
+  fileInput.click();
+};
 
 </script>
 
@@ -430,6 +447,8 @@ async function savePages() {
     <Teleport defer to="#sidebar-right-outlet" v-if="bioSettingsOpened">
       <div class="sidebar">
         <span class="text-2xl">Bio settings</span>
+        <Button :onClick="handleChangeWallpaper" icon-position="only" icon-type="chevron_right" size="small"
+          rank="secondary" />
       </div>
     </Teleport>
 
