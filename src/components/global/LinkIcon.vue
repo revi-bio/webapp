@@ -2,9 +2,10 @@
 import { computed } from 'vue';
 
 const props = defineProps<{
-  type: string,
+  type?: string,
   width: string,
-  color: string
+  color: string,
+  url?: string
 }>();
 
 const icons: Record<string, string> = {
@@ -29,15 +30,32 @@ const icons: Record<string, string> = {
   youtube: 'youtube-fill-svgrepo-com.svg',
 };
 
+const getIconTypeFromUrl = (url: string): string => {
+  for (const key of Object.keys(icons)) {
+    if (url.includes(key)) {
+      return key;
+    }
+  }
+  return 'default';
+};
+
+const getIconFromUrl = (url: string): string | null => {
+  const iconType = getIconTypeFromUrl(url);
+  if (iconType && icons[iconType]) {
+    return iconsModule[`/src/assets/LinkIcons/${icons[iconType]}`] || null;
+  }
+  return null;
+};
+
 const iconsModule = import.meta.glob('@/assets/LinkIcons/*.svg', { eager: true, as: 'raw' }) as Record<string, string>;
 
 const iconPath = icons[props.type] ? iconsModule[`/src/assets/LinkIcons/${icons[props.type]}`] : null;
 
 const processedSvg = computed(() => {
-  if (!iconPath) return null;
+  const svgContent = props.url ? getIconFromUrl(props.url) : iconPath;
+  if (!svgContent) return null;
 
-
-  return iconPath
+  return svgContent
     .replace(/<svg/, '<svg width="100%" height="100%" preserveAspectRatio="xMidYMid meet"')
     .replace(/fill="[^"]*"/g, 'fill="currentColor"')
     .replace(/stroke="[^"]*"/g, 'stroke="currentColor"');

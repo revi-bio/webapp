@@ -1,37 +1,50 @@
 <script setup lang="ts">
 import type { Widget } from '@/types/Widget';
 import { ref, watch } from 'vue';
+import LinkIcon from '../global/LinkIcon.vue';
 
 const props = defineProps<{
   data: Widget
+  inEditor: boolean,
 }>();
 
 const links = ref<[{ link: string; name: string }]>();
-console.log(props.data)
-// Figyeljük a specificSettings.links változását
+
 watch(
   () => props.data.specificSettings['links'],
   (newLinks) => {
     links.value = newLinks || [];
-    console.log('specificSettings.links:', props.data.specificSettings['links']);
   },
   { immediate: true },
 );
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 p-4">
-    adsasd
-    <h3 class="text-2xl">{{ data.specificSettings['title'] }}</h3>
-    <ul class="link-list">
-      <li v-for="(link, index) in links" :key="index" class="link-item">
-        <a :href="link.link" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:underline">
-          {{ link.name }}
-        </a>
-      </li>
-    </ul>
+  <div class="flex flex-wrap gap-4 justify-center">
+    <div
+      v-for="(link, index) in links"
+      :key="index"
+      class="flex-1 min-w-[calc(33.33%-1rem)] text-center bg-zinc-700/20 rounded-md hover:bg-zinc-600/30 transition duration-200 ease-in-out"
+    >
+      <a
+        v-if="!inEditor"
+        :href="link.link"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-zinc-300 cursor-pointer flex flex-col items-center justify-center h-full p-4"
+      >
+        {{ link.name }}
+        <LinkIcon width="32px" color="zinc-200" :url="link.link" />
+      </a>
+      <p
+        v-if="inEditor"
+        class="text-zinc-300 cursor-pointer flex flex-col items-center justify-center h-full p-4"
+      >
+        {{ link.name }}
+        <LinkIcon width="48px" color="zinc-200" :url="link.link" />
+      </p>
+    </div>
   </div>
-  <pre>{{ JSON.stringify(data.specificSettings['links'], null, 2) }}</pre>
 </template>
 
 <style lang="scss">
