@@ -10,7 +10,7 @@ import LinkContainer from './LinkContainer.vue';
 
 const props = withDefaults(defineProps<{
   data: Widget;
-  inEditor: boolean;
+  inEditor?: boolean;
 }>(), { data: undefined, inEditor: false });
 
 let style = computed(() =>

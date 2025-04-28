@@ -33,7 +33,7 @@ let textStyle = computed(
 
 onMounted(() => {
   const route = useRoute();
-  handle.value = route.params.handle;
+  handle.value = route.params['handle'] as string;
 });
 
 </script>
