@@ -407,9 +407,11 @@ async function savePages() {
         <div @click="addWidget('profile')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add profile widget</div>
         <div @click="addWidget('link')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
         <div @click="addWidget('youtube')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add youtube widget</div>
-        <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add markdown widget</div>
+        <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add markdown widget
+        </div>
         <div @click="addWidget('gallery')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add gallery widget</div>
-        <div @click="addWidget('linkContainer')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link container widget</div>
+        <div @click="addWidget('linkContainer')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link container
+          widget</div>
         <!--
         <div @click="addWidget('spotify')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
         <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
@@ -449,14 +451,10 @@ async function savePages() {
             v-else-if="setting.type === 'images'" @change-images="(images) => {
               selectedWidget.specificSettings['images'] = images
             }" />
-          <LinkSelector
-            :widgetId="selectedWidgetId"
-            :links="selectedWidget.specificSettings['links']"
-            v-else-if="setting.type === 'links'"
-            @change-links="(links) => {
+          <LinkSelector :widgetId="selectedWidgetId" :links="selectedWidget.specificSettings['links']"
+            v-else-if="setting.type === 'links'" @change-links="(links) => {
               selectedWidget.specificSettings['links'] = links;
-            }"
-          />
+            }" />
         </span>
 
         <!-- Generic settings -->
@@ -484,7 +482,7 @@ async function savePages() {
       <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
         <div class="flex gap-2 relative">
           <!-- Widget component -->
-          <Widget @click="toggleSelection(widget.id)" :data="widget" class="w-full"
+          <Widget @click="toggleSelection(widget.id)" :data="widget" :in-editor="true" class="w-full"
             :selected="widget.id === selectedWidgetId" />
 
           <!-- Widget controls - only show for widgets on the current page -->
