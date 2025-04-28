@@ -9,6 +9,7 @@ import type { User } from '@/types/User';
 import type { Bio } from "@/types/Bio";
 import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 import Modal from '@/components/global/Modal.vue';
+import router from '@/router';
 
 const adminStore = useAdminStore();
 const usersList = ref<UserForAdmin[]>([]);
@@ -61,7 +62,9 @@ const refreshUserBios = async (userId: string) => {
   }
 };
 
-const handleDeleteBio = async (bioId: string) => {
+const handleDeleteBio = async (bioId: string, event: Event) => {
+  event.stopPropagation();
+
   try {
     if (selectedUser.value) {
       await adminStore.deleteBio(bioId);
@@ -70,6 +73,10 @@ const handleDeleteBio = async (bioId: string) => {
   } catch (error) {
     console.error('Error deleting bio:', error);
   }
+};
+
+const navigateToBio = (handle: string) => {
+  router.push(`/${handle}`);
 };
 
 const modalActions = [
@@ -119,8 +126,9 @@ const modalActions = [
           This user hasn't created any bios yet.
         </div>
         <div v-else class="flex w-full h-full flex-col justify-center content-center gap-5 overflow-y-auto">
-          <div v-for="(bio, index) in selectedUserBios" :key="bio?._id || index" class="p-3 gap-2 bg-zinc-700 rounded-lg">
-            <div class="flex flex-row justify-between items-center mb-2">
+          <div v-for="(bio, index) in selectedUserBios" :key="bio?._id || index"
+               class="p-3 gap-2 bg-zinc-700 rounded-lg cursor-pointer hover:bg-zinc-600/80 transition-colors">
+            <div class="flex flex-row justify-between items-center mb-2" @click="navigateToBio(bio.handle)">
               <div>
                 <h4 class="text-lg text-zinc-200">{{ bio.name || 'Unnamed Bio' }}</h4>
                 <p class="text-sm text-zinc-400">@{{ bio.handle }}</p>
@@ -134,12 +142,16 @@ const modalActions = [
                 </span>
               </div>
             </div>
-            <div class="flex justify-between text-xs text-zinc-500 mb-2">
+            <div class="flex justify-between text-xs text-zinc-500 mb-2" @click="navigateToBio(bio.handle)">
               <div>Created: {{ new Date(bio.createdAt).toLocaleString() }}</div>
               <div>Updated: {{ new Date(bio.updatedAt).toLocaleString() }}</div>
             </div>
-            <Button rank="primary" size="small" text="Delete" icon-position="right" icon-type="delete"
-            @click.prevent="handleDeleteBio(bio._id)"></Button>
+            <div class="flex flex-row gap-2">
+              <Button rank="primary" size="small" text="View" icon-position="right" icon-type="visibility"
+                @click.stop="navigateToBio(bio.handle)"></Button>
+              <Button rank="primary" size="small" text="Delete" icon-position="right" icon-type="delete"
+                @click="handleDeleteBio(bio._id, $event)"></Button>
+            </div>
           </div>
         </div>
       </div>
