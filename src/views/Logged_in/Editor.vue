@@ -374,7 +374,7 @@ async function savePages() {
 </script>
 
 <template>
-  <div class="flex justify-center items-center h-full w-full relative"
+  <div class="flex justify-center items-center h-full w-full relative rounded-2xl"
     style="background-image: url(https://w.wallhaven.cc/full/nr/wallhaven-nrddrm.png);">
     <!-- Bottom toolbar -->
     <div class="absolute w-full bottom-0 p-6 justify-between space-x-2 text-zinc-200 grid grid-cols-3">
