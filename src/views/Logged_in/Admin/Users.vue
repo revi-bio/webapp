@@ -11,10 +11,6 @@ import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 import Modal from '@/components/global/Modal.vue';
 import router from '@/router';
 
-// Adding interface to extend Bio with _id property
-interface ExtendedBio extends Bio {
-  _id: string;
-}
 
 const adminStore = useAdminStore();
 const usersList = ref<UserForAdmin[]>([]);
@@ -24,8 +20,7 @@ const alertMessage = ref<string>('');
 const alertActive = ref<boolean>(false);
 
 const showBiosModal = ref(false);
-// Update the type to use the extended interface with _id
-const selectedUserBios = ref<ExtendedBio[]>([]);
+const selectedUserBios = ref<Bio[]>([]);
 const selectedUser = ref<UserForAdmin | null>(null);
 
 onMounted(async () => {
@@ -60,8 +55,7 @@ const refreshUserBios = async (userId: string) => {
   try {
     const bios = await adminStore.getUserBios(userId);
     if (bios) {
-      // Ensure bios is an array and cast it to our ExtendedBio type
-      selectedUserBios.value = Array.isArray(bios) ? bios as ExtendedBio[] : [bios as ExtendedBio];
+      selectedUserBios.value = Array.isArray(bios) ? bios as Bio[] : [bios as Bio];
       showBiosModal.value = true;
     }
   } catch (error) {
@@ -86,7 +80,6 @@ const navigateToBio = (handle: string) => {
   router.push(`/${handle}`);
 };
 
-// Fix the type for modalActions to use specific rank values
 const modalActions: {
   text: string;
   icon?: string;
