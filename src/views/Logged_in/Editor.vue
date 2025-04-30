@@ -21,7 +21,11 @@ import Alert from '@/components/global/Alert.vue';
 import LinkSelector from '@/components/global/LinkSelector.vue';
 import { ApiWrapper } from '@/composables/ApiWrapper';
 
-const loaded = ref(false);
+const emits = defineEmits([
+  'avatarChange',
+  'wallpaperChange'
+]);
+
 const route = useRoute();
 const handle = route.params.handle as string;
 const currentPageIndex = ref(0);
@@ -59,7 +63,6 @@ onMounted(async () => {
       console.log(pages.value)
     }
 
-    loaded.value = true;
     await updateBackgroundStyle();
   } catch (error: any) {
     console.error("Error fetching bio pages:", error);
@@ -71,8 +74,6 @@ onMounted(async () => {
   }
 
 });
-
-watchEffect(loaded, updateBackgroundStyle);
 
 // Computed properties
 const currentPage = computed(() =>
@@ -383,7 +384,7 @@ async function savePages() {
   }
 }
 
-function handleChangeWallpaper() {
+function handleUploadFile(path: string) {
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
   fileInput.accept = 'image/*';
@@ -394,8 +395,7 @@ function handleChangeWallpaper() {
     if (target.files && target.files[0]) {
       const formData = new FormData();
       formData.append('file', target.files[0]);
-      await ApiWrapper.patch(`bio/${handle}/bioWallpaper`, formData);
-
+      await ApiWrapper.patch(path, formData);
     }
   };
 
@@ -405,7 +405,7 @@ function handleChangeWallpaper() {
 </script>
 
 <template>
-  <div class="flex justify-center items-center h-full w-full relative rounded-2xl" :style="backgroundStyle">
+  <div class="flex justify-center items-center h-full w-full relative rounded-2xl bg-cover" :style="backgroundStyle">
     <!-- Bottom toolbar -->
     <div class="absolute w-full bottom-0 p-6 justify-between space-x-2 text-zinc-200 grid grid-cols-3">
       <!-- Add widget button -->
@@ -453,8 +453,10 @@ function handleChangeWallpaper() {
     <Teleport defer to="#sidebar-right-outlet" v-if="bioSettingsOpened">
       <div class="sidebar">
         <span class="text-2xl">Bio settings</span>
-        <Button :onClick="handleChangeWallpaper" icon-position="only" icon-type="chevron_right" size="small"
-          rank="secondary" />
+        <Button :onClick="() => handleUploadFile(`bio/${handle}/bioWallpaper`)" text="Change wallpaper"
+          icon-position="none" size="normal" rank="secondary" />
+        <Button :onClick="() => handleUploadFile(`bio/${handle}/bioPfp`)" text="Change avatar" icon-position="none"
+          size="normal" rank="secondary" />
       </div>
     </Teleport>
 
