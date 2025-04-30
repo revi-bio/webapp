@@ -10,6 +10,10 @@ const props = defineProps<{
 const currentIndex = ref(0);
 const images = ref<string[]>([]);
 
+function getImg(image: string): string {
+  return `${import.meta.env.VITE_API_BASE_URL}/file/${image}`;
+}
+
 watch(
   () => props.data.specificSettings['images'],
   (newImages) => {
@@ -36,7 +40,7 @@ function prevImage() {
   <div class="flex flex-col gap-4 p-4">
     <h3 class="text-2xl">{{ data.specificSettings['title'] }}</h3>
     <div class="relative">
-      <img v-if="images.length" :src="images[currentIndex]" alt="Gallery image" class="w-full h-auto rounded-lg" />
+      <img v-if="images.length" :src="getImg(images[currentIndex])" alt="Gallery image" class="w-full h-auto rounded-lg" />
       <p v-else class="text-center text-zinc-500">No images available</p>
 
       <Icon
