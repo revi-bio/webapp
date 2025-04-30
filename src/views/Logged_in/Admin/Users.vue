@@ -248,7 +248,6 @@ const mailInputs = computed(() => [
       :show="showMailModal"
       @close="closeMailModal"
       @submit="sendMail"
-      @update:modelValue="handleMailInputUpdate"
       :primaryMsg="mailRecipient ? `Send Message to ${mailRecipient.displayName}` : 'Send Message'"
       :secondaryMsg="mailRecipient ? `Email: ${mailRecipient.email}` : ''"
       :actions="mailModalActions"
