@@ -1,6 +1,6 @@
 export interface Bio {
   name: string,
-  //_id: string,
+  _id?: string,
   avatar?: string,
   backgroundImage?: string;
   handle: string,

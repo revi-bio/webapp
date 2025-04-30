@@ -11,6 +11,11 @@ import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 import Modal from '@/components/global/Modal.vue';
 import router from '@/router';
 
+// Adding interface to extend Bio with _id property
+interface ExtendedBio extends Bio {
+  _id: string;
+}
+
 const adminStore = useAdminStore();
 const usersList = ref<UserForAdmin[]>([]);
 const alertStatus = ref<number>(0);
@@ -19,7 +24,8 @@ const alertMessage = ref<string>('');
 const alertActive = ref<boolean>(false);
 
 const showBiosModal = ref(false);
-const selectedUserBios = ref<Bio[]>([]);
+// Update the type to use the extended interface with _id
+const selectedUserBios = ref<ExtendedBio[]>([]);
 const selectedUser = ref<UserForAdmin | null>(null);
 
 onMounted(async () => {
@@ -54,7 +60,8 @@ const refreshUserBios = async (userId: string) => {
   try {
     const bios = await adminStore.getUserBios(userId);
     if (bios) {
-      selectedUserBios.value = bios;
+      // Ensure bios is an array and cast it to our ExtendedBio type
+      selectedUserBios.value = Array.isArray(bios) ? bios as ExtendedBio[] : [bios as ExtendedBio];
       showBiosModal.value = true;
     }
   } catch (error) {
@@ -79,7 +86,13 @@ const navigateToBio = (handle: string) => {
   router.push(`/${handle}`);
 };
 
-const modalActions = [
+// Fix the type for modalActions to use specific rank values
+const modalActions: {
+  text: string;
+  icon?: string;
+  rank?: "primary" | "secondary" | "tabItem";
+  callback: string;
+}[] = [
   {
     text: "Close",
     icon: "close",
@@ -126,7 +139,7 @@ const modalActions = [
           This user hasn't created any bios yet.
         </div>
         <div v-else class="flex w-full h-full flex-col justify-center content-center gap-5 overflow-y-auto">
-          <div v-for="(bio, index) in selectedUserBios" :key="bio?._id || index"
+          <div v-for="(bio, index) in selectedUserBios" :key="index"
                class="p-3 gap-2 bg-zinc-700 rounded-lg cursor-pointer hover:bg-zinc-600/80 transition-colors">
             <div class="flex flex-row justify-between items-center mb-2" @click="navigateToBio(bio.handle)">
               <div>
