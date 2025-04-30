@@ -31,6 +31,12 @@ const router = createRouter({
       component: () => import('../views/EmailVerification.vue'),
     },
     {
+      path: '/verify-your-email',
+      name: 'verifyYourEmail',
+      meta: { public: true },
+      component: () => import('../views/VerifyYourEmail.vue'),
+    },
+    {
       path: '/baseDash',
       name: 'baseDash',
       component: () => import('../views/BaseDashLayout.vue'),

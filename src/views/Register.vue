@@ -49,8 +49,8 @@ const onRegister = async () => {
     });
 
     if (res.status === 201 && res.data.jwt) {
+      router.push('verify-your-email');
       userStore.setJwt(res.data.jwt);
-      router.push('baseDash/overview');
     } else {
       console.error('Registration failed:', res);
     }
