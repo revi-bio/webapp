@@ -11,6 +11,7 @@ import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 import Modal from '@/components/global/Modal.vue';
 import router from '@/router';
 
+
 const adminStore = useAdminStore();
 const usersList = ref<UserForAdmin[]>([]);
 const alertStatus = ref<number>(0);
@@ -54,7 +55,7 @@ const refreshUserBios = async (userId: string) => {
   try {
     const bios = await adminStore.getUserBios(userId);
     if (bios) {
-      selectedUserBios.value = bios;
+      selectedUserBios.value = Array.isArray(bios) ? bios as Bio[] : [bios as Bio];
       showBiosModal.value = true;
     }
   } catch (error) {
@@ -79,7 +80,12 @@ const navigateToBio = (handle: string) => {
   router.push(`/${handle}`);
 };
 
-const modalActions = [
+const modalActions: {
+  text: string;
+  icon?: string;
+  rank?: "primary" | "secondary" | "tabItem";
+  callback: string;
+}[] = [
   {
     text: "Close",
     icon: "close",
@@ -126,7 +132,7 @@ const modalActions = [
           This user hasn't created any bios yet.
         </div>
         <div v-else class="flex w-full h-full flex-col justify-center content-center gap-5 overflow-y-auto">
-          <div v-for="(bio, index) in selectedUserBios" :key="bio?._id || index"
+          <div v-for="(bio, index) in selectedUserBios" :key="index"
                class="p-3 gap-2 bg-zinc-700 rounded-lg cursor-pointer hover:bg-zinc-600/80 transition-colors">
             <div class="flex flex-row justify-between items-center mb-2" @click="navigateToBio(bio.handle)">
               <div>
