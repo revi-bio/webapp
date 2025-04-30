@@ -14,6 +14,7 @@ const selectedWidgetId = ref<string | null>(null);
 const widgetToolboxOpened = ref(false);
 const bioSettingsOpened = ref(false);
 const bioStore = useBioStore();
+const backgroundStyle = ref('');
 
 // Initialize pages with sample widgets
 const pages = ref<Page[]>(
@@ -27,8 +28,15 @@ const pages = ref<Page[]>(
   ]
 );
 
+async function updateBackgroundStyle() {
+  const currentBio = await bioStore.fetchBio(handle);
+
+  backgroundStyle.value = `background-image: url(${import.meta.env.VITE_API_BASE_URL}/file/${currentBio.backgroundImage});`;
+}
+
 onMounted(async () => {
   pages.value = await bioStore.getBioPages(handle);
+  await updateBackgroundStyle();
 })
 
 // Computed properties
@@ -46,7 +54,7 @@ function findWidgetIndex(id: string): number {
 </script>
 
 <template>
-  <div class="flex justify-center items-center h-full w-full relative">
+  <div class="flex justify-center items-center h-full w-full relative bg-cover" :style="backgroundStyle">
     <div id="widgets" class="flex flex-col gap-3 justify-center z-0 h-[80%] w-1/2">
       <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
         <div class="flex gap-2 relative">

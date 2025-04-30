@@ -37,13 +37,12 @@ const handleImageSelection = () => {
 
         reader.onload = (e) => {
           if (e.target?.result) {
-            // Csak előnézethez használható, ha szükséges
+
           }
         };
 
         reader.readAsDataURL(file);
 
-        // Kép feltöltése a szerverre
         try {
           isUploading.value = true;
           const formData = new FormData();
@@ -55,9 +54,7 @@ const handleImageSelection = () => {
             },
           });
 
-          // Kép URL hozzáadása a widgethez
-          const imageUrl = getImg(response.data);
-          selectedImages.value.push(imageUrl);
+          selectedImages.value.push(response.data);
           emit('change-images', selectedImages.value);
         } catch (error) {
           console.error('Failed to upload image:', error);
@@ -115,7 +112,7 @@ const moveImageDown = (index: number) => {
 
     <div v-if="images.length" class="w-full grid grid-row gap-4">
       <div v-for="(image, index) in images" :key="index" class="relative group">
-        <img :src="image" alt="Selected Image" class="w-full h-32 object-cover border border-zinc-300 rounded" />
+        <img :src="getImg(image)" alt="Selected Image" class="w-full h-32 object-cover border border-zinc-300 rounded" />
         <button
           class="absolute top-1 right-1 bg-rose-500 text-zinc-200 rounded-full px-1 text-sm opacity-0 group-hover:opacity-100 transition-opacity"
           @click.prevent="removeImage(index)">
