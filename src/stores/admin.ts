@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from 'vue';
 import { ApiWrapper } from '@/composables/ApiWrapper';
 import type { Bio } from "@/types/Bio";
+import type { InboxMessage } from "@/types/InboxMessage";
 
 
 export interface UserForAdmin {
@@ -75,6 +76,15 @@ export const useAdminStore =  defineStore('admin', ()=>{
     }
   }
 
+  async function sendMassageToUser(userId: string, title: string, text: string) {
+    try{
+      const res = await ApiWrapper.post<InboxMessage>(`admin/users/${userId}/messages`,{userId, title, text})
+      return res.data
+    }catch(error: any){
+      console.error('Error while sending message:', error)
+    }
+  }
+
   return{
     users,
     bios,
@@ -82,6 +92,7 @@ export const useAdminStore =  defineStore('admin', ()=>{
     deleteUser,
     getUserBios,
     deleteBio,
-    fetchAllBios
+    fetchAllBios,
+    sendMassageToUser
   }
 })

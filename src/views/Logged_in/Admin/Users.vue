@@ -11,7 +11,6 @@ import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 import Modal from '@/components/global/Modal.vue';
 import router from '@/router';
 
-
 const adminStore = useAdminStore();
 const usersList = ref<UserForAdmin[]>([]);
 const alertStatus = ref<number>(0);
@@ -19,9 +18,15 @@ const alertError = ref<string>('');
 const alertMessage = ref<string>('');
 const alertActive = ref<boolean>(false);
 
+
 const showBiosModal = ref(false);
 const selectedUserBios = ref<Bio[]>([]);
 const selectedUser = ref<UserForAdmin | null>(null);
+
+const showMailModal = ref(false);
+const mailTitle = ref('');
+const mailContent = ref('');
+const mailRecipient = ref<UserForAdmin | null>(null);
 
 onMounted(async () => {
   await adminStore.fetchAllUsers();
@@ -80,7 +85,40 @@ const navigateToBio = (handle: string) => {
   router.push(`/${handle}`);
 };
 
-const modalActions: {
+const resetMailForm = () => {
+  mailTitle.value = '';
+  mailContent.value = '';
+};
+
+const openMailModal = (user: UserForAdmin) => {
+  mailRecipient.value = user;
+  mailTitle.value = '';
+  mailContent.value = '';
+  showMailModal.value = true;
+};
+
+const closeMailModal = () => {
+  showMailModal.value = false;
+  mailTitle.value = '';
+  mailContent.value = '';
+};
+
+const sendMail = async () => {
+  try {
+    await adminStore.sendMassageToUser(
+      mailRecipient.value._id,
+      mailTitle.value,
+      mailContent.value
+    );
+    resetMailForm();
+    showMailModal.value = false;
+  } catch (error) {
+    console.error('Error sending mail:', error);
+  }
+};
+
+
+const biosModalActions: {
   text: string;
   icon?: string;
   rank?: "primary" | "secondary" | "tabItem";
@@ -93,11 +131,51 @@ const modalActions: {
     callback: "close"
   }
 ];
+
+const mailModalActions = computed(() => {
+  const actions: {
+    text: string;
+    icon?: string;
+    rank?: "primary" | "secondary" | "tabItem";
+    callback: string;
+  }[] = [
+    {
+      text: "Send",
+      icon: "send",
+      rank: "primary",
+      callback: "submit"
+    },
+    {
+      text: "Cancel",
+      icon: "close",
+      rank: "secondary",
+      callback: "close"
+    }
+  ];
+
+  return actions;
+});
+
+const mailInputs = computed(() => [
+  {
+    placeholder: "Title",
+    modelValue: mailTitle.value,
+    type: "text" as "text" | "password" | "email"
+  },
+  {
+    placeholder: "Content",
+    modelValue: mailContent.value,
+    type: "text" as "text" | "password" | "email"
+  }
+]);
+
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col justify-start content-center items-center overflow-y-auto">
-    <div v-for="user in usersList" :key="user?._id" class="w-full flex flex-row justify-between content-center items-center p-4 bg-zinc-700/50 rounded-xl mb-2">
+  <div class="w-full h-full flex flex-col justify-start content-center items-center overflow-y-auto gap-5">
+
+
+    <div v-for="user in usersList" :key="user?._id" class="w-full flex flex-row justify-between content-center items-center p-4 bg-zinc-700/50 rounded-xl">
       <div class="w-full flex flex-row justify-start content-center items-center gap-5">
         <Avatar class="w-16 h-16" :avatar-url="user?.avatar" />
         <div class="flex flex-col justify-center content-start items-start">
@@ -115,7 +193,8 @@ const modalActions: {
           icon-type="verified"></Button>
         <Button rank="primary" size="small" text="Bios" icon-position="right" icon-type="recent_actors"
           @click.prevent="openBiosModal(user)"></Button>
-        <Button rank="primary" size="small" text="Mail" icon-position="right" icon-type="mail"></Button>
+        <Button rank="primary" size="small" text="Mail" icon-position="right" icon-type="mail"
+          @click.prevent="openMailModal(user)"></Button>
         <Button rank="primary" size="small" text="Delete" icon-position="right" icon-type="delete"
           @click.prevent="adminStore.deleteUser(user._id)"></Button>
       </div>
@@ -126,7 +205,7 @@ const modalActions: {
       @close="showBiosModal = false"
       :primaryMsg="selectedUser ? `${selectedUser.displayName}'s Bios` : 'User Bios'"
       :secondaryMsg="selectedUserBios.length ? `${selectedUserBios.length} bios found` : 'No bios found'"
-      :actions="modalActions">
+      :actions="biosModalActions">
       <div class="w-full h-full">
         <div v-if="selectedUserBios.length === 0" class="text-center text-zinc-400 my-4">
           This user hasn't created any bios yet.
@@ -139,12 +218,14 @@ const modalActions: {
                 <h4 class="text-lg text-zinc-200">{{ bio.name || 'Unnamed Bio' }}</h4>
                 <p class="text-sm text-zinc-400">@{{ bio.handle }}</p>
               </div>
-              <div class="flex gap-2">
+              <div class="flex flex-row justify-center content-center items-center gap-2">
                 <span class="text-sm text-zinc-400 flex items-center">
-                  <Icon type="visibility" size="3" class="mr-1"></Icon> {{ bio.views || 0 }}
+                  <Icon type="visibility" size="3"></Icon>
+                  {{ bio.views || 0 }}
                 </span>
                 <span class="text-sm text-zinc-400 flex items-center">
-                  <Icon type="widgets" size="3" class="mr-1"></Icon> {{ bio.widgets || 0 }}
+                  <Icon type="widgets" size="3"></Icon>
+                  {{ bio.widgets || 0 }}
                 </span>
               </div>
             </div>
@@ -161,6 +242,17 @@ const modalActions: {
           </div>
         </div>
       </div>
+    </Modal>
+
+    <Modal
+      :show="showMailModal"
+      @close="closeMailModal"
+      @submit="sendMail"
+      @update:modelValue="handleMailInputUpdate"
+      :primaryMsg="mailRecipient ? `Send Message to ${mailRecipient.displayName}` : 'Send Message'"
+      :secondaryMsg="mailRecipient ? `Email: ${mailRecipient.email}` : ''"
+      :actions="mailModalActions"
+      :inputs="mailInputs">
     </Modal>
   </div>
 </template>
