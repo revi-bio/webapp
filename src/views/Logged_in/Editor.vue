@@ -410,7 +410,8 @@ function handleUploadFile(path: string) {
     <div class="absolute w-full bottom-0 p-6 justify-between space-x-2 text-zinc-200 grid grid-cols-3">
       <!-- Add widget button -->
       <div class="flex gap-2">
-        <Button :onClick="toggleWidgetToolbox" icon-position="only" icon-type="add" size="small" rank="primary" />
+        <Button :onClick="toggleWidgetToolbox" icon-position="left" icon-type="add" size="small" rank="primary" text="Add widget" />
+        <Button :onClick="toggleWidgetToolbox" icon-position="left" icon-type="add" size="small" rank="primary" text="Add page" />
       </div>
 
       <!-- Page navigation -->
@@ -426,7 +427,7 @@ function handleUploadFile(path: string) {
 
       <!-- Bio settings button -->
       <div class="flex justify-end">
-        <Button :onClick="toggleBioSettings" icon-position="only" icon-type="settings" size="small" rank="secondary" />
+        <Button :onClick="toggleBioSettings" icon-position="left" icon-type="settings" size="small" rank="secondary" text="Bio settings" />
       </div>
     </div>
 
@@ -545,7 +546,7 @@ function handleUploadFile(path: string) {
     </div>
 
     <div class="top-0 right-0 m-6 absolute">
-      <Button :onClick="savePages" icon-position="only" icon-type="save" size="small" rank="primary" />
+      <Button :onClick="savePages" icon-position="left" icon-type="save" size="small" rank="primary" text="Save" />
     </div>
   </div>
   <Alert :status="alertStatus" :error="alertError" :message="alertMessage" :active="alertActive" @hide="onAlertHide" />
