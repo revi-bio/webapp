@@ -38,7 +38,7 @@ const props = defineProps<{
 
 <style>
 button {
-  @apply rounded-md flex items-center gap-2;
+  @apply rounded-md flex items-center gap-2 shadow;
 }
 
 .primary {

@@ -22,7 +22,7 @@ let style = computed(() =>
 </script>
 
 <template>
-  <div class="p-4 relative w-full" :style="style">
+  <div class="p-4 relative w-full shadow-lg" :style="style">
     <Link :data="data" :in-editor="inEditor" v-if="data.type == 'link'" />
     <ProfileWidget :data="data" v-if="data.type == 'profile'" />
     <Markdown :data="data" v-if="data.type == 'markdown'" />
