@@ -407,7 +407,7 @@ function handleUploadFile(path: string) {
 <template>
   <div class="flex justify-center items-center h-full w-full relative rounded-2xl bg-cover" :style="backgroundStyle">
     <!-- Bottom toolbar -->
-    <div class="absolute w-full bottom-0 p-6 justify-between space-x-2 text-zinc-200 grid grid-cols-3">
+    <div class="absolute w-full bottom-0 p-4 justify-between space-x-2 text-zinc-200 grid grid-cols-3 bg-zinc-900/50 rounded-2xl">
       <!-- Add widget button -->
       <div class="flex gap-2">
         <Button :onClick="toggleWidgetToolbox" icon-position="left" icon-type="add" size="small" rank="primary" text="Add widget" />
