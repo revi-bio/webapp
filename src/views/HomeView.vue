@@ -7,6 +7,9 @@ import Footer from '@/components/global/Footer.vue';
 import { onMounted, ref } from 'vue';
 import { animate, inView, scroll, stagger } from 'motion';
 import { useIntersectionObserver } from '@vueuse/core';
+import { useWindowSize } from '@vueuse/core';
+
+const { width } = useWindowSize();
 
 onMounted(() => {
   const elements = document.querySelectorAll(
@@ -88,9 +91,9 @@ onMounted(() => {
       </defs>
     </svg>
     <svg
-      class="absolute left-[600px] top-[3300px]"
-      width="1007"
-      height="933"
+      class="absolute left-[80px] sm:left-[100px] md:left-[300px] lg:left-[550px] top-[3300px]"
+      :width="width < 1607 ? width < 1007/2+300 ? 1007/3 : 1007/2 : 1007"
+      :height="width < 1607 ? width < 633/2+300 ? 933/3 : 933/2 : 933"
       viewBox="0 0 1007 933"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">
@@ -126,9 +129,9 @@ onMounted(() => {
       </defs>
     </svg>
     <svg
-      class="absolute left-[300px] top-[5200px]"
-      width="788"
-      height="768"
+      class="absolute left-[0px] sm:left-[50px] md:left-[150px] lg:left-[300px] top-[5200px]"
+      :width="width < 1088 ? width < 788/2+300 ? 788/3 : 788/2 : 788"
+      :height="width < 1088 ? width < 768/2+300 ? 768/3 : 768/2 : 768"
       viewBox="0 0 788 768"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">
