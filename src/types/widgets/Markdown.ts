@@ -11,7 +11,7 @@ export const MarkdownSettingDefinitions: SettingDefinition[] = [
   },
   {
     name: 'text',
-    type: 'string',
+    type: 'text',
   },
 ];
 

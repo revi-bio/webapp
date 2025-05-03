@@ -19,7 +19,9 @@ import { useRoute } from 'vue-router';
 import ImagePicker from '@/components/global/ImagePicker.vue';
 import Alert from '@/components/global/Alert.vue';
 import LinkSelector from '@/components/global/LinkSelector.vue';
+import Slider from '@/components/global/Slider.vue';
 import { ApiWrapper } from '@/composables/ApiWrapper';
+import Textbox from '@/components/global/Textbox.vue';
 
 const emits = defineEmits([
   'avatarChange',
@@ -470,7 +472,7 @@ function handleUploadFile(path: string) {
         <span>Widget-specific settings</span>
         <span v-for="setting in SPECIFIC_SETTINGS_DEFINITIONS[selectedWidget.type]" :key="setting.name">
           <span class="text-zinc-400">{{ setting.name }}</span>
-          <Input v-if="setting.type === 'number' || setting.type === 'string'" type="text"
+          <Input v-if="setting.type === 'string'" type="text"
             v-model="(selectedWidget.specificSettings as any)[setting.name]" />
           <ColorPicker v-else-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
             (_baseColor, _shade, opacity, hslaValue) => {
@@ -490,15 +492,21 @@ function handleUploadFile(path: string) {
             v-else-if="setting.type === 'links'" @change-links="(links) => {
               selectedWidget.specificSettings['links'] = links;
             }" />
+          <Slider :max="100" :min="0" v-model="(selectedWidget.specificSettings as any)[setting.name]"
+            v-else-if="setting.type === 'number'"
+          />
+          <Textbox v-model="(selectedWidget.specificSettings as any)[setting.name]"
+            v-else-if="setting.type === 'text'"
+          />
         </span>
 
         <!-- Generic settings -->
         <span>Generic settings</span>
         <span v-for="setting in GENERIC_SETTINGS_DEFINITIONS" :key="setting.name">
           <span class="text-zinc-400">{{ setting.name }}</span>
-          <Input v-if="setting.type !== 'color'" type="text"
-            v-model="(currentPage?.widgets.find((w) => w.id === selectedWidgetId)?.genericSettings as any)[setting.name]" />
-          <ColorPicker v-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
+          <Input v-if="setting.type === 'string'" type="text"
+          v-model="(currentPage?.widgets.find((w) => w.id === selectedWidgetId)?.genericSettings as any)[setting.name]" />
+          <ColorPicker v-else-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
             (_baseColor, _shade, opacity, hslaValue) => {
               (selectedWidget!.genericSettings as any)[setting.name] = {
                 hue: hslaValue.h,
@@ -508,6 +516,9 @@ function handleUploadFile(path: string) {
               };
             }
           " />
+          <Slider :max="100" :min="0" v-model="(selectedWidget.genericSettings as any)[setting.name]"
+            v-else-if="setting.type === 'number'"
+          />
         </span>
       </div>
     </Teleport>
