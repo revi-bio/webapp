@@ -6,7 +6,7 @@ import Icon from './Icon.vue';
 </script>
 
 <template>
-  <footer class="flex flex-row w-full justify-evenly content-center items-center gap-5 snap-center bg-zinc-950 py-6 px-2.5 relative">
+  <footer class="flex flex-col lg:flex-row w-full justify-evenly content-center items-center gap-5 snap-center bg-zinc-950 py-6 px-2.5 relative">
 
     <!--Lastupdate-->
 
@@ -16,8 +16,8 @@ import Icon from './Icon.vue';
       <p>Check out <span class="underline">FAQ</span></p>
       <Button size="small" icon-position="none" rank="primary" text="Take me there"></Button>
     </div>
-    <div class="flex flex-col items-center space-y-20 justify-self-auto w-full">
-      <div class="flex flex-row justify-between items-center text-zinc-500  text-2xl space-x-2.5">
+    <div class="flex flex-col items-center lg:space-y-20 space-y-5 justify-self-auto w-full">
+      <div class="flex flex-col sm:flex-row justify-between items-center text-zinc-500  text-2xl space-x-2">
         <RouterLink to="login" class="px-10 text-lg hover:text-zinc-400">Log In</RouterLink>
         <RouterLink to="register" class="px-10 text-lg hover:text-zinc-400">Register</RouterLink>
         <RouterLink to="/" class="px-10 text-lg hover:text-zinc-400">Home</RouterLink>
@@ -31,7 +31,7 @@ import Icon from './Icon.vue';
       <div class="flex flex-col items-center w-full space-y-4 text-lg">
         <p class="underline hover:text-zinc-400">Contact us</p>
         <p><span class="text-rose-500">revi</span><span class="text-zinc-700">bio</span>@gmail.com</p>
-        <span class="w-full h-0.5 rounded-full bg-zinc-500"></span>
+        <span class="lg:w-full h-0.5 rounded-full bg-zinc-500"></span>
         <p class="text-zinc-500 text-xs"><span class="text-rose-500">Copyright©2025.</span> All right reserved</p>
       </div>
     </div>
