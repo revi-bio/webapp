@@ -4,10 +4,10 @@ export class DateTime {
   }
 
   static onlyDate(date: string): string {
-    return date.replace('-', '.').split('T')[0];
+    return date.replace('-', '.').replace('-', '.').split('T')[0];
   }
 
   static onlyTime(date: string): string {
-    return date.split('T')[1].replace('-', '.').split('.')[0];
+    return date.split('T')[1].split('.')[0];
   }
 }
