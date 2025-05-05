@@ -66,7 +66,7 @@ const modalActions = [
 </script>
 
 <template>
-  <div class="flex flex-row justify-between w-full rounded-[16px] p-4 bg-zinc-700/50">
+  <div class="flex flex-row justify-between w-full rounded-[16px] p-4 bg-zinc-700/50 hover:bg-zinc-600/50 transition duration-200">
     <div class="flex flex-row space-x-4 items-center">
       <BioPfp class="w-[64px] h-[64px]" :bioHandle="avatar"></BioPfp>
       <div class="flex flex-col">

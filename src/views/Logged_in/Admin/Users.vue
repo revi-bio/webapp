@@ -10,6 +10,7 @@ import type { Bio } from "@/types/Bio";
 import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 import Modal from '@/components/global/Modal.vue';
 import router from '@/router';
+import { DateTime } from '@/composables/date';
 
 const adminStore = useAdminStore();
 const usersList = ref<UserForAdmin[]>([]);
@@ -175,7 +176,7 @@ const mailInputs = computed(() => [
   <div class="w-full h-full flex flex-col justify-start content-center items-center overflow-y-auto gap-5">
 
 
-    <div v-for="user in usersList" :key="user?._id" class="w-full flex flex-row justify-between content-center items-center p-4 bg-zinc-700/50 rounded-xl">
+    <div v-for="user in usersList" :key="user?._id" class="w-full flex flex-row justify-between content-center items-center p-4 bg-zinc-700/50 rounded-xl hover:bg-zinc-600/50 transition duration-200">
       <div class="w-full flex flex-row justify-start content-center items-center gap-5">
         <Avatar class="w-16 h-16" :avatar-url="user?.avatar" />
         <div class="flex flex-col justify-center content-start items-start">
@@ -183,7 +184,7 @@ const mailInputs = computed(() => [
           <h3 class="text-sm text-zinc-400">{{ user?.role }}</h3>
         </div>
         <h3 class="text-sm text-zinc-200">{{ user?.email }}</h3>
-        <h3 class="text-sm text-zinc-400">{{ user?.createdAt }}</h3>
+        <h3 class="text-sm text-zinc-400">{{ DateTime.formatDate(user?.createdAt) }}</h3>
         <Icon :type="!needsEmailVerification(user) ? 'verified' : 'verified_off'"
           :class="!needsEmailVerification(user) ? 'text-cyan-500': 'text-red-500'"></Icon>
       </div>
