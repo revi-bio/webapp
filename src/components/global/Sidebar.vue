@@ -5,10 +5,21 @@ import Avatar from './Avatar.vue';
 import { RouterLink } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import router from '@/router';
-import { ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import type { InboxMessage } from '@/types/InboxMessage';
+import { useInboxStore } from '@/stores/inboxMessages';
 
+
+const inboxStore = useInboxStore();
 const userStore = useUserStore();
 const toggleLogout = ref(false);
+
+const msgs = ref<InboxMessage[]>([]);
+
+onMounted(async () => {
+  await inboxStore.fetchInbox();
+  msgs.value = inboxStore.getInboxMessages();
+});
 
 const logoutUser = () => {
   userStore.clearUser();
@@ -20,6 +31,8 @@ const toggleLogoutWindow = (event: Event) => {
   event.stopPropagation();
   toggleLogout.value = !toggleLogout.value;
 };
+
+const countOfUnreaded = computed(() => msgs.value.filter((msg) => !msg.isRead).length);
 </script>
 
 <template>
@@ -55,7 +68,8 @@ const toggleLogoutWindow = (event: Event) => {
       </RouterLink>
       <RouterLink to="/baseDash/inbox" class="navItem">
         <span>
-          <Icon size="3xl" type="mail"></Icon>
+          <Icon v-if="countOfUnreaded <= 0" size="3xl" type="mail"></Icon>
+          <Icon v-if="countOfUnreaded > 0" size="3xl" type="mark_email_unread"></Icon>
         </span>
       </RouterLink>
 
