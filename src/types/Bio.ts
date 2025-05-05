@@ -5,7 +5,8 @@ export interface Bio {
   backgroundImage?: string;
   handle: string,
   views: number,
-  widgets: number,
+  widgetsCount: number,
+  pagesCount: number,
   createdAt: string,
   updatedAt: string
 }

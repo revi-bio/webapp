@@ -8,6 +8,7 @@ import BioPfp from '@/components/global/BioPfp.vue';
 import { useBioStore } from '@/stores/bio';
 import type { Bio } from '@/types/Bio';
 import router from '@/router';
+import { DateTime } from '@/composables/date';
 
 const bioStore = useBioStore();
 const biosList = ref<Bio[]>([]);
@@ -238,7 +239,7 @@ window.addEventListener('resize', () => {
               </span>
             </div>
             <h3>
-              {{ bio?.updatedAt.replace('T', ' ').split('.')[0] }}
+              {{ DateTime.formatDate(bio?.updatedAt)}}
             </h3>
           </div>
         </div>

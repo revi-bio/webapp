@@ -6,6 +6,7 @@ import Button from '@/components/global/Button.vue';
 import Modal from './Modal.vue';
 import { useBioStore } from '@/stores/bio';
 import { useRouter } from 'vue-router';
+import { DateTime } from '@/composables/date';
 
 const showModal = ref(false);
 const bioStore = useBioStore();
@@ -15,6 +16,7 @@ const props = defineProps<{
   handle: string;
   views: number;
   widgets: number;
+  pages: number;
   avatar: string,
   createdAt: string;
   updatedAt: string;
@@ -80,15 +82,19 @@ const modalActions = [
           <Icon type="widgets" size="4"></Icon>
           <h3>{{ widgets }}</h3>
         </div>
+        <div class="stats">
+          <Icon type="wysiwyg" size="4"></Icon>
+          <h3>{{ pages }}</h3>
+        </div>
       </div>
       <div class="flex space-x-2 justify-evenly">
         <div class="dates text-zinc-500">
           <h3 class="font-medium">Created at</h3>
-          <h3 class="text-zinc-600">{{ createdAt }}</h3>
+          <h3 class="text-zinc-600">{{ DateTime.formatDate(createdAt) }}</h3>
         </div>
         <div class="dates text-zinc-500">
           <h3 class="font-medium">Last edited at</h3>
-          <h3 class="text-zinc-600">{{ updatedAt }}</h3>
+          <h3 class="text-zinc-600">{{ DateTime.formatDate(updatedAt) }}</h3>
         </div>
       </div>
     </div>
