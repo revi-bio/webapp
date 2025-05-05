@@ -225,7 +225,11 @@ const mailInputs = computed(() => [
                 </span>
                 <span class="text-sm text-zinc-400 flex items-center">
                   <Icon type="widgets" size="3"></Icon>
-                  {{ bio.widgets || 0 }}
+                  {{ bio.widgetsCount || 0 }}
+                </span>
+                <span class="text-sm text-zinc-400 flex items-center">
+                  <Icon type="wysiwyg" size="3"></Icon>
+                  {{ bio.pagesCount || 0 }}
                 </span>
               </div>
             </div>
