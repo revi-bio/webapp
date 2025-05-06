@@ -294,7 +294,7 @@ window.addEventListener('resize', () => {
 
         <!--Middle-->
         <div class="flex lg:flex-row flex-col gap-4 w-full h-full">
-          <div class="dashboardCard w-full lg:w-5/12 h-full min-h-[500px]">
+          <div class="dashboardCard w-full lg:w-5/12 h-full min-h-[300px]">
             <h3 class="">Most visitors per countries</h3>
             <div ref="chartDom" class="w-full h-full flex flex-col justify-center content-center items-center"></div>
             <span class="w-full flex flex-row justify-center content-center flex-wrap items-center gap-4">
@@ -306,7 +306,7 @@ window.addEventListener('resize', () => {
           </div>
 
           <!--Most used links-->
-          <div class="dashboardCard w-full lg:w-7/12 min-h-[500px] h-full">
+          <div class="dashboardCard w-full lg:w-7/12 min-h-[300px] h-full">
             <h3>Most used links</h3>
             <div class="linkDom w-full h-full gap-2 md:gap-5 flex flex-row justify-center items-end">
               <span v-for="(link, id) in linkData" :key="id"
@@ -327,7 +327,7 @@ window.addEventListener('resize', () => {
         </div>
 
         <!--Bottom-->
-        <div class="dashboardCard w-full h-auto lg:h-full h-min-[400px]">
+        <div class="dashboardCard w-full h-auto lg:h-full h-min-[100px]">
           <h3>Additional views</h3>
           <div ref="barDom" class="w-full h-[350px] flex justify-center content-center items-center"></div>
           <!--
