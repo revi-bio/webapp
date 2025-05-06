@@ -48,7 +48,7 @@ onMounted(()=>{
       ]"
     ></TabControl>
     <div class="w-full h-full">
-      <RouterView ></RouterView>
+      <RouterView></RouterView>
     </div >
   </div>
 </template>
