@@ -587,21 +587,13 @@ function handleUploadFile(path: string) {
           <div class="flex absolute left-[calc(100%+12px)] gap-2 z-10"
             v-if="widget.id === selectedWidgetId && isSelectedWidgetOnCurrentPage">
             <div class="flex flex-col gap-2">
-              <Button :onClick="() => moveWidget('up')" icon-position="only" icon-type="arrow_upward" size="small"
-                rank="secondary" />
-              <Button :onClick="() => moveWidget('down')" icon-position="only" icon-type="arrow_downward" size="small"
-                rank="secondary" />
-              <Button :onClick="deleteWidget" icon-position="only" icon-type="delete" size="small" rank="secondary" />
+              <Button @click="() => moveWidget('up')" icon="arrow_upward" icon-only small />
+              <Button @click="() => moveWidget('down')" icon="arrow_downward" icon-only small />
+              <Button @click="deleteWidget" icon="delete" icon-only small />
             </div>
             <div class="flex gap-2">
-              <Button :onClick="() => moveWidgetToPage('prev')" icon-position="only" icon-type="arrow_back" size="small"
-                rank="secondary">
-                Previous
-              </Button>
-              <Button :onClick="() => moveWidgetToPage('next')" icon-position="only" icon-type="arrow_forward"
-                size="small" rank="secondary">
-                Next
-              </Button>
+              <Button @click="() => moveWidgetToPage('prev')" icon="arrow_back" icon-only small />
+              <Button @click="() => moveWidgetToPage('next')" icon="arrow_forward" icon-only small />
             </div>
           </div>
         </div>
