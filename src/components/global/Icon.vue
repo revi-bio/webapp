@@ -1,7 +1,9 @@
 <script setup lang="ts">
 defineProps<{
-  type: string;
-  size?: string;
+  type?: string;
+  // same as type but more kezre all
+  name?: string;
+  size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | `${number}xl`;
 }>();
 </script>
 
@@ -10,6 +12,6 @@ defineProps<{
     class="material-symbols-outlined align-middle"
     :class="size ? `text-${size}` : 'text-lg'"
   >
-    {{ type }}
+    {{ type || name }}
   </span>
 </template>
