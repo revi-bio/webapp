@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { onMounted, ref, watchEffect, computed } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
 import Searchbar from '@/components/global/Searchbar.vue';
 import BioListItem from '@/components/global/BioListItem.vue';
 import Button from '@/components/global/Button.vue';
 import type { Bio } from '@/types/Bio';
 import router from '@/router';
 import { useBioStore } from '@/stores/bio';
-import Modal from '@/components/global/Modal.vue';
+import NewModal from '@/components/global/NewModal.vue';
+import Input from '@/components/global/Input.vue';
 import Alert from '@/components/global/Alert.vue';
 
 const bioStore = useBioStore();
@@ -41,43 +42,7 @@ const showAlert = (status: number, error: string, message: string) => {
 const bioName = ref('');
 const bioHandle = ref('');
 
-const modalActions = [
-  {
-    text: "Create",
-    icon: "add",
-    rank: "primary" as const,
-    callback: "submit"
-  },
-  {
-    text: "Cancel",
-    icon: "close",
-    rank: "secondary" as const,
-    callback: "close"
-  }
-];
-
-const modalInputs = computed(() => [
-  {
-    placeholder: "Enter bio name",
-    label: "Bio Name",
-    modelValue: bioName.value,
-    type: "text" as "text" | "password" | "email",
-  },
-  {
-    placeholder: "Enter handle (without @)",
-    label: "Bio Handle",
-    modelValue: bioHandle.value,
-    type: "text" as "text" | "password" | "email",
-  }
-]);
-
-const handleModelValueUpdate = (data: { index: number, value: string }) => {
-  if (data.index === 0) {
-    bioName.value = data.value;
-  } else if (data.index === 1) {
-    bioHandle.value = data.value;
-  }
-};
+// No longer needed with NewModal
 
 const resetBioInputs = () => {
   bioName.value = '';
@@ -155,11 +120,11 @@ watchEffect(() => {
     <div class="flex flex-row justify-between content-center items-center w-full rounded-[16px] p-4 bg-zinc-700/50">
       <Searchbar v-model="search" :basearray="biolists" @filtered="changeSearch"></Searchbar>
       <Button
-        rank="primary"
-        size="small"
+        primary
+        small
         text="Create bio"
-        icon-position="right"
-        icon-type="add"
+        iconRight
+        icon="add"
         @click="openCreateModal"
       ></Button>
     </div>
@@ -181,17 +146,21 @@ watchEffect(() => {
     </div>
   </div>
 
-  <Modal
-    v-if="showModal"
+  <NewModal
     :show="showModal"
     @close="closeModal"
-    primaryMsg="Create a new Bio"
-    secondaryMsg="Set your bio's display name and handle"
-    :inputs="modalInputs"
-    :actions="modalActions"
-    @update:modelValue="handleModelValueUpdate"
-    @submit="createBio"
-  ></Modal>
+    title="Create a new Bio"
+  >
+    <div class="flex flex-col gap-4 w-full">
+      <p class="text-center text-zinc-400">Set your bio's display name and handle</p>
+      <Input v-model="bioName" placeholder="Enter bio name" label="Bio Name" type="text" />
+      <Input v-model="bioHandle" placeholder="Enter handle (without @)" label="Bio Handle" type="text" />
+      <div class="flex justify-end gap-2">
+        <Button text="Cancel" @click="closeModal" />
+        <Button primary text="Create" icon="add" @click="createBio" />
+      </div>
+    </div>
+  </NewModal>
 
   <Alert
     :status="alertStatus"

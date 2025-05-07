@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import Icon from './Icon.vue';
 import BioPfp from './BioPfp.vue';
 import Button from '@/components/global/Button.vue';
-import Modal from './Modal.vue';
+import NewModal from './NewModal.vue';
 import { useBioStore } from '@/stores/bio';
 import { useRouter } from 'vue-router';
 import { DateTime } from '@/composables/date';
@@ -49,20 +49,7 @@ async function confirmDelete() {
     alert("An error occurred while deleting.");
   }
 }
-const modalActions = [
-  {
-    text: "Delete",
-    icon: "delete",
-    rank: "primary" as const,
-    callback: "delete"
-  },
-  {
-    text: "Cancel",
-    icon: "close",
-    rank: "secondary" as const,
-    callback: "close"
-  }
-];
+// No longer needed with NewModal
 </script>
 
 <template>
@@ -75,15 +62,15 @@ const modalActions = [
       </div>
       <div class="flex space-x-1">
         <div class="stats">
-          <Icon type="visibility" size="4"></Icon>
+          <Icon type="visibility" size="lg"></Icon>
           <h3>{{ views }}</h3>
         </div>
         <div class="stats">
-          <Icon type="widgets" size="4"></Icon>
+          <Icon type="widgets" size="lg"></Icon>
           <h3>{{ widgets }}</h3>
         </div>
         <div class="stats">
-          <Icon type="wysiwyg" size="4"></Icon>
+          <Icon type="wysiwyg" size="lg"></Icon>
           <h3>{{ pages }}</h3>
         </div>
       </div>
@@ -99,19 +86,24 @@ const modalActions = [
       </div>
     </div>
     <div class="flex space-x-4 py-4">
-      <Button icon-position="left" icon-type="delete" text="Delete" rank="primary" size="small" v-on:click="deleteBio()"></Button>
-      <Button icon-position="left" icon-type="edit" text="Edit" rank="primary" size="small" v-on:click="openEditor(handle)"></Button>
+      <Button @click="deleteBio" text="Delete" icon="delete" primary />
+      <Button @click="() => openEditor(handle)" text="Edit" icon="edit" primary />
     </div>
   </div>
 
-  <Modal
+  <NewModal
     :show="showModal"
     @close="showModal = false"
-    :primaryMsg="`Delete ${name}?`"
-    :secondaryMsg="`Are you sure you want to delete ${handle}?`"
-    :actions="modalActions"
-    @delete="confirmDelete"
-  ></Modal>
+    :title="`Delete ${name}?`"
+  >
+    <div class="flex flex-col gap-4 w-full">
+      <p class="text-center text-zinc-400">Are you sure you want to delete @{{ handle }}?</p>
+      <div class="flex justify-end gap-2">
+        <Button text="Cancel" @click="showModal = false" />
+        <Button primary text="Delete" icon="delete" @click="confirmDelete" />
+      </div>
+    </div>
+  </NewModal>
 </template>
 
 <style>

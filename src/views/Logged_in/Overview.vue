@@ -197,7 +197,7 @@ window.addEventListener('resize', () => {
 <template>
   <div class="flex flex-col justify-center content-center items-center p-6 gap-2 w-full h-full ">
     <span class="flex flex-row justify-end content-center items-center w-full gap-4 pt-4">
-      <Button text="Export" size="small" rank="primary" icon-position="left" icon-type="check"></Button>
+      <Button text="Export" icon="check" primary />
       <Dropdown type="normal" baseText="Choose one" position="center" :items="[
         { name: 'Last 30 days', event: () => handleDropdownSelect('Last 30 days') },
         { name: 'Last 60 days', event: () => handleDropdownSelect('Last 60 days') },

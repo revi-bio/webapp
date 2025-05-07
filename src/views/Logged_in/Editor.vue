@@ -441,7 +441,7 @@ function handleUploadFile(path: string) {
     <div class="absolute w-full bottom-0 p-4 justify-between space-x-2 text-zinc-200 grid grid-cols-3 bg-zinc-900/50 rounded-2xl">
       <!-- Add widget button -->
       <div class="flex gap-2">
-        <Button :onClick="toggleWidgetToolbox" icon-position="left" icon-type="add" size="small" rank="primary" text="Add widget" />
+        <Button @click="toggleWidgetToolbox" text="Add widget" icon="add" primary small />
       </div>
 
       <!-- Page navigation -->
@@ -460,8 +460,8 @@ function handleUploadFile(path: string) {
 
       <!-- Bio settings button -->
       <div class="flex justify-end gap-2">
-        <Button :onClick="togglePagesSidebar" icon-position="left" icon-type="settings" size="small" rank="secondary" text="Pages" />
-        <Button :onClick="toggleBioSettings" icon-position="left" icon-type="settings" size="small" rank="secondary" text="Bio settings" />
+        <Button @click="togglePagesSidebar" text="Pages" icon="settings" small />
+        <Button @click="toggleBioSettings" text="Bio settings" icon="settings" small />
       </div>
     </div>
 
@@ -546,12 +546,12 @@ function handleUploadFile(path: string) {
         <Input type="text" placeholder="Icon" v-model="newPageIcon" />
         <Button
           @click="addPage"
-          :disabled="pages.length == 3"
           text="Add page"
-          icon-position="left"
-          icon-type="add"
-          rank="primary"
-          size="normal" />
+          :disabled="pages.length == 3"
+          icon="add"
+          primary
+        />
+
         <span>Page list</span>
         <div class="flex flex-col">
           <div
@@ -609,8 +609,8 @@ function handleUploadFile(path: string) {
     </div>
 
     <div class="top-0 right-0 m-6 absolute flex gap-2">
-      <Button :onClick="savePages" icon-position="left" icon-type="share" size="small" rank="secondary" text="Share" />
-      <Button :onClick="savePages" icon-position="left" icon-type="save" size="small" rank="primary" text="Save" />
+      <Button @click="savePages" text="Share" icon="share" />
+      <Button @click="savePages" text="Save" icon="save" primary />
     </div>
   </div>
   <Alert :status="alertStatus" :error="alertError" :message="alertMessage" :active="alertActive" @hide="onAlertHide" />

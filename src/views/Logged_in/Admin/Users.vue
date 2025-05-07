@@ -2,13 +2,12 @@
 import Avatar from '@/components/global/Avatar.vue';
 import Button from '@/components/global/Button.vue';
 import Icon from '@/components/global/Icon.vue';
+import Input from '@/components/global/Input.vue';
 import { useAdminStore } from '@/stores/admin';
 import type { UserForAdmin } from '@/stores/admin';
-import { useSettingsStore } from '@/stores/settings';
-import type { User } from '@/types/User';
 import type { Bio } from "@/types/Bio";
-import { computed, onMounted, ref, watch, watchEffect } from 'vue';
-import Modal from '@/components/global/Modal.vue';
+import { onMounted, ref, watchEffect } from 'vue';
+import NewModal from '@/components/global/NewModal.vue';
 import router from '@/router';
 import { DateTime } from '@/composables/date';
 
@@ -119,56 +118,7 @@ const sendMail = async () => {
 };
 
 
-const biosModalActions: {
-  text: string;
-  icon?: string;
-  rank?: "primary" | "secondary" | "tabItem";
-  callback: string;
-}[] = [
-  {
-    text: "Close",
-    icon: "close",
-    rank: "primary",
-    callback: "close"
-  }
-];
-
-const mailModalActions = computed(() => {
-  const actions: {
-    text: string;
-    icon?: string;
-    rank?: "primary" | "secondary" | "tabItem";
-    callback: string;
-  }[] = [
-    {
-      text: "Send",
-      icon: "send",
-      rank: "primary",
-      callback: "submit"
-    },
-    {
-      text: "Cancel",
-      icon: "close",
-      rank: "secondary",
-      callback: "close"
-    }
-  ];
-
-  return actions;
-});
-
-const mailInputs = computed(() => [
-  {
-    placeholder: "Title",
-    modelValue: mailTitle.value,
-    type: "text" as "text" | "password" | "email"
-  },
-  {
-    placeholder: "Content",
-    modelValue: mailContent.value,
-    type: "text" as "text" | "password" | "email"
-  }
-]);
+// No longer needed with NewModal
 
 </script>
 
@@ -190,23 +140,21 @@ const mailInputs = computed(() => [
       </div>
 
       <div class="flex flex-row justify-center content-center items-center gap-2">
-        <Button v-if="needsEmailVerification(user)" rank="primary" size="small" text="verify" icon-position="right"
-          icon-type="verified"></Button>
-        <Button rank="primary" size="small" text="Bios" icon-position="right" icon-type="recent_actors"
+        <Button v-if="needsEmailVerification(user)" primary small text="verify" iconRight
+          icon="verified"></Button>
+        <Button primary small text="Bios" iconRight icon="recent_actors"
           @click.prevent="openBiosModal(user)"></Button>
-        <Button rank="primary" size="small" text="Mail" icon-position="right" icon-type="mail"
+        <Button primary small text="Mail" iconRight icon="mail"
           @click.prevent="openMailModal(user)"></Button>
-        <Button rank="primary" size="small" text="Delete" icon-position="right" icon-type="delete"
+        <Button primary small text="Delete" iconRight icon="delete"
           @click.prevent="adminStore.deleteUser(user._id)"></Button>
       </div>
     </div>
 
-    <Modal
+    <NewModal
       :show="showBiosModal"
       @close="showBiosModal = false"
-      :primaryMsg="selectedUser ? `${selectedUser.displayName}'s Bios` : 'User Bios'"
-      :secondaryMsg="selectedUserBios.length ? `${selectedUserBios.length} bios found` : 'No bios found'"
-      :actions="biosModalActions">
+      :title="selectedUser ? `${selectedUser.displayName}'s Bios` : 'User Bios'">
       <div class="w-full h-full">
         <div v-if="selectedUserBios.length === 0" class="text-center text-zinc-400 my-4">
           This user hasn't created any bios yet.
@@ -221,15 +169,15 @@ const mailInputs = computed(() => [
               </div>
               <div class="flex flex-row justify-center content-center items-center gap-2">
                 <span class="text-sm text-zinc-400 flex items-center">
-                  <Icon type="visibility" size="3"></Icon>
+                  <Icon type="visibility" size="base"></Icon>
                   {{ bio.views || 0 }}
                 </span>
                 <span class="text-sm text-zinc-400 flex items-center">
-                  <Icon type="widgets" size="3"></Icon>
+                  <Icon type="widgets" size="base"></Icon>
                   {{ bio.widgetsCount || 0 }}
                 </span>
                 <span class="text-sm text-zinc-400 flex items-center">
-                  <Icon type="wysiwyg" size="3"></Icon>
+                  <Icon type="wysiwyg" size="base"></Icon>
                   {{ bio.pagesCount || 0 }}
                 </span>
               </div>
@@ -239,24 +187,28 @@ const mailInputs = computed(() => [
               <div>Updated: {{ new Date(bio.updatedAt).toLocaleString() }}</div>
             </div>
             <div class="flex flex-row gap-2">
-              <Button rank="primary" size="small" text="View" icon-position="right" icon-type="visibility"
+              <Button primary small text="View" iconRight icon="visibility"
                 @click.stop="navigateToBio(bio.handle)"></Button>
-              <Button rank="primary" size="small" text="Delete" icon-position="right" icon-type="delete"
+              <Button primary small text="Delete" iconRight icon="delete"
                 @click="handleDeleteBio(bio._id, $event)"></Button>
             </div>
           </div>
         </div>
       </div>
-    </Modal>
+    </NewModal>
 
-    <Modal
+    <NewModal
       :show="showMailModal"
       @close="closeMailModal"
-      @submit="sendMail"
-      :primaryMsg="mailRecipient ? `Send Message to ${mailRecipient.displayName}` : 'Send Message'"
-      :secondaryMsg="mailRecipient ? `Email: ${mailRecipient.email}` : ''"
-      :actions="mailModalActions"
-      :inputs="mailInputs">
-    </Modal>
+      :title="mailRecipient ? `Send Message to ${mailRecipient.displayName}` : 'Send Message'">
+      <div class="flex flex-col gap-4 w-full">
+        <Input v-model="mailTitle" placeholder="Title" type="text" />
+        <Input v-model="mailContent" placeholder="Content" type="text" />
+        <div class="flex justify-end gap-2">
+          <Button text="Cancel" @click="closeMailModal" />
+          <Button primary text="Send" icon="send" @click="sendMail" />
+        </div>
+      </div>
+    </NewModal>
   </div>
 </template>
