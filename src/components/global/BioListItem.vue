@@ -15,8 +15,8 @@ const props = defineProps<{
   name: string;
   handle: string;
   views: number;
-  widgets: number;
-  pages: number;
+  widgetsCount: number;
+  pagesCount: number;
   avatar: string,
   createdAt: string;
   updatedAt: string;
@@ -67,11 +67,11 @@ async function confirmDelete() {
         </div>
         <div class="stats">
           <Icon type="widgets" size="lg"></Icon>
-          <h3>{{ widgets }}</h3>
+          <h3>{{ widgetsCount }}</h3>
         </div>
         <div class="stats">
           <Icon type="wysiwyg" size="lg"></Icon>
-          <h3>{{ pages }}</h3>
+          <h3>{{ pagesCount }}</h3>
         </div>
       </div>
       <div class="flex space-x-2 justify-evenly">

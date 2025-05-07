@@ -53,7 +53,8 @@ export const useBioStore = defineStore('bios', () => {
         name,
         handle,
         views: 0,
-        widgets: 0,
+        widgetsCount: 0,
+        pagesCount: 0,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
