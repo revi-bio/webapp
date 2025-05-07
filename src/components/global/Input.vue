@@ -31,7 +31,12 @@ const props = defineProps<{
 }
 
 input {
-  @apply bg-zinc-800 order-2 w-full h-full px-4 py-2 hover:bg-zinc-700 rounded transition-colors duration-200
+  @apply bg-zinc-800 order-2 w-full h-full px-4 py-2 hover:bg-zinc-700 rounded transition-colors duration-200;
+
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .error{
