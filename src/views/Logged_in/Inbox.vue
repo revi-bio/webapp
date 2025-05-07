@@ -47,7 +47,7 @@ const countOfUnreaded = computed(() => msgs.value.filter((msg) => !msg.isRead).l
             <span><Logo type="revibio" width="60"></Logo></span>
           </div>
           <div class="cursor-pointer" @click="deleteMsg()">
-            <Icon size="text-sm" type="delete"></Icon> Delete this mail
+            <Icon size="lg" type="delete"></Icon> Delete this mail
           </div>
         </div>
       </div>
