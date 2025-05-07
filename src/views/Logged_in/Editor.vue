@@ -22,6 +22,8 @@ import LinkSelector from '@/components/global/LinkSelector.vue';
 import Slider from '@/components/global/Slider.vue';
 import { ApiWrapper } from '@/composables/ApiWrapper';
 import Textbox from '@/components/global/Textbox.vue';
+import { default as Modal } from '@/components/global/NewModal.vue';
+import Icon from '@/components/global/Icon.vue';
 
 const emits = defineEmits([
   'avatarChange',
@@ -34,12 +36,15 @@ const currentPageIndex = ref(0);
 const selectedWidgetId = ref<string | null>(null);
 const widgetToolboxOpened = ref(false);
 const bioSettingsOpened = ref(false);
+const pagesSidebarOpened = ref(false);
 const bioStore = useBioStore();
 const alertStatus = ref<number>(0);
 const alertError = ref<string>('');
 const alertMessage = ref<string>('');
 const alertActive = ref<boolean>(false);
 const backgroundStyle = ref(``);
+const newPageName = ref('');
+const newPageIcon = ref('');
 
 // Initialize pages with sample widgets
 const pages = ref<Page[]>([
@@ -134,12 +139,21 @@ function toggleWidgetToolbox() {
   selectedWidgetId.value = null;
   widgetToolboxOpened.value = !widgetToolboxOpened.value;
   bioSettingsOpened.value = false;
+  pagesSidebarOpened.value = false;
+}
+
+function togglePagesSidebar() {
+  selectedWidgetId.value = null;
+  widgetToolboxOpened.value = false;
+  bioSettingsOpened.value = false;
+  pagesSidebarOpened.value = !pagesSidebarOpened.value;
 }
 
 function toggleBioSettings() {
   selectedWidgetId.value = null;
   widgetToolboxOpened.value = false;
   bioSettingsOpened.value = !bioSettingsOpened.value;
+  pagesSidebarOpened.value = false;
 }
 
 // Widget manipulation functions
@@ -327,6 +341,10 @@ function addWidget(type: WidgetType) {
   }
 }
 
+function addPage() {
+  pages.value.push({ id: uuidv4(), name: newPageName.value, icon: newPageIcon.value, widgets: [] });
+}
+
 // Page navigation
 function navigatePage(direction: 'prev' | 'next') {
   if (selectedWidgetId.value != null)
@@ -404,53 +422,48 @@ function handleUploadFile(path: string) {
   fileInput.click();
 };
 
+
 </script>
 
 <template>
+  <Modal @close="widgetToolboxOpened = false" :show="widgetToolboxOpened" title="Add widget">
+    <div class="grid grid-cols-3 grid-rows-2 [&>*]:aspect-square">
+      <div @click="addWidget('profile')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Profile widget</div>
+      <div @click="addWidget('link')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Link widget</div>
+      <div @click="addWidget('youtube')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">YouTube widget</div>
+      <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Markdown widget</div>
+      <div @click="addWidget('gallery')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Gallery widget</div>
+      <div @click="addWidget('linkContainer')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Link container widget</div>
+    </div>
+  </Modal>
   <div class="flex justify-center items-center h-full w-full relative rounded-2xl bg-cover" :style="backgroundStyle">
     <!-- Bottom toolbar -->
     <div class="absolute w-full bottom-0 p-4 justify-between space-x-2 text-zinc-200 grid grid-cols-3 bg-zinc-900/50 rounded-2xl">
       <!-- Add widget button -->
       <div class="flex gap-2">
         <Button :onClick="toggleWidgetToolbox" icon-position="left" icon-type="add" size="small" rank="primary" text="Add widget" />
-        <Button :onClick="toggleWidgetToolbox" icon-position="left" icon-type="add" size="small" rank="primary" text="Add page" />
       </div>
 
       <!-- Page navigation -->
-      <div class="flex gap-2 items-center justify-center">
-        <Button :onClick="() => navigatePage('prev')" icon-position="only" icon-type="chevron_left" size="small"
-          rank="secondary" />
-        <span v-for="(page, index) in pages" :key="page.id">
-          {{ currentPageIndex === index ? 'x' : '-' }}
+      <div class="PageContainer">
+        <span
+          @click="currentPageIndex = index"
+          v-for="(page, index) in pages"
+          :key="page.id"
+          class="Page"
+          :selected="currentPageIndex == index"
+        >
+          <Icon :type="page.icon" class="Page__Icon" />
+          <span class="Page__Name">{{ page.name }}</span>
         </span>
-        <Button :onClick="() => navigatePage('next')" icon-position="only" icon-type="chevron_right" size="small"
-          rank="secondary" />
       </div>
 
       <!-- Bio settings button -->
-      <div class="flex justify-end">
+      <div class="flex justify-end gap-2">
+        <Button :onClick="togglePagesSidebar" icon-position="left" icon-type="settings" size="small" rank="secondary" text="Pages" />
         <Button :onClick="toggleBioSettings" icon-position="left" icon-type="settings" size="small" rank="secondary" text="Bio settings" />
       </div>
     </div>
-
-    <!-- Widget toolbox sidebar -->
-    <Teleport defer to="#sidebar-right-outlet" v-if="widgetToolboxOpened">
-      <div class="sidebar">
-        <span class="text-2xl">Widget toolbox</span>
-        <div @click="addWidget('profile')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add profile widget</div>
-        <div @click="addWidget('link')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
-        <div @click="addWidget('youtube')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add youtube widget</div>
-        <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add markdown widget
-        </div>
-        <div @click="addWidget('gallery')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add gallery widget</div>
-        <div @click="addWidget('linkContainer')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link container
-          widget</div>
-        <!--
-        <div @click="addWidget('spotify')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
-        <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Add link widget</div>
-        -->
-      </div>
-    </Teleport>
 
     <!-- Bio settings sidebar -->
     <Teleport defer to="#sidebar-right-outlet" v-if="bioSettingsOpened">
@@ -523,6 +536,45 @@ function handleUploadFile(path: string) {
       </div>
     </Teleport>
 
+    <!-- Pages sidebar -->
+    <Teleport defer to="#sidebar-right-outlet" v-if="pagesSidebarOpened">
+      <div class="sidebar">
+        <span class="text-2xl">Pages</span>
+        <span class="text-zinc-400">Note: When someone visits your bio page, they will see the first page.</span>
+        <span>New page</span>
+        <Input type="text" placeholder="Name" v-model="newPageName" />
+        <Input type="text" placeholder="Icon" v-model="newPageIcon" />
+        <Button
+          @click="addPage"
+          :disabled="pages.length == 3"
+          text="Add page"
+          icon-position="left"
+          icon-type="add"
+          rank="primary"
+          size="normal" />
+        <span>Page list</span>
+        <div class="flex flex-col">
+          <div
+            v-for="page in pages" :key="page.id"
+            class="flex items-center w-full"
+          >
+            <span class="w-full">{{ page.name }}</span>
+            <div class="grid grid-cols-2 grid-rows-2">
+              <div class="row-start-1 col-start-1">
+                <Icon type="keyboard_arrow_up" />
+              </div>
+              <div class="row-start-2 col-start-1">
+                <Icon type="keyboard_arrow_down" />
+              </div>
+              <div class="row-start-1 col-start-2 row-span-2 flex items-center">
+                <Icon type="delete" class="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
+
     <!-- Widgets display -->
     <div id="widgets" class="flex flex-col gap-3 justify-center z-0 h-[80%] w-1/2">
       <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
@@ -556,7 +608,8 @@ function handleUploadFile(path: string) {
       </template>
     </div>
 
-    <div class="top-0 right-0 m-6 absolute">
+    <div class="top-0 right-0 m-6 absolute flex gap-2">
+      <Button :onClick="savePages" icon-position="left" icon-type="share" size="small" rank="secondary" text="Share" />
       <Button :onClick="savePages" icon-position="left" icon-type="save" size="small" rank="primary" text="Save" />
     </div>
   </div>
@@ -566,6 +619,30 @@ function handleUploadFile(path: string) {
 <style lang="scss">
 #widgets *[selected='true'] {
   @apply ring-2 ring-rose-500;
+}
+
+.PageContainer {
+  @apply flex gap-2 items-center justify-center bg-zinc-900 place-self-center rounded-full border border-zinc-900;
+}
+
+.Page {
+  @apply bg-zinc-800 flex gap-2 items-center cursor-pointer rounded-full lg:pr-3;
+
+  .Page__Icon {
+    @apply px-3 rounded-full bg-zinc-700;
+  }
+
+  .Page__Name {
+    @apply max-lg:hidden;
+  }
+
+  &[selected='true'] {
+    // @apply ;
+
+    .Page__Icon {
+      @apply bg-rose-500;
+    }
+  }
 }
 
 .sidebar {
