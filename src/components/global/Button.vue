@@ -1,71 +1,67 @@
 <script setup lang="ts">
 import Icon from './Icon.vue';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   text?: string;
-  size: 'small' | 'normal';
-  rank: 'primary' | 'secondary' | 'tabItem';
-  iconPosition: 'none' | 'only' | 'left' | 'right';
+  small?: boolean;
+  icon?: string;
+  primary?: boolean;
+  iconOnly?: boolean;
+  iconRight?: boolean;
   disabled?: boolean;
-  iconType?: string;
-  onClick?: () => void;
   isActive?: boolean;
-}>();
-
+}>(), {
+  text: '',
+  small: false,
+  icon: '',
+  primary: false,
+  iconOnly: false,
+  iconRight: false,
+  disabled: false,
+  isActive: false,
+});
 </script>
 
 <template>
   <button
-    :class="[size, rank, { 'active': isActive, 'disabled': disabled }]"
-    @click="onClick"
+    :class="[{ 'small': small, 'primary': primary, 'active': isActive, 'disabled': disabled, 'flex-row-reverse': iconRight}]"
+    :disabled="disabled"
   >
-    <template v-if="iconPosition === 'left'">
-      <Icon v-if="iconType" :type="iconType" />
-      <span>{{ text }}</span>
-    </template>
-    <template v-else-if="iconPosition === 'right'">
-      <span>{{ text }}</span>
-      <Icon v-if="iconType" :type="iconType" />
-    </template>
-    <template v-else-if="iconPosition === 'only'">
-      <Icon v-if="iconType" :type="iconType" />
-    </template>
-    <template v-else>
-      <span>{{ text }}</span>
-    </template>
+      <Icon v-if="icon" :name="icon" :size='small ? "base" : "lg"' />
+      <span v-if="!iconOnly">{{ text }}</span>
   </button>
 </template>
 
-<style>
+<style lang="scss">
 button {
-  @apply rounded-md flex items-center gap-2 shadow;
-}
+  @apply rounded-md flex items-center gap-2 shadow bg-zinc-700 hover:bg-zinc-700/75 transition duration-200 px-3 py-2 text-base;
 
-.primary {
-  @apply bg-rose-500 text-white hover:bg-rose-400 active:bg-rose-600 transition duration-200;
-}
+  .Icon[data-only="true"] {
+    @apply aspect-square w-auto;
+  }
 
-.secondary {
-  @apply bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-800 transition duration-200;
-}
+  &.small {
+    @apply text-base px-2 py-1;
+  }
 
-.small {
-  @apply text-base px-2 py-1;
-}
+  &.primary {
+    @apply bg-rose-500 text-white hover:bg-rose-400 active:bg-rose-600 transition duration-200;
+  }
 
-.normal {
-  @apply text-lg px-3 py-2;
-}
+  &.secondary {
+    @apply bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-800 transition duration-200;
+  }
 
-.tabItem {
-  @apply bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-800 transition duration-200;
-}
+  &.tabItem {
+    @apply bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-800 transition duration-200;
+  }
 
-.tabItem.active {
-  @apply bg-zinc-800;
-}
+  &.tabItem.active {
+    @apply bg-zinc-800;
+  }
 
-.disabled {
-@apply bg-zinc-700/25 pointer-events-none;
+  &.disabled {
+    @apply bg-zinc-700/25 pointer-events-none;
+  }
 }
 </style>
