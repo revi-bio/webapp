@@ -27,8 +27,8 @@ const filteredUsers = ref<[]>([]);
         </div>
 
         <div class="flex flex-row justify-start content-start items-start w-full gap-2">
-          <Button rank="primary" size="small" text="Send" icon-position="right" icon-type="send"></Button>
-          <Button rank="secondary" size="small" text="Clear" icon-position="right" icon-type="clear"></Button>
+          <Button text="Send" icon="send" icon-right small primary />
+          <Button text="Clear" icon="clear" icon-right small />
         </div>
     </div>
 

@@ -58,21 +58,19 @@ const handleDisplayNameChange = (event: Event) => {
 
       <div class="flex flex-col justify-center content-center items-start gap-2">
         <Button
-          text="Change picture"
-          size="small"
-          rank="primary"
-          icon-position="right"
-          icon-type="edit"
           @click="handleChangePicture"
-        ></Button>
+          text="Change picture"
+          icon="edit"
+          icon-right
+          small
+        />
         <Button
-          text="Delete picture"
-          size="small"
-          rank="primary"
-          icon-position="right"
-          icon-type="delete"
           @click="handleDeletePicture"
-        ></Button>
+          text="Delete picture"
+          icon="delete"
+          icon-right
+          small
+        />
       </div>
     </div>
     <div class="flex flex-col justify-center content-start items-start gap-2">

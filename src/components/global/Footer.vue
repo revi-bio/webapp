@@ -14,7 +14,7 @@ import Icon from './Icon.vue';
     <div class="flex flex-col items-center space-y-4 text-lg text-zinc-300 w-full">
       <p>Have any questions?</p>
       <p>Check out <span class="underline">FAQ</span></p>
-      <Button size="small" icon-position="none" rank="primary" text="Take me there"></Button>
+      <Button text="Take me there" small primary />
     </div>
     <div class="flex flex-col items-center lg:space-y-20 space-y-5 justify-self-auto w-full">
       <div class="flex flex-col sm:flex-row justify-between items-center text-zinc-500  text-2xl space-x-2">
