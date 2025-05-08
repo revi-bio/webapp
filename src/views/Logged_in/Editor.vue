@@ -45,6 +45,7 @@ const alertActive = ref<boolean>(false);
 const backgroundStyle = ref(``);
 const newPageName = ref('');
 const newPageIcon = ref('');
+const globalGenericSettings = ref<Record<string, any>>({});
 
 // Initialize pages with sample widgets
 const pages = ref<Page[]>([
@@ -80,6 +81,10 @@ onMounted(async () => {
     );
   }
 
+  if (pages.value.length > 0 && pages.value[0].widgets.length > 0) {
+    const firstWidget = pages.value[0].widgets[0];
+    globalGenericSettings.value = { ...firstWidget.genericSettings };
+  }
 });
 
 // Computed properties
@@ -302,32 +307,26 @@ function addWidget(type: WidgetType) {
     switch (type) {
       case 'link': {
         currentPage.value.widgets.push(new LinkWidget(data));
-        showAlert(200, '', `Link widget added successfully!`);
         break;
       }
       case 'profile': {
         currentPage.value.widgets.push(new ProfileWidget(data));
-        showAlert(200, '', `Profile widget added successfully!`);
         break;
       }
       case 'youtube': {
         currentPage.value.widgets.push(new YoutubeWidget(data));
-        showAlert(200, '', `YouTube widget added successfully!`);
         break;
       }
       case 'markdown': {
         currentPage.value.widgets.push(new MarkdownWidget(data));
-        showAlert(200, '', `Markdown widget added successfully!`);
         break;
       }
       case 'gallery': {
         currentPage.value.widgets.push(new GalleryWidget(data));
-        showAlert(200, '', `Gallery widget added successfully!`);
         break;
       }
       case 'linkContainer': {
         currentPage.value.widgets.push(new LinkContainerWidget(data));
-        showAlert(200, '', `Link container widget added successfully!`);
         break;
       }
     }
@@ -422,6 +421,16 @@ function handleUploadFile(path: string) {
   fileInput.click();
 };
 
+function updateAllWidgetsGenericSettings(settingName: string, value: any) {
+  pages.value.forEach((page) => {
+    page.widgets.forEach((widget) => {
+      if (!widget.genericSettings) {
+        widget.genericSettings = {};
+      }
+      widget.genericSettings[settingName] = value;
+    });
+  });
+}
 
 </script>
 
@@ -433,12 +442,15 @@ function handleUploadFile(path: string) {
       <div @click="addWidget('youtube')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">YouTube widget</div>
       <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Markdown widget</div>
       <div @click="addWidget('gallery')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Gallery widget</div>
-      <div @click="addWidget('linkContainer')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Link container widget</div>
+      <div @click="addWidget('linkContainer')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Link container
+        widget</div>
     </div>
   </Modal>
-  <div class="flex justify-center items-center h-full w-full relative rounded-2xl bg-cover" :style="backgroundStyle">
+  <div class="flex justify-center items-center h-full w-full relative rounded-2xl bg-cover bg-center"
+    :style="backgroundStyle">
     <!-- Bottom toolbar -->
-    <div class="absolute w-full bottom-0 p-4 justify-between space-x-2 text-zinc-200 grid grid-cols-3 bg-zinc-900/50 rounded-2xl">
+    <div
+      class="absolute w-full bottom-0 p-4 justify-between space-x-2 text-zinc-200 grid grid-cols-3 bg-zinc-900/50 rounded-2xl">
       <!-- Add widget button -->
       <div class="flex gap-2">
         <Button @click="toggleWidgetToolbox" text="Add widget" icon="add" primary small />
@@ -446,13 +458,8 @@ function handleUploadFile(path: string) {
 
       <!-- Page navigation -->
       <div class="PageContainer">
-        <span
-          @click="currentPageIndex = index"
-          v-for="(page, index) in pages"
-          :key="page.id"
-          class="Page"
-          :selected="currentPageIndex == index"
-        >
+        <span @click="currentPageIndex = index" v-for="(page, index) in pages" :key="page.id" class="Page"
+          :selected="currentPageIndex == index">
           <Icon :type="page.icon" class="Page__Icon" />
           <span class="Page__Name">{{ page.name }}</span>
         </span>
@@ -473,7 +480,32 @@ function handleUploadFile(path: string) {
           icon-position="none" size="normal" rank="secondary" />
         <Button :onClick="() => handleUploadFile(`bio/${handle}/bioPfp`)" text="Change avatar" icon-position="none"
           size="normal" rank="secondary" />
+
+
+        <!-- Generic settings -->
+        <span>Generic settings for all widgets</span>
+        <div v-for="setting in GENERIC_SETTINGS_DEFINITIONS" :key="setting.name" class="mb-4">
+          <span class="text-zinc-400">{{ setting.name }}</span>
+          <Input v-if="setting.type === 'string'" type="text" v-model="globalGenericSettings[setting.name]"
+            @input="updateAllWidgetsGenericSettings(setting.name, globalGenericSettings[setting.name])" />
+          <ColorPicker v-else-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
+            (_baseColor, _shade, opacity, hslaValue) => {
+              const newValue = {
+                hue: hslaValue.h,
+                saturation: hslaValue.s,
+                value: hslaValue.l,
+                opacity: hslaValue.a,
+              };
+              globalGenericSettings[setting.name] = newValue;
+              updateAllWidgetsGenericSettings(setting.name, newValue);
+            }
+          " />
+          <Slider :max="100" :min="0" v-model="globalGenericSettings[setting.name]"
+            @input="updateAllWidgetsGenericSettings(setting.name, globalGenericSettings[setting.name])"
+            v-else-if="setting.type === 'number'" />
+        </div>
       </div>
+
     </Teleport>
 
     <!-- Widget settings sidebar -->
@@ -506,11 +538,9 @@ function handleUploadFile(path: string) {
               selectedWidget.specificSettings['links'] = links;
             }" />
           <Slider :max="100" :min="0" v-model="(selectedWidget.specificSettings as any)[setting.name]"
-            v-else-if="setting.type === 'number'"
-          />
+            v-else-if="setting.type === 'number'" />
           <Textbox v-model="(selectedWidget.specificSettings as any)[setting.name]"
-            v-else-if="setting.type === 'text'"
-          />
+            v-else-if="setting.type === 'text'" />
         </span>
 
         <!-- Generic settings -->
@@ -518,7 +548,7 @@ function handleUploadFile(path: string) {
         <span v-for="setting in GENERIC_SETTINGS_DEFINITIONS" :key="setting.name">
           <span class="text-zinc-400">{{ setting.name }}</span>
           <Input v-if="setting.type === 'string'" type="text"
-          v-model="(currentPage?.widgets.find((w) => w.id === selectedWidgetId)?.genericSettings as any)[setting.name]" />
+            v-model="(currentPage?.widgets.find((w) => w.id === selectedWidgetId)?.genericSettings as any)[setting.name]" />
           <ColorPicker v-else-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
             (_baseColor, _shade, opacity, hslaValue) => {
               (selectedWidget!.genericSettings as any)[setting.name] = {
@@ -530,8 +560,7 @@ function handleUploadFile(path: string) {
             }
           " />
           <Slider :max="100" :min="0" v-model="(selectedWidget.genericSettings as any)[setting.name]"
-            v-else-if="setting.type === 'number'"
-          />
+            v-else-if="setting.type === 'number'" />
         </span>
       </div>
     </Teleport>
@@ -544,20 +573,11 @@ function handleUploadFile(path: string) {
         <span>New page</span>
         <Input type="text" placeholder="Name" v-model="newPageName" />
         <Input type="text" placeholder="Icon" v-model="newPageIcon" />
-        <Button
-          @click="addPage"
-          text="Add page"
-          :disabled="pages.length == 3"
-          icon="add"
-          primary
-        />
+        <Button @click="addPage" text="Add page" :disabled="pages.length == 3" icon="add" primary />
 
         <span>Page list</span>
         <div class="flex flex-col">
-          <div
-            v-for="page in pages" :key="page.id"
-            class="flex items-center w-full"
-          >
+          <div v-for="page in pages" :key="page.id" class="flex items-center w-full">
             <span class="w-full">{{ page.name }}</span>
             <div class="grid grid-cols-2 grid-rows-2">
               <div class="row-start-1 col-start-1">

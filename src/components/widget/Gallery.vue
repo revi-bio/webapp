@@ -40,7 +40,7 @@ function prevImage() {
   <div class="flex flex-col gap-4 p-4">
     <h3 class="text-2xl">{{ data.specificSettings['title'] }}</h3>
     <div class="relative">
-      <img v-if="images.length" :src="getImg(images[currentIndex])" alt="Gallery image" class="w-full h-auto rounded-lg" />
+      <img v-if="images.length" :src="getImg(images[currentIndex])" alt="Gallery image" class="w-full h-auto rounded-lg object-cover max-h-[300px]" />
       <p v-else class="text-center text-zinc-500">No images available</p>
 
       <Icon
