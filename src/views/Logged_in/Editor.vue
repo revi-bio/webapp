@@ -415,10 +415,16 @@ function handleUploadFile(path: string) {
       const formData = new FormData();
       formData.append('file', target.files[0]);
       await ApiWrapper.patch(path, formData);
+
+      if (path.includes('bioPfp')) {
+        emits('avatarChange');
+      }
     }
+    await updateBackgroundStyle();
   };
 
   fileInput.click();
+
 };
 
 function updateAllWidgetsGenericSettings(settingName: string, value: any) {

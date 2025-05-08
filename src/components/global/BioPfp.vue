@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { computed, onMounted, defineProps } from 'vue';
+import { computed, onMounted, defineProps, watch } from 'vue';
 import { useBioStore } from '@/stores/bio';
-
 
 const props = defineProps({
   bioHandle: {
@@ -19,13 +18,14 @@ onMounted(async () => {
   }
 });
 
-
 const BioPfp = computed(() => {
-
   const pfpUrl = bioStore.getBioPfpUrl(props.bioHandle);
   return pfpUrl || defaultPfp;
 });
 
+watch(() => bioStore.bios, async () => {
+  await bioStore.fetchBios();
+});
 
 const handleImageError = (event: Event) => {
   const imgElement = event.target as HTMLImageElement;
