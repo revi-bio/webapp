@@ -11,6 +11,7 @@ import NewModal from '@/components/global/NewModal.vue';
 import router from '@/router';
 import { DateTime } from '@/composables/date';
 import Searchbar from '@/components/global/Searchbar.vue';
+import Textbox from '@/components/global/Textbox.vue';
 
 const adminStore = useAdminStore();
 const usersList = ref<UserForAdmin[]>([]);
@@ -214,7 +215,7 @@ function changeSearch(filtered: Bio[]) {
       :title="mailRecipient ? `Send Message to ${mailRecipient.displayName}` : 'Send Message'">
       <div class="flex flex-col gap-4 w-full">
         <Input v-model="mailTitle" placeholder="Title" type="text" />
-        <Input v-model="mailContent" placeholder="Content" type="text" />
+        <Textbox v-model="mailContent" placeholder="Content" />
         <div class="flex justify-end gap-2">
           <Button text="Cancel" @click="closeMailModal" />
           <Button primary text="Send" icon="send" @click="sendMail" />
