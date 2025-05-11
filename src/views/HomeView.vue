@@ -203,7 +203,7 @@ onMounted(() => {
         <Logo type="revibio"></Logo>
         <span class="flex flex-row justify-center content-center items-center gap-5">
           <RouterLink to="/register"
-            ><Button text="Start your journey" size="normal" rank="primary" icon-position="none"></Button
+            ><Button text="Start your journey" size="normal" rank="primary" icon-position="none" :primary="true"></Button
           ></RouterLink>
           <a href="#more"><Button text="Learn more" size="normal" rank="secondary" icon-position="none"></Button></a>
         </span>

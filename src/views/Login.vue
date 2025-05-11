@@ -68,7 +68,7 @@
           <Input placeholder="Password" v-model="password" type="password"></Input>
         </form>
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
-          <Button text="Log in" rank="primary" size="normal" icon-position="none" @click.prevent="onLogIn"></Button>
+          <Button text="Log in" rank="primary" size="normal" icon-position="none" @click.prevent="onLogIn" :primary="true"></Button>
           <p class="text-[#71717A]"><RouterLink to="register">- or Create an account</RouterLink></p>
         </div>
       </div>

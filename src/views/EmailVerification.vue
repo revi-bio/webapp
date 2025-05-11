@@ -126,7 +126,7 @@ onMounted(async () => {
 
         <!-- Login Button -->
         <RouterLink to="/login">
-          <Button icon-position="none" rank="primary" size="normal" text="Log In" />
+          <Button icon-position="none" rank="primary" size="normal" text="Log In" :primary="true" />
         </RouterLink>
 
         <p class="text-zinc-400">If you encounter any issues, please contact our support team.</p>

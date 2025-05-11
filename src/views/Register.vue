@@ -87,7 +87,7 @@ const onRegister = async () => {
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
           <Button
             text="Register"
-            rank="primary"
+            :primary="true"
             size="normal"
             icon-position="none"
             @click.prevent="onRegister"></Button>
