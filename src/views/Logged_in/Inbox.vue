@@ -38,10 +38,10 @@ const countOfUnreaded = computed(() => msgs.value.filter((msg) => !msg.isRead).l
 <template>
   <div class="flex h-full justify-center content-center items-center flex-row gap-4 p-6">
     <div class="w-full h-full flex-col flex items-center justify-center">
-      <div v-if="selectedMsg" class="space-y-6">
-        <div class="max-w-[800px] w-full bg-zinc-700 rounded-2xl p-6">{{ selectedMsg.title }}</div>
-        <div class="max-w-[800px] w-full bg-zinc-700 rounded-2xl p-6 text-justify">{{ selectedMsg.text }}</div>
-        <div class="max-w-[800px] w-full bg-zinc-700 rounded-2xl p-6">From: Us</div>
+      <div v-if="selectedMsg" class="space-y-6 w-full max-w-[600px]">
+        <div class="w-full bg-zinc-700 rounded-2xl p-6">{{ selectedMsg.title }}</div>
+        <div class="w-full bg-zinc-700 rounded-2xl p-6 text-justify">{{ selectedMsg.text }}</div>
+        <div class="w-full bg-zinc-700 rounded-2xl p-6">From: Us</div>
         <div class="text-rose-500 flex justify-between items-center">
           <div class="bg-zinc-900 w-[70px] h-[40px] flex items-center rounded-2xl justify-center">
             <span><Logo type="revibio" width="60"></Logo></span>

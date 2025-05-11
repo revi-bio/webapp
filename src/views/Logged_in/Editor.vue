@@ -602,7 +602,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
     </Teleport>
 
     <!-- Widgets display -->
-    <div id="widgets" class="flex flex-col gap-3 max-w-[600px]  justify-center z-0 h-[80%] w-1/2">
+    <div id="widgets" class="flex flex-col gap-3 max-w-[600px] justify-center z-0 h-[80%] w-1/2">
       <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
         <div class="flex gap-2 relative">
           <!-- Widget component -->
