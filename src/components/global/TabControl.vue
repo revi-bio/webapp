@@ -8,8 +8,12 @@ const props = defineProps<{
     event?: () => void;
     buttonText: string;
     buttonSize: 'small' | 'normal';
-    buttonRank: 'primary' | 'secondary' | 'tabItem';
-    buttonIconPosition: 'none' | 'only' | 'left' | 'right';
+    primary?: boolean;
+    tabItem?: boolean;
+    iconOnly?: boolean;
+    iconRight?: boolean;
+    disabled?: boolean;
+    isActive?: boolean;
   }[];
 }>();
 
@@ -18,7 +22,7 @@ const activeTabIndex = ref<number | null>(null);
 
 
 const selectTab = (index: number) => {
-  if (props.items[index].buttonRank === 'tabItem') {
+  if (props.items[index].tabItem) {
     activeTabIndex.value = index;
   }
 };
@@ -36,8 +40,11 @@ activeTabIndex.value = 0;
       :key="index"
       :text="item.buttonText"
       :size="item.buttonSize"
-      :rank="item.buttonRank"
-      :icon-position="item.buttonIconPosition"
+      :tabItem="item.tabItem"
+      :primary="item.primary"
+      :iconOnly="item.iconOnly"
+      :iconRight="item.iconRight"
+      :disabled="item.disabled"
       :isActive="activeTabIndex === index"
       @click.prevent="() => { selectTab(index); item.event?.(); }"
     ></Button>

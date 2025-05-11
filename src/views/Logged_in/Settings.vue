@@ -15,7 +15,7 @@ onMounted(() => {
   if (route.path === '/baseDash/settings') {
     router.push('/baseDash/settings/profile');
   }
-  
+
   settingsStore.loadSettings();
 });
 
@@ -40,41 +40,29 @@ const saveChanges = async () => {
 <template>
   <div class="w-full h-full flex flex-col justify-start content-start items-start text-3xl py-20 px-6 gap-5">
     <span class="flex flex-row justify-center content-start items-center gap-5">
-      <TabControl
-        :items="[
-          {
-            buttonText: 'Profile',
-            buttonSize: 'small',
-            buttonRank: 'tabItem',
-            buttonIconPosition: 'none',
-            event: () => router.push('/baseDash/settings/profile'),
-          },
-          {
-            buttonText: 'Account',
-            buttonSize: 'small',
-            buttonRank: 'tabItem',
-            buttonIconPosition: 'none',
-            event: () => router.push('/baseDash/settings/account'),
-          },
-          {
-            buttonText: 'Preferences',
-            buttonSize: 'small',
-            buttonRank: 'tabItem',
-            buttonIconPosition: 'none',
-            event: () => router.push('/baseDash/settings/preferences'),
-          }
-        ]"
-      />
+      <TabControl :items="[
+        {
+          buttonText: 'Profile',
+          buttonSize: 'small',
+          tabItem: true,
+          event: () => router.push('/baseDash/settings/profile'),
+        },
+        {
+          buttonText: 'Account',
+          buttonSize: 'small',
+          tabItem: true,
+          event: () => router.push('/baseDash/settings/account'),
+        },
+        {
+          buttonText: 'Preferences',
+          buttonSize: 'small',
+          tabItem: true,
+          event: () => router.push('/baseDash/settings/preferences'),
+        }
+      ]" />
 
-      <Button
-        text="Save changes"
-        size="small"
-        rank="primary"
-        icon-position="right"
-        icon-type="edit"
-        :disabled="!hasChanges || isSaving"
-        @click="saveChanges"
-      ></Button>
+      <Button text="Save changes" size="small" rank="primary" icon-position="right" icon-type="edit"
+        :disabled="!hasChanges || isSaving" @click="saveChanges"></Button>
     </span>
 
     <div class="w-full h-full flex justify-start content-start items-start">

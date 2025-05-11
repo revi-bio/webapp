@@ -6,6 +6,7 @@ const props = withDefaults(defineProps<{
   small?: boolean;
   icon?: string;
   primary?: boolean;
+  tabItem?: boolean;
   iconOnly?: boolean;
   iconRight?: boolean;
   disabled?: boolean;
@@ -15,6 +16,7 @@ const props = withDefaults(defineProps<{
   small: false,
   icon: '',
   primary: false,
+  tabItem: false,
   iconOnly: false,
   iconRight: false,
   disabled: false,
@@ -24,7 +26,7 @@ const props = withDefaults(defineProps<{
 
 <template>
   <button
-    :class="[{ 'small': small, 'primary': primary, 'active': isActive, 'disabled': disabled, 'flex-row-reverse': iconRight}]"
+    :class="[{ 'small': small, 'primary': primary, 'active': isActive, 'tabItem':tabItem, 'disabled': disabled, 'flex-row-reverse': iconRight}]"
     :disabled="disabled"
   >
       <Icon v-if="icon" :name="icon" :size='small ? "base" : "lg"' />
