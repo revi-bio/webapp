@@ -10,6 +10,7 @@ import { onMounted, ref, watchEffect } from 'vue';
 import NewModal from '@/components/global/NewModal.vue';
 import router from '@/router';
 import { DateTime } from '@/composables/date';
+import Searchbar from '@/components/global/Searchbar.vue';
 
 const adminStore = useAdminStore();
 const usersList = ref<UserForAdmin[]>([]);
@@ -28,9 +29,13 @@ const mailTitle = ref('');
 const mailContent = ref('');
 const mailRecipient = ref<UserForAdmin | null>(null);
 
+const search = ref('');
+const filteredData = ref<UserForAdmin[]>([]);
+
 onMounted(async () => {
   await adminStore.fetchAllUsers();
   usersList.value = [...adminStore.users];
+  filteredData.value = [...usersList.value];
 });
 
 watchEffect(() => {
@@ -118,15 +123,21 @@ const sendMail = async () => {
 };
 
 
+function changeSearch(filtered: Bio[]) {
+  filteredData.value = filtered;
+}
+
 // No longer needed with NewModal
 
 </script>
 
 <template>
   <div class="w-full h-full flex flex-col justify-start content-center items-center overflow-y-auto gap-5">
+    <div class="flex flex-row justify-between content-center items-center w-full rounded-[16px] p-4 bg-zinc-700/50">
+      <Searchbar v-model="search" :basearray="usersList" @filtered="changeSearch"></Searchbar>
+    </div>
 
-
-    <div v-for="user in usersList" :key="user?._id" class="w-full flex flex-row justify-between content-center items-center p-4 bg-zinc-700/50 rounded-xl hover:bg-zinc-600/50 transition duration-200">
+    <div v-for="user in filteredData" :key="user?._id" class="w-full flex flex-row justify-between content-center items-center p-4 bg-zinc-700/50 rounded-xl hover:bg-zinc-600/50 transition duration-200">
       <div class="w-full flex flex-row justify-start content-center items-center gap-5">
         <Avatar class="w-16 h-16" :avatar-url="user?.avatar" />
         <div class="flex flex-col justify-center content-start items-start">
