@@ -42,7 +42,6 @@ const showAlert = (status: number, error: string, message: string) => {
 const bioName = ref('');
 const bioHandle = ref('');
 
-// No longer needed with NewModal
 
 const resetBioInputs = () => {
   bioName.value = '';

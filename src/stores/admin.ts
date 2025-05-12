@@ -24,7 +24,6 @@ export const useAdminStore =  defineStore('admin', ()=>{
     try{
       const res = await ApiWrapper.get<UserForAdmin[]>('admin/users', {});
       users.value = res.data;
-      console.log("Fetched users: ",res.data)
       return res.data;
     }catch(error){
       console.error("Failed to fetch users:", error);
@@ -58,6 +57,8 @@ export const useAdminStore =  defineStore('admin', ()=>{
   async function deleteBio(bioId: string) {
     try{
       const res = await ApiWrapper.delete<Bio>(`admin/bios/${bioId}`,null);
+      // Update the bios array after deleting a bio
+      await fetchAllBios();
       return res.data;
     }catch(error: any){
       console.error("Failed to delete bio", error)

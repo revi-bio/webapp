@@ -38,11 +38,14 @@ function openEditor(handle: string) {
   console.log('handle from getCurrentHandle:', bioStore.getCurrentHandle())
 }
 
+const emit = defineEmits(['bioDeleted']);
+
 async function confirmDelete() {
   try {
     const response = await bioStore.deleteBio(props.handle);
     if (response) {
       showModal.value = false;
+      emit('bioDeleted', { handle: props.handle, name: props.name });
     }
   } catch (error) {
     console.error("Error deleting bio:", error);

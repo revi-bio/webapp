@@ -1,27 +1,65 @@
 <script setup lang="ts">
 import BioListItem from '@/components/global/BioListItem.vue';
-import { computed, onMounted, ref, watch, watchEffect } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useAdminStore } from '@/stores/admin';
 import type { Bio } from '@/types/Bio';
 import Searchbar from '@/components/global/Searchbar.vue';
+import Alert from '@/components/global/Alert.vue';
 
 const adminStore = useAdminStore();
 const biolists = ref<Bio[]>([]);
 const search = ref('');
 const filteredData = ref<Bio[]>([]);
+const alertStatus = ref<number>(0);
+const alertError = ref<string>('');
+const alertMessage = ref<string>('');
+const alertActive = ref<boolean>(false);
+
+const showAlert = (status: number, error: string, message: string) => {
+  alertStatus.value = status;
+  alertError.value = status === 200 ? '' : error;
+  alertMessage.value = message;
+  alertActive.value = true;
+};
+
+watch(() => adminStore.bios, (newBios) => {
+  biolists.value = [...newBios];
+  if (search.value === '') {
+    filteredData.value = [...biolists.value];
+  }
+}, { deep: true });
+
 
 onMounted(async()=>{
-  await adminStore.fetchAllBios();
-  biolists.value = [...adminStore.bios];
-  filteredData.value = [...biolists.value];
+  try {
+    await adminStore.fetchAllBios();
+    biolists.value = [...adminStore.bios];
+    filteredData.value = [...biolists.value];
+  }catch (error: any){
+    showAlert(
+      error.response?.status || 500,
+      error.response?.data?.error || "Error",
+      error.response?.data?.message || "Failed to fetch bios"
+    );
+  }
 })
 
-watchEffect(() => {
-  biolists.value = [...adminStore.bios];
-})
 
 function changeSearch(filtered: Bio[]) {
   filteredData.value = filtered;
+}
+
+async function handleBioDeleted(bio: Bio) {
+  try {
+    await adminStore.deleteBio(bio._id);
+    showAlert(200, '', `Bio "${bio.name}" deleted successfully!`);
+  } catch (error: any) {
+    showAlert(
+      error.response?.status || 500,
+      error.response?.data?.error || "Error",
+      error.response?.data?.message || "Failed to delete bio"
+    );
+  }
 }
 </script>
 
@@ -41,8 +79,14 @@ function changeSearch(filtered: Bio[]) {
           :pagesCount="item.pagesCount"
           :createdAt="item.createdAt || null"
           :updatedAt="item.updatedAt || null"
-          @bioDeleted="adminStore.deleteBio(item._id)"
+          @bioDeleted="handleBioDeleted(item)"
         ></BioListItem>
       </div>
   </div>
+    <Alert
+    :status="alertStatus"
+    :error="alertError"
+    :message="alertMessage"
+    :active="alertActive"
+  />
 </template>

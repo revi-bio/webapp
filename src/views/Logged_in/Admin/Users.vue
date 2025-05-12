@@ -6,7 +6,7 @@ import Input from '@/components/global/Input.vue';
 import { useAdminStore } from '@/stores/admin';
 import type { UserForAdmin } from '@/stores/admin';
 import type { Bio } from "@/types/Bio";
-import { onMounted, ref, watchEffect } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import NewModal from '@/components/global/NewModal.vue';
 import router from '@/router';
 import { DateTime } from '@/composables/date';
@@ -39,9 +39,9 @@ onMounted(async () => {
   filteredData.value = [...usersList.value];
 });
 
-watchEffect(() => {
-  usersList.value = [...adminStore.users];
-});
+watch(() => adminStore.users, (newUsers) => {
+  usersList.value = [...newUsers];
+}, { deep: true });
 
 const needsEmailVerification = (user: UserForAdmin): boolean => {
   if (!user || !(user as any).validations || !Array.isArray((user as any).validations)) {
