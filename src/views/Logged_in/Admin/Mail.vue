@@ -26,9 +26,9 @@ const filteredUsers = ref<[]>([]);
 
     <div class="flex flex-col justify-start content-start items-start w-full h-full gap-5 bg-zinc-900 p-5 border-zinc-700 rounded-lg">
         <h3 class="text-xl">Write mail</h3>
-        <div class="flex flex-col justify-start content-start items-start w-full gap-2">
+        <div class="flex flex-col justify-start content-start items-start w-full h-full gap-2">
           <Input type="text" placeholder="Title" class="w-full"/>
-          <Input type="text" placeholder="Content" class="w-full"/>
+          <Input type="textarea" placeholder="Content" class="w-full h-full"/>
         </div>
 
         <div class="flex flex-row justify-start content-start items-start w-full gap-2">
