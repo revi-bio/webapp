@@ -59,6 +59,6 @@ watch(search, (newSearch) => {
 
 <style>
 .searchInput {
-  width: 20rem;
+  max-width: 20rem;
 }
 </style>

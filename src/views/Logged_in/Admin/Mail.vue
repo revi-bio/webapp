@@ -51,18 +51,25 @@ const showUsersList = computed(() => {
         </h3>
       </div>
 
-      <div v-else-if="showUsersList" class="w-full h-full flex flex-col gap-2 overflow-y-auto">
-    <div v-for="user in filteredData" :key="user?._id" class="w-full flex flex-row justify-between content-center items-center p-4 bg-zinc-700/50 rounded-xl hover:bg-zinc-600/50 transition duration-200">
-      <div class="w-full flex flex-row justify-start content-center items-center gap-5">
-        <Avatar class="w-16 h-16" :avatar-url="user?.avatar" />
-        <div class="flex flex-col justify-center content-start items-start">
-          <h3 class="text-xl">{{ user?.displayName }}</h3>
-          <h3 class="text-sm text-zinc-400">{{ user?.role }}</h3>
+      <div v-else-if="showUsersList" class="w-full overflow-y-auto flex flex-col justify-start content-center items-center gap-2">
+        <div v-for="user in filteredData" :key="user?._id" class="w-full flex flex-row justify-between content-center items-center p-4 bg-zinc-700/50 rounded-xl hover:bg-zinc-600/50 transition duration-200">
+
+          <div class="w-full flex flex-row justify-start content-center items-center gap-5">
+            <Avatar class="w-16 h-16" :avatar-url="user?.avatar" />
+
+            <div class="flex flex-col justify-center content-start items-start">
+              <h3 class="text-xl">{{ user?.displayName }}</h3>
+              <h3 class="text-sm text-zinc-400">{{ user?.role }}</h3>
+            </div>
+
+            <h3 class="text-sm text-zinc-200">{{ user?.email }}</h3>
+            <h3 class="text-sm text-zinc-400">{{ DateTime.formatDate(user?.createdAt) }}</h3>
+          </div>
+
+          <div class="flex flex-row justify-center content-center items-center gap-2">
+            <Button text="Select" icon="check_circle" icon-right small primary></Button>
+          </div>
         </div>
-        <h3 class="text-sm text-zinc-200">{{ user?.email }}</h3>
-        <h3 class="text-sm text-zinc-400">{{ DateTime.formatDate(user?.createdAt) }}</h3>
-      </div>
-    </div>
       </div>
     </div>
 
