@@ -14,7 +14,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col justify-start content-start items-start w-full h-full gap-5 py-20 px-6">
+  <div class="flex flex-col justify-start content-start items-start w-full h-full gap-5 pt-20 pb-6 px-6">
     <TabControl :items="[
       {
         buttonText: 'Admin overview',
