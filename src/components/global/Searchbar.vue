@@ -49,7 +49,7 @@ watch(search, (newSearch) => {
 
 <template>
   <Input
-    class="input"
+    class="max-w-[300px] input"
     placeholder="Search"
     v-model="search"
     type="text"
