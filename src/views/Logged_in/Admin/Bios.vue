@@ -15,6 +15,7 @@ onMounted(async()=>{
   biolists.value = [...adminStore.bios];
   filteredData.value = [...biolists.value];
 })
+
 watchEffect(() => {
   biolists.value = [...adminStore.bios];
 })
@@ -38,8 +39,8 @@ function changeSearch(filtered: Bio[]) {
           :views="item.views"
           :widgetsCount="item.widgetsCount"
           :pagesCount="item.pagesCount"
-          :createdAt="item.createdAt"
-          :updatedAt="item.updatedAt"
+          :createdAt="item.createdAt || null"
+          :updatedAt="item.updatedAt || null"
           @bioDeleted="adminStore.deleteBio(item._id)"
         ></BioListItem>
       </div>

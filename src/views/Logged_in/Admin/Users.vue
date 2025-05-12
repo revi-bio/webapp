@@ -124,7 +124,7 @@ const sendMail = async () => {
 };
 
 
-function changeSearch(filtered: Bio[]) {
+function changeSearch(filtered: UserForAdmin[]) {
   filteredData.value = filtered;
 }
 
