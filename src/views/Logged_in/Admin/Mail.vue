@@ -3,16 +3,21 @@ import Button from '@/components/global/Button.vue';
 import Input from '@/components/global/Input.vue';
 import Searchbar from '@/components/global/Searchbar.vue';
 import Checkbox from '@/components/global/Checkbox.vue';
+import { useAdminStore } from '@/stores/admin';
 import { ref } from 'vue';
 
+const adminStore = useAdminStore();
+
 const allUsers = ref<[]>([]);
+const search = ref('');
 const filteredUsers = ref<[]>([]);
 </script>
 <template>
-  <div class="flex flex-row justify-start content-start items-start w-full h-full">
+  <div class="flex flex-row justify-start content-start items-start w-full h-full gap-5">
     <div class="flex flex-col justify-start content-start items-start w-full h-full gap-5">
-      <h3>Select user(s)</h3>
-      <Searchbar :basearray="filteredUsers" class="w-full"></Searchbar>
+          <div class="flex flex-row justify-between content-center items-center w-full rounded-lg p-4 bg-zinc-700/50">
+            <Searchbar v-model="search" :basearray="filteredUsers"></Searchbar>
+          </div>
       <Checkbox text="Send mail to all users"></Checkbox>
       <div class="w-full h-full flex-col justify-center content-center items-center">
         <h3 class="w-full text-center">No users have been selected yet.</h3>

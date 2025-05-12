@@ -50,7 +50,7 @@ watch(search, (newSearch) => {
 
 <template>
   <Input
-    class="input"
+    class="searchInput"
     placeholder="Search"
     v-model="search"
     type="text"
@@ -58,7 +58,7 @@ watch(search, (newSearch) => {
 </template>
 
 <style>
-.input {
+.searchInput {
   width: 20rem;
 }
 </style>
