@@ -2,7 +2,7 @@
 import { watch, watchEffect } from 'vue';
 import Icon from './Icon.vue';
 
-const text = defineModel()
+const text = defineModel<string>()
 
 const props = defineProps<{
   type: "text" | "password" | "email" | "textarea",
