@@ -7,27 +7,40 @@ const props = defineProps({
     type: String,
     required: true
   },
+  modelValue: {
+    type: Boolean,
+    default: undefined
+  },
   checked: {
     type: Boolean,
     default: false
   }
 });
 
-const emit = defineEmits(['change']);
+const emit = defineEmits(['change', 'update:modelValue']);
+const localChecked = ref(props.modelValue !== undefined ? props.modelValue : props.checked);
 
-const localChecked = ref(props.checked);
+watch(() => props.modelValue, (newVal) => {
+  if (newVal !== undefined) {
+    localChecked.value = newVal;
+  }
+}, { immediate: true });
 
 watch(() => props.checked, (newVal) => {
-  localChecked.value = newVal;
-});
-
+  if (props.modelValue === undefined) {
+    localChecked.value = newVal;
+  }
+}, { immediate: true });
 
 onMounted(() => {
-  localChecked.value = props.checked;
+  localChecked.value = props.modelValue !== undefined ? props.modelValue : props.checked;
 });
 
 const handleChange = () => {
-  emit('change', localChecked.value);
+  const newValue = localChecked.value;
+
+  emit('change', newValue);
+  emit('update:modelValue', newValue);
 };
 </script>
 
