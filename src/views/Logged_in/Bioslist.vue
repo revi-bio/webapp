@@ -108,11 +108,6 @@ onMounted(async () => {
     );
   }
 });
-
-watchEffect(() => {
-  biolists.value = [...bioStore.bios];
-  filteredData.value = [...biolists.value];
-});
 </script>
 
 <template>
