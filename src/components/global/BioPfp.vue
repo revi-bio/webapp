@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, defineProps, watch } from 'vue';
+import { computed, onMounted, defineProps } from 'vue';
 import { useBioStore } from '@/stores/bio';
 
 const props = defineProps({
@@ -12,19 +12,9 @@ const props = defineProps({
 const bioStore = useBioStore();
 const defaultPfp = new URL('@/assets/defPfp.png', import.meta.url).href;
 
-onMounted(async () => {
-  if (bioStore.bios.length === 0) {
-    await bioStore.fetchBios();
-  }
-});
-
 const BioPfp = computed(() => {
   const pfpUrl = bioStore.getBioPfpUrl(props.bioHandle);
   return pfpUrl || defaultPfp;
-});
-
-watch(() => bioStore.bios, async () => {
-  await bioStore.fetchBios();
 });
 
 const handleImageError = (event: Event) => {

@@ -12,13 +12,6 @@ const props = defineProps({
 
 const bioStore = useBioStore();
 
-
-onMounted(async () => {
-  if (bioStore.bios.length === 0) {
-    await bioStore.fetchBios();
-  }
-});
-
 const handleChangePicture = (event) => {
   event.stopPropagation();
   const fileInput = document.createElement('input');
@@ -29,11 +22,8 @@ const handleChangePicture = (event) => {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files[0]) {
       try {
-        //console.log('Uploading file using handle:', props.bioHandle);
         await bioStore.uploadBioPfp(target.files[0], props.bioHandle);
-        //console.log('Profile picture updated successfully');
       } catch (error) {
-        //console.error('Error uploading profile picture:', error);
       }
     }
   };

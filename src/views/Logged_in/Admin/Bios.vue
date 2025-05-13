@@ -22,12 +22,7 @@ const showAlert = (status: number, error: string, message: string) => {
   alertActive.value = true;
 };
 
-watch(() => adminStore.bios, (newBios) => {
-  biolists.value = [...newBios];
-  if (search.value === '') {
-    filteredData.value = [...biolists.value];
-  }
-}, { deep: true });
+// We don't need to watch adminStore.bios since we'll update our local arrays directly after operations
 
 
 onMounted(async()=>{
@@ -52,6 +47,10 @@ function changeSearch(filtered: Bio[]) {
 async function handleBioDeleted(bio: Bio) {
   try {
     showAlert(200, '', `Bio "${bio.name}" deleted successfully!`);
+    // Update local arrays after bio deletion
+    await adminStore.fetchAllBios();
+    biolists.value = [...adminStore.bios];
+    filteredData.value = [...biolists.value];
   } catch (error: any) {
     showAlert(
       error.response?.status || 500,

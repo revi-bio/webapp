@@ -70,7 +70,6 @@ export const useBioStore = defineStore('bios', () => {
   async function deleteBio(handle: string) {
     try {
       const response = await ApiWrapper.delete<Bio>(`bio/${handle}`, null);
-      fetchBios();
       return response.data;
     } catch (error) {
       console.error('Failed to delete bio:', error);

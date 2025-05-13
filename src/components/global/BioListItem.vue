@@ -41,15 +41,24 @@ function openEditor(handle: string) {
 const emit = defineEmits(['bioDeleted']);
 
 async function confirmDelete() {
+
   try {
+    await bioStore.deleteBio(props.handle);
+
     showModal.value = false;
+
     emit('bioDeleted', { handle: props.handle, name: props.name });
   } catch (error) {
     console.error("Error deleting bio:", error);
     alert("An error occurred while deleting.");
   }
 }
-// No longer needed with NewModal
+
+function handleModalClose() {
+
+  showModal.value = false;
+
+}
 </script>
 
 <template>
@@ -93,14 +102,22 @@ async function confirmDelete() {
 
   <NewModal
     :show="showModal"
-    @close="showModal = false"
+    @close="handleModalClose"
     :title="`Delete ${name}?`"
   >
     <div class="flex flex-col gap-4 w-full">
       <p class="text-center text-zinc-400">Are you sure you want to delete @{{ handle }}?</p>
       <div class="flex justify-end gap-2">
-        <Button text="Cancel" @click="showModal = false" />
-        <Button primary text="Delete" icon="delete" @click="confirmDelete" />
+        <Button
+          text="Cancel"
+          @click="handleModalClose"
+        />
+        <Button
+          primary
+          text="Delete"
+          icon="delete"
+          @click="confirmDelete"
+        />
       </div>
     </div>
   </NewModal>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref, watchEffect } from 'vue';
+import { onMounted, ref, watchEffect, watch } from 'vue';
 import Searchbar from '@/components/global/Searchbar.vue';
 import BioListItem from '@/components/global/BioListItem.vue';
 import Button from '@/components/global/Button.vue';
@@ -70,6 +70,9 @@ const createBio = async () => {
     if (newBio) {
       closeModal();
       showAlert(200, "Success", "Bio created successfully!");
+      await bioStore.fetchBios();
+      biolists.value = [...bioStore.bios];
+      filteredData.value = [...biolists.value];
       pendingBioHandle.value = newBio.handle;
     }
   } catch (error: any) {
@@ -90,9 +93,18 @@ function changeSearch(filtered: Bio[]) {
   filteredData.value = filtered;
 }
 
-const handleBioDeleted = (data: { handle: string, name: string }) => {
+const handleBioDeleted = async (data: { handle: string, name: string }) => {
   showAlert(200, '', `Bio "${data.name}" deleted successfully!`);
+  await bioStore.fetchBios();
+  biolists.value = [...bioStore.bios];
+  filteredData.value = [...biolists.value];
 };
+
+// Watch for changes in the bioStore.bios array and update local arrays
+watch(() => bioStore.bios, (newBios) => {
+  biolists.value = [...newBios];
+  filteredData.value = [...biolists.value];
+});
 
 onMounted(async () => {
   try {
