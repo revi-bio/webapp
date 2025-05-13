@@ -136,8 +136,8 @@ const removeSelectedUser = (user: UserForAdmin) => {
 </script>
 
 <template>
-  <div class="flex flex-row justify-start content-start items-start w-full h-full gap-5">
-    <div class="flex flex-col justify-start content-start items-start w-full h-full gap-5">
+  <div class="flex flex-row justify-start content-start items-start w-full h-full gap-5 pb-20 overflow-hidden">
+    <div class="flex flex-col justify-start content-start items-start w-full h-full gap-5 overflow-y-auto pb-20">
       <div class="flex flex-row justify-between content-center items-center w-full rounded-lg p-4 bg-zinc-700/50">
         <Searchbar v-model="search" :basearray="usersList" @filtered="changeSearch"></Searchbar>
       </div>
