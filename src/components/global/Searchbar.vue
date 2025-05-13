@@ -22,15 +22,13 @@ watch(search, (newSearch) => {
   if (props.basearray.length > 0) {
     const firstItem = props.basearray[0];
 
-    if ('name' in firstItem) {
-      const nameFiltered = props.basearray.filter((item: Bio) =>
-        item.name.toLowerCase().replace(/\s+/g, "").includes(newSearch.toLowerCase().replace(/\s+/g, ""))
-      );
+    if ('handle' in firstItem) {
       const handleFiltered = props.basearray.filter((item: Bio) =>
-        item.handle.toLowerCase().replace(/\s+/g, "").includes(newSearch.toLowerCase().replace(/\s+/g, ""))
+        item.handle.toLowerCase().replace(/\s+/g, "").includes(newSearch.toLowerCase().replace(/\s+/g, ""))||
+        item.name?.toLowerCase().replace(/\s+/g, "").includes(newSearch.toLowerCase().replace(/\s+/g, ""))
       );
-      const combined = [...nameFiltered, ...handleFiltered];
-      filtered = Array.from(new Map(combined.map(item => [item._id, item])).values());
+      const combined = [...handleFiltered];
+      filtered = combined
 
     } else if ('displayName' in firstItem) {
       filtered = props.basearray.filter((item: UserForAdmin) =>
