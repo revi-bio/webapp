@@ -53,6 +53,12 @@ const needsEmailVerification = (user: UserForAdmin): boolean => {
   );
 };
 
+const verifyUser = (user: UserForAdmin): void => {
+  adminStore.verifyUser(user._id)
+
+
+}
+
 const openBiosModal = async (user: UserForAdmin) => {
   try {
     selectedUser.value = user;
@@ -153,7 +159,7 @@ function changeSearch(filtered: UserForAdmin[]) {
 
       <div class="flex flex-row justify-center content-center items-center gap-2">
         <Button v-if="needsEmailVerification(user)" primary small text="verify" iconRight
-          icon="verified"></Button>
+          icon="verified" @click.prevent="verifyUser(user)" ></Button>
         <Button primary small text="Bios" iconRight icon="recent_actors"
           @click.prevent="openBiosModal(user)"></Button>
         <Button primary small text="Mail" iconRight icon="mail"

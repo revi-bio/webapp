@@ -86,7 +86,15 @@ export const useAdminStore =  defineStore('admin', ()=>{
     }
   }
 
-
+  async function verifyUser(userId: string) {
+    try{
+      const res = await ApiWrapper.get<any>(`admin/users/${userId}/verify`,null);
+      return res.data;
+    }catch(error){
+      console.error("Failed to verify bio", error)
+      return null;
+    }
+  }
 
   return{
     users,
@@ -96,6 +104,7 @@ export const useAdminStore =  defineStore('admin', ()=>{
     getUserBios,
     deleteBio,
     fetchAllBios,
-    sendMassageToUser
+    sendMassageToUser,
+    verifyUser
   }
 })
