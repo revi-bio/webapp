@@ -42,11 +42,8 @@ const emit = defineEmits(['bioDeleted']);
 
 async function confirmDelete() {
   try {
-    const response = await bioStore.deleteBio(props.handle);
-    if (response) {
-      showModal.value = false;
-      emit('bioDeleted', { handle: props.handle, name: props.name });
-    }
+    showModal.value = false;
+    emit('bioDeleted', { handle: props.handle, name: props.name });
   } catch (error) {
     console.error("Error deleting bio:", error);
     alert("An error occurred while deleting.");

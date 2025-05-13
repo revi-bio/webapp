@@ -51,7 +51,6 @@ function changeSearch(filtered: Bio[]) {
 
 async function handleBioDeleted(bio: Bio) {
   try {
-    await adminStore.deleteBio(bio._id);
     showAlert(200, '', `Bio "${bio.name}" deleted successfully!`);
   } catch (error: any) {
     showAlert(
