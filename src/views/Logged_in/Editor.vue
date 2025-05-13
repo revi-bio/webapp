@@ -611,10 +611,18 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
         <span>Page list</span>
         <div class="flex flex-col gap-2">
           <div v-for="(page, index) in pages" :key="page.id"
-            class="flex items-center w-full bg-zinc-800 rounded-lg p-1 gap-2 cursor-pointer border-zinc-900/70 border-2" @click="() => {
-              editSelectPage.id = page.id;
-              editSelectPage.name = page.name;
-              editSelectPage.icon = page.icon;
+            class="flex items-center w-full bg-zinc-800 rounded-lg p-1 gap-2 cursor-pointer border-zinc-900/70 border-2 hover:bg-zinc-700 transition duration-200"
+            @click="() => {
+              if (editSelectPage.id === '') {
+                editSelectPage.id = page.id;
+                editSelectPage.name = page.name;
+                editSelectPage.icon = page.icon;
+              }
+              else {
+                editSelectPage.id = '';
+                editSelectPage.name = '';
+                editSelectPage.icon = '';
+              }
             }">
             <Icon :type="page.icon" size="2xl" />
             <span class="w-full">{{ page.name }}</span>
@@ -674,7 +682,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
 }
 
 .Page {
-  @apply bg-zinc-800 flex gap-2 items-center cursor-pointer rounded-full lg:pr-3;
+  @apply bg-zinc-800 flex gap-2 items-center cursor-pointer rounded-full lg:pr-3 hover:bg-zinc-700 transition duration-200;
 
   .Page__Icon {
     @apply px-3 rounded-full bg-zinc-700;
