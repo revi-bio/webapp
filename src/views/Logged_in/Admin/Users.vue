@@ -137,13 +137,13 @@ function changeSearch(filtered: UserForAdmin[]) {
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col justify-start content-center items-center overflow-y-auto gap-5 pb-20">
+  <div class="w-full h-full flex flex-col justify-start content-center items-center gap-5 pb-20">
     <div class="flex flex-row justify-between content-center items-center w-full rounded-[16px] p-4 bg-zinc-700/50">
       <Searchbar v-model="search" :basearray="usersList" @filtered="changeSearch"></Searchbar>
     </div>
 
-    <div class="w-full flex flex-col gap-5">
-      <div v-for="user in filteredData" :key="user?._id" class="w-full flex flex-row justify-between content-center items-center p-4 bg-zinc-700/50 rounded-xl hover:bg-zinc-600/50 transition duration-200">
+    <div class="w-full flex flex-col gap-5 pr-4 userList overflow-y-auto ">
+      <div v-for="user in filteredData" :key="user?._id" class="w-full flex flex-row justify-between content-center items-center p-4  bg-zinc-700/50 rounded-xl hover:bg-zinc-600/50 transition duration-200">
         <div class="w-full flex flex-row justify-start content-center items-center gap-5">
           <Avatar class="w-16 h-16" :avatar-url="user?.avatar" />
           <div class="flex flex-col justify-center content-start items-start">
@@ -230,3 +230,25 @@ function changeSearch(filtered: UserForAdmin[]) {
     </NewModal>
   </div>
 </template>
+<style>
+/* width */
+.userList::-webkit-scrollbar {
+  @apply w-2 rounded-full
+}
+
+/* Track */
+.userList::-webkit-scrollbar-track {
+  @apply bg-zinc-800 rounded-full
+}
+
+/* Handle */
+.userList::-webkit-scrollbar-thumb {
+  @apply bg-zinc-600/50 rounded-full border-4
+}
+
+/* Handle on hover */
+.userList::-webkit-scrollbar-thumb:hover {
+  @apply bg-zinc-700 rounded-full
+}
+</style>
+

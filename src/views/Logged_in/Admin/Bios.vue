@@ -22,9 +22,6 @@ const showAlert = (status: number, error: string, message: string) => {
   alertActive.value = true;
 };
 
-// We don't need to watch adminStore.bios since we'll update our local arrays directly after operations
-
-
 onMounted(async()=>{
   try {
     await adminStore.fetchAllBios();
@@ -47,7 +44,6 @@ function changeSearch(filtered: Bio[]) {
 async function handleBioDeleted(bio: Bio) {
   try {
     showAlert(200, '', `Bio "${bio.name}" deleted successfully!`);
-    // Update local arrays after bio deletion
     await adminStore.fetchAllBios();
     biolists.value = [...adminStore.bios];
     filteredData.value = [...biolists.value];
@@ -62,31 +58,54 @@ async function handleBioDeleted(bio: Bio) {
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col justify-start content-start items-start gap-5 overflow-y-auto pb-20">
+  <div class="w-full h-full flex flex-col gap-4">
     <div class="flex flex-row justify-between content-center items-center w-full rounded-[16px] p-4 bg-zinc-700/50">
       <Searchbar v-model="search" :basearray="biolists" @filtered="changeSearch"></Searchbar>
     </div>
 
-    <div class="w-full flex flex-col gap-5">
-      <div class="w-full" v-for="item in filteredData" :key="item.handle">
-        <BioListItem
-          :avatar="item.handle"
-          :name="item.name"
-          :handle="item.handle"
-          :views="item.views"
-          :widgetsCount="item.widgetsCount"
-          :pagesCount="item.pagesCount"
-          :createdAt="item.createdAt || null"
-          :updatedAt="item.updatedAt || null"
-          @bioDeleted="handleBioDeleted(item)"
-        ></BioListItem>
+    <div class="w-full h-full biosList overflow-y-auto flex-col space-y-6 pb-20 pr-4">
+      <div class="w-full flex flex-col gap-5">
+        <div class="w-full" v-for="item in filteredData" :key="item.handle">
+          <BioListItem
+            :avatar="item.handle"
+            :name="item.name"
+            :handle="item.handle"
+            :views="item.views"
+            :widgetsCount="item.widgetsCount"
+            :pagesCount="item.pagesCount"
+            :createdAt="item.createdAt || null"
+            :updatedAt="item.updatedAt || null"
+            @bioDeleted="handleBioDeleted(item)"
+          ></BioListItem>
+        </div>
       </div>
     </div>
   </div>
-    <Alert
+  <Alert
     :status="alertStatus"
     :error="alertError"
     :message="alertMessage"
     :active="alertActive"
   />
 </template>
+<style>
+/* width */
+.biosList::-webkit-scrollbar {
+  @apply w-2 rounded-full
+}
+
+/* Track */
+.biosList::-webkit-scrollbar-track {
+  @apply bg-zinc-800 rounded-full
+}
+
+/* Handle */
+.biosList::-webkit-scrollbar-thumb {
+  @apply bg-zinc-600/50 rounded-full border-4
+}
+
+/* Handle on hover */
+.biosList::-webkit-scrollbar-thumb:hover {
+  @apply bg-zinc-700 rounded-full
+}
+</style>

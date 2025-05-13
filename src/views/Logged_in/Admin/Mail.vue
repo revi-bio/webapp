@@ -154,7 +154,7 @@ const removeSelectedUser = (user: UserForAdmin) => {
         </h3>
       </div>
 
-      <div v-else-if="showUsersList" class="w-full flex-1 overflow-y-auto">
+      <div v-else-if="showUsersList" class="w-full flex-1 overflow-y-auto userList">
         <div class="flex flex-col gap-2 pr-2">
           <div v-for="user in filteredData" :key="user?._id" class="w-full flex flex-row justify-between content-center items-center p-4 bg-zinc-700/50 rounded-xl hover:bg-zinc-600/50 transition duration-200">
 
@@ -244,5 +244,23 @@ const removeSelectedUser = (user: UserForAdmin) => {
 </template>
 
 <style>
+/* width */
+.userList::-webkit-scrollbar {
+  @apply w-2 rounded-full
+}
 
+/* Track */
+.userList::-webkit-scrollbar-track {
+  @apply bg-zinc-800 rounded-full
+}
+
+/* Handle */
+.userList::-webkit-scrollbar-thumb {
+  @apply bg-zinc-600/50 rounded-full border-4
+}
+
+/* Handle on hover */
+.userList::-webkit-scrollbar-thumb:hover {
+  @apply bg-zinc-700 rounded-full
+}
 </style>

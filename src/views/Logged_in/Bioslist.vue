@@ -100,7 +100,6 @@ const handleBioDeleted = async (data: { handle: string, name: string }) => {
   filteredData.value = [...biolists.value];
 };
 
-// Watch for changes in the bioStore.bios array and update local arrays
 watch(() => bioStore.bios, (newBios) => {
   biolists.value = [...newBios];
   filteredData.value = [...biolists.value];
@@ -135,7 +134,7 @@ onMounted(async () => {
       ></Button>
     </div>
 
-    <div class="w-full h-full baseDash overflow-y-auto flex-col space-y-6 pb-20">
+    <div class="w-full h-full baseDash overflow-y-auto flex-col space-y-6 pb-10 pr-4">
       <div v-for="item in filteredData" :key="item.handle">
         <BioListItem
           :avatar="item.handle"
