@@ -6,14 +6,24 @@ import Icon from '@/components/global/Icon.vue';
 import Logo from '@/components/global/Logo.vue';
 import { useInboxStore } from '@/stores/inboxMessages';
 import type { InboxMessage } from '@/types/InboxMessage';
+import LoadingCircle from '@/components/global/LoadingCircle.vue';
 
 const inboxStore = useInboxStore();
 const msgs = ref<InboxMessage[]>([]);
 const selectedMsg = ref<InboxMessage | undefined>();
+const isLoading = ref<boolean>(true);
 
 onMounted(async () => {
-  await inboxStore.fetchInbox();
-  msgs.value = inboxStore.getInboxMessages();
+  try{
+    isLoading.value=true;
+    await inboxStore.fetchInbox();
+    msgs.value = inboxStore.getInboxMessages();
+  }catch(error:any){
+    console.error("Error while fetching messages:", error);
+  }finally{
+    isLoading.value = false;
+  }
+
 });
 
 async function selectMsg(index: number) {
@@ -51,6 +61,7 @@ const countOfUnreaded = computed(() => msgs.value.filter((msg) => !msg.isRead).l
           </div>
         </div>
       </div>
+
       <div v-if="!selectedMsg" class="space-y-4 text-3xl flex items-center justify-center flex-col text-center">
         <h3>Keep</h3>
         <h3>track of <span class="text-rose-500">your</span> notifications</h3>
@@ -62,7 +73,11 @@ const countOfUnreaded = computed(() => msgs.value.filter((msg) => !msg.isRead).l
     </div>
     <div class="w-[400px] max-w-[400px] h-full flex-col space-y-2 p-6 bg-zinc-900 rounded-2xl">
       <Inboxnoti :items="msgs" @selectMsg="selectMsg"></Inboxnoti>
+      <div v-if="isLoading" class="w-full flex flex-col justify-center content-center items-center py-8">
+        <LoadingCircle />
+      </div>
     </div>
+
   </div>
 </template>
 

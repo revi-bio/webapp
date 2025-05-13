@@ -6,7 +6,6 @@ import type { Bio } from '@/types/Bio';
 import Searchbar from '@/components/global/Searchbar.vue';
 import Alert from '@/components/global/Alert.vue';
 import LoadingCircle from '@/components/global/LoadingCircle.vue';
-import { tr } from 'motion/react-client';
 
 const adminStore = useAdminStore();
 const biolists = ref<Bio[]>([]);
