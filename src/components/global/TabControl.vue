@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import Button from './Button.vue';
-import { onMounted } from 'vue';
 
 const props = defineProps<{
   items: {
@@ -15,11 +14,10 @@ const props = defineProps<{
     disabled?: boolean;
     isActive?: boolean;
   }[];
+  activeTabIndex?: number;
 }>();
 
-
-const activeTabIndex = ref<number | null>(null);
-
+const activeTabIndex = ref<number | null>(props.activeTabIndex !== undefined ? props.activeTabIndex : 0);
 
 const selectTab = (index: number) => {
   if (props.items[index].tabItem) {
@@ -27,14 +25,18 @@ const selectTab = (index: number) => {
   }
 };
 
-onMounted(()=>{
-activeTabIndex.value = 0;
-})
+watch(
+  () => props.activeTabIndex,
+  (newValue) => {
+    if (newValue !== undefined) {
+      activeTabIndex.value = newValue;
+    }
+  }
+);
 </script>
 
 <template>
   <div class="flex flex-row justify-evenly content-center items-center bg-zinc-700 p-2 rounded-lg gap-3">
-
     <Button
       v-for="(item, index) in props.items"
       :key="index"
@@ -47,7 +49,6 @@ activeTabIndex.value = 0;
       :disabled="item.disabled"
       :isActive="activeTabIndex === index"
       @click.prevent="() => { selectTab(index); item.event?.(); }"
-    ></Button>
-
+    />
   </div>
 </template>

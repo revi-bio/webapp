@@ -59,6 +59,7 @@ const router = createRouter({
           name: 'Settings',
           meta: { public: false },
           component: () => import('../views/Logged_in/Settings.vue'),
+          redirect: '/baseDash/settings/profile',
           children: [
             {
               path: 'profile',
