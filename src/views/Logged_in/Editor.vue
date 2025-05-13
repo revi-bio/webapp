@@ -47,6 +47,11 @@ const backgroundStyle = ref(``);
 const newPageName = ref('');
 const newPageIcon = ref('');
 const globalGenericSettings = ref<Record<string, any>>({});
+const editSelectPage = ref({
+  id: '',
+  name: '',
+  icon: '',
+});
 
 // Initialize pages with sample widgets
 const pages = ref<Page[]>([
@@ -137,6 +142,7 @@ function toggleSelection(id: string) {
   selectedWidgetId.value = selectedWidgetId.value === id ? null : id;
   widgetToolboxOpened.value = false;
   bioSettingsOpened.value = false;
+  pagesSidebarOpened.value = false;
 
   console.log(selectedWidget.value)
 }
@@ -343,6 +349,44 @@ function addWidget(type: WidgetType) {
 
 function addPage() {
   pages.value.push({ id: uuidv4(), name: newPageName.value, icon: newPageIcon.value, widgets: [] });
+  newPageName.value = '';
+  newPageIcon.value = '';
+}
+
+function deletePage(pageId: string) {
+  pages.value = pages.value.filter((page) => page.id !== pageId);
+}
+
+function movePageUp(pageId: string) {
+  const index = pages.value.findIndex((page) => page.id === pageId);
+  const temp = pages.value[index - 1];
+  pages.value[index - 1] = pages.value[index];
+  pages.value[index] = temp;
+}
+
+function movePageDown(pageId: string) {
+  const index = pages.value.findIndex((page) => page.id === pageId);
+  const temp = pages.value[index + 1];
+  pages.value[index + 1] = pages.value[index];
+  pages.value[index] = temp;
+}
+
+function editPage(pageId: string) {
+  const page = pages.value.find((page) => page.id === pageId);
+  if (page) {
+    page.name = newPageName.value;
+    page.icon = newPageIcon.value;
+  }
+
+  page.name = editSelectPage.value.name;
+  page.icon = editSelectPage.value.icon;
+
+  editSelectPage.value = {
+    id: '',
+    name: '',
+    icon: '',
+  };
+
 }
 
 const showAlert = (status: number, error: string, message: string) => {
@@ -372,7 +416,7 @@ async function savePages() {
 }
 
 async function shareBio() {
-  await navigator.clipboard.writeText(apiUrl +"/"+ handle);
+  await navigator.clipboard.writeText(apiUrl + "/" + handle);
   showAlert(200, '', 'Bio url copied to clipboard!')
 }
 
@@ -549,25 +593,38 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
       <div class="sidebar">
         <span class="text-2xl">Pages</span>
         <span class="text-zinc-400">Note: When someone visits your bio page, they will see the first page.</span>
-        <span>New page</span>
-        <Input type="text" placeholder="Name" v-model="newPageName" />
-        <Input type="text" placeholder="Icon" v-model="newPageIcon" />
-        <Button @click="addPage" text="Add page" :disabled="pages.length == 3" icon="add" primary />
+
+        <div class="flex flex-col gap-2" v-if="editSelectPage.id === ''">
+          <span>New page</span>
+          <Input type="text" placeholder="Name" v-model="newPageName" />
+          <Input type="text" placeholder="Icon" v-model="newPageIcon" />
+          <Button @click="addPage" text="Add page" :disabled="pages.length == 3" icon="add" primary />
+        </div>
+
+        <div class="flex flex-col gap-2" v-if="editSelectPage.id !== ''">
+          <span>Edit page</span>
+          <Input type="text" placeholder="Name" v-model="editSelectPage.name" />
+          <Input type="text" placeholder="Icon" v-model="editSelectPage.icon" />
+          <Button @click="editPage(editSelectPage.id)" text="Confirm" icon="edit" primary />
+        </div>
 
         <span>Page list</span>
-        <div class="flex flex-col">
-          <div v-for="page in pages" :key="page.id" class="flex items-center w-full">
+        <div class="flex flex-col gap-2">
+          <div v-for="(page, index) in pages" :key="page.id"
+            class="flex items-center w-full bg-zinc-800 rounded-lg p-1 gap-2 cursor-pointer border-zinc-900/70 border-2" @click="() => {
+              editSelectPage.id = page.id;
+              editSelectPage.name = page.name;
+              editSelectPage.icon = page.icon;
+            }">
+            <Icon :type="page.icon" size="2xl" />
             <span class="w-full">{{ page.name }}</span>
-            <div class="grid grid-cols-2 grid-rows-2">
-              <div class="row-start-1 col-start-1">
-                <Icon type="keyboard_arrow_up" />
-              </div>
-              <div class="row-start-2 col-start-1">
-                <Icon type="keyboard_arrow_down" />
-              </div>
-              <div class="row-start-1 col-start-2 row-span-2 flex items-center">
-                <Icon type="delete" class="" />
-              </div>
+            <div class="grid grid-cols-2 grid-rows-2 gap-1 min-w-[66px]">
+              <Button class="row-start-1 col-start-1" icon="keyboard_arrow_up" :small="true" :disabled="index === 0"
+                @click="movePageUp(page.id)" />
+              <Button class="row-start-2 col-start-1" icon="keyboard_arrow_down" :small="true"
+                :disabled="index === pages.length - 1" @click="movePageDown(page.id)" />
+              <Button class="row-start-1 col-start-2 row-span-2" :primary="true" icon="delete" :small="true"
+                @click="deletePage(page.id)" :disabled="pages.length === 1" />
             </div>
           </div>
         </div>
