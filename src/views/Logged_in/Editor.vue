@@ -481,7 +481,13 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
 
       <!-- Page navigation -->
       <div class="PageContainer">
-        <span @click="currentPageIndex = index" v-for="(page, index) in pages" :key="page.id" class="Page"
+        <span @click="() => {
+          currentPageIndex = index;
+          selectedWidgetId = null;
+          widgetToolboxOpened = false;
+          bioSettingsOpened = false;
+          pagesSidebarOpened = false;
+        }" v-for="(page, index) in pages" :key="page.id" class="Page"
           :selected="currentPageIndex == index">
           <Icon :type="page.icon" class="Page__Icon" />
           <span class="Page__Name">{{ page.name }}</span>
