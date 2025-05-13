@@ -219,7 +219,7 @@ function changeSearch(filtered: UserForAdmin[]) {
       :title="mailRecipient ? `Send Message to ${mailRecipient.displayName}` : 'Send Message'">
       <div class="flex flex-col gap-4 w-full">
         <Input v-model="mailTitle" placeholder="Title" type="text" />
-        <Textbox v-model="mailContent" placeholder="Content" />
+        <Input v-model="mailContent" placeholder="Content" type="textarea" class=""/>
         <div class="flex justify-end gap-2">
           <Button text="Cancel" @click="closeMailModal" />
           <Button primary text="Send" icon="send" @click="sendMail" />
