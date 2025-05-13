@@ -30,6 +30,7 @@ const emits = defineEmits([
   'wallpaperChange'
 ]);
 
+const apiUrl = import.meta.env.VITE_BASE_URL;
 const route = useRoute();
 const handle = route.params.handle as string;
 const currentPageIndex = ref(0);
@@ -344,50 +345,17 @@ function addPage() {
   pages.value.push({ id: uuidv4(), name: newPageName.value, icon: newPageIcon.value, widgets: [] });
 }
 
-// Page navigation
-function navigatePage(direction: 'prev' | 'next') {
-  if (selectedWidgetId.value != null)
-    selectedWidgetId.value = null;
-
-  if (direction === 'prev') {
-    if (currentPageIndex.value > 0) {
-      // Check if the current page has no widgets before navigating away
-      if (currentPage.value && currentPage.value.widgets.length === 0) {
-        // Remove the empty page
-        pages.value.splice(currentPageIndex.value, 1);
-        // Adjust the current page index
-        currentPageIndex.value--;
-      } else {
-        currentPageIndex.value--;
-      }
-    }
-  } else {
-    if (currentPageIndex.value >= pages.value.length - 1) {
-      // Create a new page if we're at the last page and there's less than 3 pages
-      if (pages.value.length < 3) {
-        pages.value.push({
-          id: uuidv4(),
-          name: `Page ${pages.value.length + 1}`,
-          icon: 'page',
-          widgets: [],
-        });
-      } else {
-        return;
-      }
-    }
-    currentPageIndex.value++;
-  }
-}
-
 const showAlert = (status: number, error: string, message: string) => {
   alertStatus.value = status;
   alertError.value = status === 200 ? '' : error;
   alertMessage.value = message;
   alertActive.value = true;
 };
+
 const onAlertHide = () => {
   alertActive.value = false;
 };
+
 async function savePages() {
   console.log(pages.value);
   try {
@@ -401,6 +369,11 @@ async function savePages() {
       error.response?.data?.message || "Failed to save bio pages"
     );
   }
+}
+
+async function shareBio() {
+  await navigator.clipboard.writeText(apiUrl +"/"+ handle);
+  showAlert(200, '', 'Bio url copied to clipboard!')
 }
 
 function handleUploadFile(path: string) {
@@ -545,7 +518,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
             }" />
           <Slider :max="100" :min="0" v-model="(selectedWidget.specificSettings as any)[setting.name]"
             v-else-if="setting.type === 'number'" />
-          <Textbox v-model="(selectedWidget.specificSettings as any)[setting.name]"
+          <Input v-model="(selectedWidget.specificSettings as any)[setting.name]" type="textarea" class="h-[200px]"
             v-else-if="setting.type === 'text'" />
         </span>
 
@@ -627,7 +600,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
     </div>
 
     <div class="top-0 right-0 m-6 absolute flex gap-2">
-      <Button @click="savePages" text="Share" icon="share" />
+      <Button @click="shareBio" text="Share" icon="share" />
       <Button @click="savePages" text="Save" icon="save" primary />
     </div>
   </div>
