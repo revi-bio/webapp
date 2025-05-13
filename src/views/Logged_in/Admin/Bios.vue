@@ -62,12 +62,13 @@ async function handleBioDeleted(bio: Bio) {
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col justify-start content-start items-start gap-5 overflow-y-auto">
+  <div class="w-full h-full flex flex-col justify-start content-start items-start gap-5 overflow-y-auto pb-20">
     <div class="flex flex-row justify-between content-center items-center w-full rounded-[16px] p-4 bg-zinc-700/50">
       <Searchbar v-model="search" :basearray="biolists" @filtered="changeSearch"></Searchbar>
     </div>
 
-    <div class="w-full" v-for="item in filteredData" :key="item.handle">
+    <div class="w-full flex flex-col gap-5">
+      <div class="w-full" v-for="item in filteredData" :key="item.handle">
         <BioListItem
           :avatar="item.handle"
           :name="item.name"
@@ -80,6 +81,7 @@ async function handleBioDeleted(bio: Bio) {
           @bioDeleted="handleBioDeleted(item)"
         ></BioListItem>
       </div>
+    </div>
   </div>
     <Alert
     :status="alertStatus"
