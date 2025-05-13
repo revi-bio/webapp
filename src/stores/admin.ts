@@ -54,6 +54,17 @@ export const useAdminStore =  defineStore('admin', ()=>{
     }
   }
 
+  async function deleteBio(bioId: string) {
+    try{
+      const res = await ApiWrapper.delete<Bio>(`admin/bios/${bioId}`,null);
+      await fetchAllBios();
+      return res.data;
+    }catch(error: any){
+      console.error("Failed to delete bio", error)
+      return null;
+    }
+  }
+
   async function fetchAllBios() {
     try{
       const res = await ApiWrapper.get<Bio[]>('admin/bios', {});
@@ -99,6 +110,7 @@ export const useAdminStore =  defineStore('admin', ()=>{
     fetchAllUsers,
     deleteUser,
     getUserBios,
+    deleteBio,
     fetchAllBios,
     sendMessageToUser,
     sendMessageToAllUser,
