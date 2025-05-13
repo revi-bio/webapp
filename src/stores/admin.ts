@@ -57,7 +57,6 @@ export const useAdminStore =  defineStore('admin', ()=>{
   async function deleteBio(bioId: string) {
     try{
       const res = await ApiWrapper.delete<Bio>(`admin/bios/${bioId}`,null);
-      // Update the bios array after deleting a bio
       await fetchAllBios();
       return res.data;
     }catch(error: any){
@@ -77,12 +76,21 @@ export const useAdminStore =  defineStore('admin', ()=>{
     }
   }
 
-  async function sendMassageToUser(userId: string, title: string, text: string) {
+  async function sendMessageToUser(userId: string, title: string, text: string) {
     try{
       const res = await ApiWrapper.post<InboxMessage>(`admin/users/${userId}/messages`,{userId, title, text})
       return res.data
     }catch(error: any){
       console.error('Error while sending message:', error)
+    }
+  }
+
+  async function sendMessageToAllUser(title: string, text: string) {
+    try{
+      const res = await ApiWrapper.post<InboxMessage>('admin/messages/broadcast',{title, text})
+      return res.data
+    }catch(error: any){
+      console.error('Error while sending messages:', error)
     }
   }
 
@@ -104,7 +112,8 @@ export const useAdminStore =  defineStore('admin', ()=>{
     getUserBios,
     deleteBio,
     fetchAllBios,
-    sendMassageToUser,
+    sendMessageToUser,
+    sendMessageToAllUser,
     verifyUser
   }
 })

@@ -117,7 +117,7 @@ const closeMailModal = () => {
 
 const sendMail = async () => {
   try {
-    await adminStore.sendMassageToUser(
+    await adminStore.sendMessageToUser(
       mailRecipient.value._id,
       mailTitle.value,
       mailContent.value
@@ -133,8 +133,6 @@ const sendMail = async () => {
 function changeSearch(filtered: UserForAdmin[]) {
   filteredData.value = filtered;
 }
-
-// No longer needed with NewModal
 
 </script>
 

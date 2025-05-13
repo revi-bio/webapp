@@ -11,11 +11,17 @@ const route = useRoute();
 const settingsStore = useSettingsStore();
 const isSaving = ref(false);
 
-onMounted(() => {
-  if (route.path === '/baseDash/settings') {
-    router.push('/baseDash/settings/profile');
-  }
+const activeTabIndex = computed(() => {
+  const path = route.path;
 
+  if (path.includes('/baseDash/settings/profile')) return 0;
+  if (path.includes('/baseDash/settings/account')) return 1;
+  if (path.includes('/baseDash/settings/preferences')) return 2;
+
+  return 0;
+});
+
+onMounted(() => {
   settingsStore.loadSettings();
 });
 
@@ -40,29 +46,39 @@ const saveChanges = async () => {
 <template>
   <div class="w-full h-full flex flex-col justify-start content-start items-start text-3xl py-20 px-6 gap-5">
     <span class="flex flex-row justify-center content-start items-center gap-5">
-      <TabControl :items="[
-        {
-          buttonText: 'Profile',
-          buttonSize: 'small',
-          tabItem: true,
-          event: () => router.push('/baseDash/settings/profile'),
-        },
-        {
-          buttonText: 'Account',
-          buttonSize: 'small',
-          tabItem: true,
-          event: () => router.push('/baseDash/settings/account'),
-        },
-        {
-          buttonText: 'Preferences',
-          buttonSize: 'small',
-          tabItem: true,
-          event: () => router.push('/baseDash/settings/preferences'),
-        }
-      ]" />
+      <TabControl
+        :items="[
+          {
+            buttonText: 'Profile',
+            buttonSize: 'small',
+            tabItem: true,
+            event: () => router.push('/baseDash/settings/profile'),
+          },
+          {
+            buttonText: 'Account',
+            buttonSize: 'small',
+            tabItem: true,
+            event: () => router.push('/baseDash/settings/account'),
+          },
+          {
+            buttonText: 'Preferences',
+            buttonSize: 'small',
+            tabItem: true,
+            event: () => router.push('/baseDash/settings/preferences'),
+          }
+        ]"
+        :activeTabIndex="activeTabIndex"
+      />
 
-      <Button text="Save changes" size="small" rank="primary" icon-position="right" icon-type="edit"
-        :disabled="!hasChanges || isSaving" @click="saveChanges"></Button>
+      <Button
+        text="Save changes"
+        size="small"
+        rank="primary"
+        icon-position="right"
+        icon-type="edit"
+        :disabled="!hasChanges || isSaving"
+        @click="saveChanges"
+      />
     </span>
 
     <div class="w-full h-full flex justify-start content-start items-start">

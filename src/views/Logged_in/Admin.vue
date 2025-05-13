@@ -6,22 +6,21 @@ import TabControl from '@/components/global/TabControl.vue';
 const router = useRouter();
 const route = useRoute();
 
-onMounted(() => {
-  if (route.path === '/baseDash/admin') {
-    router.push('/baseDash/admin/adminOverview');
-  }
-})
+const activeTabIndex = computed(() => {
+  const path = route.path;
+
+  if (path.includes('/baseDash/admin/adminUsers')) return 0;
+  if (path.includes('/baseDash/admin/adminBios')) return 1;
+  if (path.includes('/baseDash/admin/adminMail')) return 2;
+
+  return 0;
+});
+
 </script>
 
 <template>
   <div class="flex flex-col justify-start content-start items-start w-full h-full gap-5 pt-20 pb-6 px-6">
     <TabControl :items="[
-      {
-        buttonText: 'Admin overview',
-        buttonSize: 'small',
-        tabItem: true,
-        event: () => router.push('/baseDash/admin/adminOverview'),
-      },
       {
         buttonText: 'Users',
         buttonSize: 'small',
@@ -40,7 +39,9 @@ onMounted(() => {
         tabItem: true,
         event: () => router.push('/baseDash/admin/adminMail'),
       },
-    ]"></TabControl>
+    ]" :activeTabIndex="activeTabIndex"
+    />
+
     <div class="w-full h-full">
       <RouterView></RouterView>
     </div>

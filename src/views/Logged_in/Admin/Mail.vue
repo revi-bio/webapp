@@ -71,8 +71,6 @@ const toggleUserSelection = (user: UserForAdmin) => {
 };
 
 const selectAllUsers = (checked: boolean) => {
-  // When sending to all users, we don't need to track individual selections
-  // Always clear the selection when toggling this option
   selectedUsers.value = [];
 };
 
@@ -99,18 +97,26 @@ const sendMail = async () => {
   }
 
   try {
-    const recipients = sendToAllUsers.value ? usersList.value : selectedUsers.value;
-
-    for (const user of recipients) {
-      await adminStore.sendMassageToUser(
-        user._id,
+    if (sendToAllUsers.value) {
+      await adminStore.sendMessageToAllUser(
         mailTitle.value,
         mailContent.value
       );
-    }
 
-    resetMailForm();
-    showAlert(200, `Mail sent successfully to ${recipients.length} users!`);
+      resetMailForm();
+      showAlert(200, `Mail sent successfully to all users!`);
+    } else {
+      for (const user of selectedUsers.value) {
+        await adminStore.sendMessageToUser(
+          user._id,
+          mailTitle.value,
+          mailContent.value
+        );
+      }
+
+      resetMailForm();
+      showAlert(200, `Mail sent successfully to user(s)!`);
+    }
   } catch (error: any) {
     console.error('Error sending mail:', error);
     showAlert(500, 'Failed to send mail', error.message || 'Unknown error occurred');
