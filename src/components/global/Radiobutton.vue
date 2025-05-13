@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 
 const props = defineProps<{
   text: string;
@@ -7,15 +6,12 @@ const props = defineProps<{
   disabled?: boolean;
   icon?: string;
   direction: "col" | "row";
-  selected?: string | number; 
+  selected?: string | number;
 }>();
-
 
 const emit = defineEmits(['change', 'selected']);
 
-
 const handleChange = (value: string | number) => {
-
   emit('change', value);
   emit('selected', value);
   console.log('Radio selection changed:', value);
@@ -27,25 +23,26 @@ const isSelected = (value: string | number) => {
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col justify-center content-start items-start gap-2">
     <h3 class="text-base">{{ text }}</h3>
-    <div :class="direction === 'col' ? 'column' : 'row'">
+    <div :class="direction === 'col' ? 'column' : 'row gap-6'">
       <div class="flex flex-row" v-for="item in options" :key="item.key">
-        <div class="flex items-center flex-row hover:bg-zinc-700/50 rounded-md p-1">
-          <input 
-            class="h-4 w-4 m-1 order-1 text-rose-600 ring-rose-500 focus:ring-rose-500 focus:ring-2"
-            :id="item.key+'_'+item.value" 
-            type="radio" 
-            :name="text" 
-            @change="handleChange(item.value)" 
+        <div class="radio-button inline-block relative cursor-pointer py-1">
+          <input
+            class="radio-button__input absolute opacity-0 w-0 h-0"
+            :id="item.key+'_'+item.value"
+            type="radio"
+            :name="text"
+            @change="handleChange(item.value)"
             :value="item.value"
             :checked="isSelected(item.value)"
             :disabled="disabled"
           />
-          <label 
-            class="order-2 py-1 px-1 text-zinc-200"
+          <label
+            class="radio-button__label inline-block pl-7 mb-2 relative cursor-pointer transition-all duration-300 ease-in-out"
             :for="item.key+'_'+item.value"
           >
+            <span class="radio-button__custom absolute top-1/2 left-0 -translate-y-1/2 w-5 h-5 border-2 border-zinc-500 rounded-full transition-all duration-300 ease-in-out"></span>
             {{ item.key }}
           </label>
         </div>
@@ -60,5 +57,17 @@ const isSelected = (value: string | number) => {
 }
 .column {
   @apply flex flex-col
+}
+
+.radio-button__input:checked + .radio-button__label .radio-button__custom {
+  @apply border-[5px] border-rose-500;
+}
+
+.radio-button__input:checked + .radio-button__label {
+  @apply text-rose-300;
+}
+
+.radio-button__label:hover .radio-button__custom {
+  @apply scale-110 border-rose-500/90;
 }
 </style>
