@@ -9,6 +9,7 @@ import { useBioStore } from '@/stores/bio';
 import NewModal from '@/components/global/NewModal.vue';
 import Input from '@/components/global/Input.vue';
 import Alert from '@/components/global/Alert.vue';
+import LoadingCircle from '@/components/global/LoadingCircle.vue';
 
 const bioStore = useBioStore();
 const search = ref('');
@@ -19,6 +20,7 @@ const alertStatus = ref<number>(0);
 const alertError = ref<string>('');
 const alertMessage = ref<string>('');
 const alertActive = ref<boolean>(false);
+const isLoading = ref<boolean>(true);
 
 
 const pendingBioHandle = ref<string | null>(null);
@@ -107,6 +109,7 @@ watch(() => bioStore.bios, (newBios) => {
 
 onMounted(async () => {
   try {
+    isLoading.value = true;
     await bioStore.fetchBios();
     biolists.value = [...bioStore.bios];
     filteredData.value = [...biolists.value];
@@ -116,6 +119,8 @@ onMounted(async () => {
       error.response?.data?.error || "Error",
       error.response?.data?.message || "Failed to fetch bios"
     );
+  }finally{
+    isLoading.value = false;
   }
 });
 </script>
@@ -147,6 +152,9 @@ onMounted(async () => {
           :updatedAt="item.updatedAt"
           @bioDeleted="handleBioDeleted"
         ></BioListItem>
+      </div>
+      <div v-if="isLoading" class="w-full flex flex-col justify-center content-center items-center py-8">
+        <LoadingCircle />
       </div>
     </div>
   </div>

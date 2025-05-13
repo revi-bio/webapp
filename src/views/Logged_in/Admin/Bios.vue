@@ -5,6 +5,8 @@ import { useAdminStore } from '@/stores/admin';
 import type { Bio } from '@/types/Bio';
 import Searchbar from '@/components/global/Searchbar.vue';
 import Alert from '@/components/global/Alert.vue';
+import LoadingCircle from '@/components/global/LoadingCircle.vue';
+import { tr } from 'motion/react-client';
 
 const adminStore = useAdminStore();
 const biolists = ref<Bio[]>([]);
@@ -14,6 +16,7 @@ const alertStatus = ref<number>(0);
 const alertError = ref<string>('');
 const alertMessage = ref<string>('');
 const alertActive = ref<boolean>(false);
+const isLoading = ref<boolean>(true);
 
 const showAlert = (status: number, error: string, message: string) => {
   alertStatus.value = status;
@@ -24,6 +27,7 @@ const showAlert = (status: number, error: string, message: string) => {
 
 onMounted(async()=>{
   try {
+    isLoading.value = true;
     await adminStore.fetchAllBios();
     biolists.value = [...adminStore.bios];
     filteredData.value = [...biolists.value];
@@ -33,6 +37,8 @@ onMounted(async()=>{
       error.response?.data?.error || "Error",
       error.response?.data?.message || "Failed to fetch bios"
     );
+  }finally{
+    isLoading.value = false;
   }
 })
 
@@ -77,6 +83,9 @@ async function handleBioDeleted(bio: Bio) {
             :updatedAt="item.updatedAt || null"
             @bioDeleted="handleBioDeleted(item)"
           ></BioListItem>
+        </div>
+        <div v-if="isLoading" class="w-full flex flex-col justify-center content-center items-center py-8">
+          <LoadingCircle />
         </div>
       </div>
     </div>

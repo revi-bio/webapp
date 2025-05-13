@@ -11,7 +11,7 @@ import NewModal from '@/components/global/NewModal.vue';
 import router from '@/router';
 import { DateTime } from '@/composables/date';
 import Searchbar from '@/components/global/Searchbar.vue';
-import Textbox from '@/components/global/Textbox.vue';
+import LoadingCircle from '@/components/global/LoadingCircle.vue';
 
 const adminStore = useAdminStore();
 const usersList = ref<UserForAdmin[]>([]);
@@ -33,10 +33,19 @@ const mailRecipient = ref<UserForAdmin | null>(null);
 const search = ref('');
 const filteredData = ref<UserForAdmin[]>([]);
 
+const isLoading = ref<boolean>(true);
+
 onMounted(async () => {
-  await adminStore.fetchAllUsers();
-  usersList.value = [...adminStore.users];
-  filteredData.value = [...usersList.value];
+  try{
+    isLoading.value = true;
+    await adminStore.fetchAllUsers();
+    usersList.value = [...adminStore.users];
+    filteredData.value = [...usersList.value];
+  }catch(error:any){
+    console.error("Error while fetching users:", error);
+  } finally {
+    isLoading.value = false;
+  }
 });
 
 watch(() => adminStore.users, (newUsers) => {
@@ -143,7 +152,7 @@ function changeSearch(filtered: UserForAdmin[]) {
     </div>
 
     <div class="w-full flex flex-col gap-5 pr-4 userList overflow-y-auto ">
-      <div v-for="user in filteredData" :key="user?._id" class="w-full flex flex-row justify-between content-center items-center p-4  bg-zinc-700/50 rounded-xl hover:bg-zinc-600/50 transition duration-200">
+      <div v-for="user in filteredData" :key="user?._id" :class="`w-full ${isLoading ? 'none' : 'flex'} flex-row justify-between content-center items-center p-4  bg-zinc-700/50 rounded-xl hover:bg-zinc-600/50 transition duration-200`">
         <div class="w-full flex flex-row justify-start content-center items-center gap-5">
           <Avatar class="w-16 h-16" :avatar-url="user?.avatar" />
           <div class="flex flex-col justify-center content-start items-start">
@@ -166,6 +175,10 @@ function changeSearch(filtered: UserForAdmin[]) {
           <Button primary small text="Delete" iconRight icon="delete"
             @click.prevent="adminStore.deleteUser(user._id)"></Button>
         </div>
+
+      </div>
+      <div v-if="isLoading" class="w-full flex justify-center items-center py-8">
+        <LoadingCircle />
       </div>
     </div>
 
