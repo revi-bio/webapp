@@ -518,7 +518,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
             }" />
           <Slider :max="100" :min="0" v-model="(selectedWidget.specificSettings as any)[setting.name]"
             v-else-if="setting.type === 'number'" />
-          <Textbox v-model="(selectedWidget.specificSettings as any)[setting.name]"
+          <Input v-model="(selectedWidget.specificSettings as any)[setting.name]" type="textarea" class="h-[200px]"
             v-else-if="setting.type === 'text'" />
         </span>
 
