@@ -111,7 +111,7 @@ const closeMailModal = () => {
 
 const sendMail = async () => {
   try {
-    await adminStore.sendMassageToUser(
+    await adminStore.sendMessageToUser(
       mailRecipient.value._id,
       mailTitle.value,
       mailContent.value
