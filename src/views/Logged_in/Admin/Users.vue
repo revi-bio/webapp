@@ -128,8 +128,6 @@ function changeSearch(filtered: UserForAdmin[]) {
   filteredData.value = filtered;
 }
 
-// No longer needed with NewModal
-
 </script>
 
 <template>

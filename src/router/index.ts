@@ -98,13 +98,8 @@ const router = createRouter({
           name: 'Admin',
           meta: { public: false, requiresAdmin: true },
           component: ()=> import('../views/Logged_in/Admin.vue'),
+          redirect: '/baseDash/admin/adminUsers',
           children:[
-            {
-              path: 'adminOverview',
-              name: 'App overview',
-              meta: { public: false, requiresAdmin: true },
-              component: ()=> import('../views/Logged_in/Admin/AdminOverview.vue'),
-            },
             {
               path: 'adminUsers',
               name: 'Users',
