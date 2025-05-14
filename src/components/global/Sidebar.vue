@@ -57,7 +57,9 @@ const toggleMenu = async () => {
     @click="toggleLogout = false"
   >
     <div class="flex flex-col justify-center content-center items-center gap-8">
-      <Logo type="revi" :animated="true"></Logo>
+      <RouterLink to="/baseDash/overview">
+        <Logo type="revi" :animated="true"></Logo>
+      </RouterLink>
       <span class="bg-zinc-800 rounded-full w-full h-[2px]"><!--Separator--></span>
       <RouterLink to="/baseDash/overview" class="navItem">
         <span>
