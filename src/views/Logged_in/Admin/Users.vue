@@ -152,29 +152,35 @@ function changeSearch(filtered: UserForAdmin[]) {
     </div>
 
     <div class="w-full flex flex-col gap-5 pr-4 userList overflow-y-auto ">
-      <div v-for="user in filteredData" :key="user?._id" :class="`w-full ${isLoading ? 'none' : 'flex'} flex-row justify-between content-center items-center p-4  bg-zinc-700/50 rounded-xl hover:bg-zinc-600/50 transition duration-200`">
+      <div v-for="user in filteredData" :key="user?._id" :class="`w-full grid grid-cols-1 md:grid-cols-1 lg:grid-cols-[1fr,1fr,auto] p-4 gap-4 bg-zinc-700/50 rounded-xl hover:bg-zinc-600/50 transition duration-200`">
+
         <div class="w-full flex flex-row justify-start content-center items-center gap-5">
           <Avatar class="w-16 h-16" :avatar-url="user?.avatar" />
           <div class="flex flex-col justify-center content-start items-start">
-            <h3 class="text-xl">{{ user?.displayName }}</h3>
+            <h3 class="text-sm lg:text-base">{{ user?.displayName }}</h3>
             <h3 class="text-sm text-zinc-400">{{ user?.role }}</h3>
           </div>
-          <h3 class="text-sm text-zinc-200">{{ user?.email }}</h3>
-          <h3 class="text-sm text-zinc-400">{{ DateTime.formatDate(user?.createdAt) }}</h3>
           <Icon :type="!needsEmailVerification(user) ? 'verified' : 'verified_off'"
-            :class="!needsEmailVerification(user) ? 'text-cyan-500': 'text-red-500'"></Icon>
+          :class="!needsEmailVerification(user) ? 'text-cyan-500': 'text-red-500'"></Icon>
         </div>
 
-        <div class="flex flex-row justify-center content-center items-center gap-2">
-          <Button v-if="needsEmailVerification(user)" primary small text="verify" iconRight
-            icon="verified" @click.prevent="verifyUser(user)" ></Button>
-          <Button primary small text="Bios" iconRight icon="recent_actors"
-            @click.prevent="openBiosModal(user)"></Button>
-          <Button primary small text="Mail" iconRight icon="mail"
-            @click.prevent="openMailModal(user)"></Button>
-          <Button primary small text="Delete" iconRight icon="delete"
-            @click.prevent="adminStore.deleteUser(user._id)"></Button>
+        <div class="flex flex-col justify-center content-start items-start gap-2">
+          <h3 class="text-sm text-zinc-200">{{ user?.email }}</h3>
+          <h3 class="text-sm text-zinc-400">{{ DateTime.formatDate(user?.createdAt) }}</h3>
         </div>
+
+          <!-- Actions row -->
+        <div class="flex flex-row justify-end content-center items-center gap-2">
+          <Button v-if="needsEmailVerification(user)" primary small text="verify" iconRight
+          icon="verified" @click.prevent="verifyUser(user)" ></Button>
+          <Button primary small text="Bios" iconRight icon="recent_actors"
+          @click.prevent="openBiosModal(user)"></Button>
+          <Button primary small text="Mail" iconRight icon="mail"
+          @click.prevent="openMailModal(user)"></Button>
+          <Button primary small text="Delete" iconRight icon="delete"
+          @click.prevent="adminStore.deleteUser(user._id)"></Button>
+        </div>
+
 
       </div>
       <div v-if="isLoading" class="w-full flex justify-center items-center py-8">
@@ -264,4 +270,3 @@ function changeSearch(filtered: UserForAdmin[]) {
   @apply bg-zinc-700 rounded-full
 }
 </style>
-
