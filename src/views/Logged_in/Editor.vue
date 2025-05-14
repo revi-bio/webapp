@@ -25,6 +25,7 @@ import Textbox from '@/components/global/Textbox.vue';
 import { default as Modal } from '@/components/global/NewModal.vue';
 import Icon from '@/components/global/Icon.vue';
 import PageSelector from '@/components/global/PageSelector.vue';
+import LoadingCircle from '@/components/global/LoadingCircle.vue';
 
 const emits = defineEmits([
   'avatarChange',
@@ -54,6 +55,8 @@ const editSelectPage = ref({
   icon: '',
 });
 
+const isLoadingBio = ref(false);
+
 // Initialize pages with sample widgets
 const pages = ref<Page[]>([
   {
@@ -72,6 +75,7 @@ async function updateBackgroundStyle() {
 
 onMounted(async () => {
   try {
+    isLoadingBio.value = true;
     const stored = await bioStore.getBioPages(handle);
     if (stored.length != 0) {
       pages.value = stored;
@@ -86,6 +90,8 @@ onMounted(async () => {
       error.response?.data?.error || "Error",
       error.response?.data?.message || "Failed to fetch bio pages"
     );
+  } finally {
+    isLoadingBio.value = false;
   }
 
   if (pages.value.length > 0 && pages.value[0].widgets.length > 0) {
@@ -642,7 +648,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
     </Teleport>
 
     <!-- Widgets display -->
-    <div id="widgets" class="flex flex-col gap-3 max-w-[600px] justify-center z-0 h-[80%] w-1/2">
+    <div id="widgets" v-if="!isLoadingBio" class="flex flex-col gap-3 max-w-[600px] justify-center z-0 h-[80%] w-1/2">
       <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
         <div class="flex gap-2 relative">
           <!-- Widget component -->
@@ -665,6 +671,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
         </div>
       </template>
     </div>
+    <LoadingCircle v-if="isLoadingBio" />
 
     <div class="top-0 right-0 m-6 absolute flex gap-2">
       <Button @click="shareBio" text="Share" icon="share" />
