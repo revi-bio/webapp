@@ -20,10 +20,10 @@ const emit = defineEmits(['close']);
         class="w-full h-full z-[100] bg-zinc-950/50 flex flex-col justify-center content-center items-center absolute outer">
         <div
           v-on:click.stop
-          class="w-full max-w-[500px] h-auto min-h-[150px] bg-zinc-800 flex flex-col justify-center content-center items-center relative rounded-xl gap-2 p-4 modal-container inner">
-          <div class="grid grid-cols-3 w-full justify-between">
+          class="w-full max-w-[20rem] sm:max-w-[28rem] md:max-w-[32rem] h-auto min-h-[150px] bg-zinc-800 flex flex-col justify-center content-center items-center relative rounded-xl gap-2 p-4 modal-container inner">
+          <div class="grid grid-cols-[1fr,auto,1fr] sm:grid-cols-3 w-full justify-between">
             <div></div>
-            <span class="text-xl place-self-center">{{ title }}</span>
+            <span class="grid text-base md:text-xl place-self-center">{{ title }}</span>
             <Icon type="close" class="text-zinc-400 cursor-pointer place-self-end self-start" @click="$emit('close')"></Icon>
           </div>
           <slot></slot>

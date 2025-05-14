@@ -66,8 +66,8 @@ function handleModalClose() {
       <div class="flex items-center gap-4">
         <BioPfp class="w-16 h-16 flex-shrink-0" :bioHandle="avatar" />
         <div class="flex flex-col">
-          <h3 class="text-xl lg:text-2xl text-zinc-100 font-medium transition-all duration-200 hover:text-white">{{ name }}</h3>
-          <h3 class="text-sm lg:text-base text-zinc-500">@{{ handle }}</h3>
+          <h3 class="text-2xl text-zinc-100 font-medium transition-all duration-200 hover:text-white">{{ name }}</h3>
+          <h3 class="text-base text-zinc-500">@{{ handle }}</h3>
         </div>
       </div>
 
@@ -79,15 +79,15 @@ function handleModalClose() {
       <div class="flex gap-4 mt-3 sm:mt-0">
         <div class="flex items-center gap-1 text-zinc-500 transition-all duration-200 hover:text-zinc-400">
           <Icon type="visibility" size="lg" />
-          <span class="text-sm lg:text-base">{{ views }}</span>
+          <span class="text-base">{{ views }}</span>
         </div>
         <div class="flex items-center gap-1 text-zinc-500 transition-all duration-200 hover:text-zinc-400">
           <Icon type="widgets" size="lg" />
-          <span class="text-sm lg:text-base">{{ widgetsCount }}</span>
+          <span class="text-base">{{ widgetsCount }}</span>
         </div>
         <div class="flex items-center gap-1 text-zinc-500 transition-all duration-200 hover:text-zinc-400">
           <Icon type="wysiwyg" size="lg" />
-          <span class="text-sm lg:text-base">{{ pagesCount }}</span>
+          <span class="text-base">{{ pagesCount }}</span>
         </div>
       </div>
       <!-- Dates section -->
