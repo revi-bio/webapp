@@ -5,10 +5,10 @@ import Avatar from './Avatar.vue';
 import { RouterLink } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import router from '@/router';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, nextTick } from 'vue';
 import type { InboxMessage } from '@/types/InboxMessage';
 import { useInboxStore } from '@/stores/inboxMessages';
-
+import { animate } from 'motion';
 
 const inboxStore = useInboxStore();
 const userStore = useUserStore();
@@ -19,6 +19,7 @@ const msgs = ref<InboxMessage[]>([]);
 onMounted(async () => {
   await inboxStore.fetchInbox();
   msgs.value = inboxStore.getInboxMessages();
+  mobileMenuOpen.value = false;
 });
 
 const logoutUser = () => {
@@ -33,15 +34,37 @@ const toggleLogoutWindow = (event: Event) => {
 };
 
 const countOfUnreaded = computed(() => msgs.value.filter((msg) => !msg.isRead).length);
+
+const mobileMenuOpen = ref<boolean>(false);
+
+const toggleMenu = async () => {
+  const mobileMenu = document.querySelector('.mobileMenu');
+
+  if (mobileMenuOpen.value) {
+    // Bezárás animáció
+    if (mobileMenu) {
+      await animate(mobileMenu, { y: [0, 20], opacity: [1, 0] }, { duration: 0.2 });
+    }
+    mobileMenuOpen.value = false;
+  } else {
+
+    mobileMenuOpen.value = true;
+    await nextTick();
+    const refreshedMobileMenu = document.querySelector('.mobileMenu');
+    if (refreshedMobileMenu) {
+      animate(refreshedMobileMenu, { y: [20, 0], opacity: [0, 1] }, { duration: 0.2 });
+    }
+  }
+}
 </script>
 
 <template>
   <div
-    class="flex flex-col justify-between content-center items-center h-full px-2 text-zinc-400"
+    class="hidden md:flex flex-col justify-between content-center items-center h-full px-2 text-zinc-400"
     @click="toggleLogout = false"
   >
     <div class="flex flex-col justify-center content-center items-center gap-8">
-      <Logo type="revi"></Logo>
+      <Logo type="revi" :animated="true"></Logo>
       <span class="bg-zinc-800 rounded-full w-full h-[2px]"><!--Separator--></span>
       <RouterLink to="/baseDash/overview" class="navItem">
         <span>
@@ -95,6 +118,56 @@ const countOfUnreaded = computed(() => msgs.value.filter((msg) => !msg.isRead).l
       </div>
     </div>
   </div>
+
+  <!--Bottom bar-->
+  <div class="w-full md:hidden flex flex-col justify-center content-center items-center">
+
+    <div class="w-full p-2 md:hidden flex flex-row justify-evenly content-center items-center bg-zinc-900">
+      <span @click.prevent="toggleMenu" class="py-1 px-3 flex justify-center content-center items-center rounded-md bg-zinc-950 hover:bg-zinc-950/80 active:bg-zinc-800 transition-colors duration-200">
+        <Icon :type="mobileMenuOpen ? 'close': 'menu'"></Icon>
+      </span>
+      <Logo type="revi" :animated="true"></Logo>
+      <Avatar
+        @click.stop="toggleLogoutWindow"
+        class="w-[48px] h-[48px] cursor-pointer"
+        :avatar-url="userStore.getUserData().avatar"
+      ></Avatar>
+    </div>
+
+    <div v-if="mobileMenuOpen" class="mobileMenu w-full p-4 md:hidden flex flex-row flex-wrap justify-evenly content-center items-center bg-zinc-950 gap-2 text-zinc-400 z-[100]">
+      <div class="w-full flex flex-row justify-evenly content-center items-center">
+        <RouterLink to="/baseDash/overview" class="navItem" @click="toggleMenu">
+          <span>
+            <Icon size="3xl" type="house"></Icon>
+          </span>
+        </RouterLink>
+        <RouterLink to="/baseDash/bios" class="navItem" @click="toggleMenu">
+          <span>
+            <Icon size="3xl" type="person"></Icon>
+          </span>
+        </RouterLink>
+        <RouterLink v-if="userStore.isAdmin()" to="/baseDash/admin" class="navItem" @click="toggleMenu">
+          <span>
+            <Icon size="3xl" type="shield_person"></Icon>
+          </span>
+        </RouterLink>
+      </div>
+
+      <RouterLink to="/baseDash/settings" class="navItem" @click="toggleMenu">
+        <span>
+          <Icon size="3xl" type="settings"></Icon>
+        </span>
+      </RouterLink>
+      <RouterLink to="/baseDash/inbox" class="navItem" @click="toggleMenu">
+        <span>
+          <Icon v-if="countOfUnreaded <= 0" size="3xl" type="mail"></Icon>
+          <Icon v-if="countOfUnreaded > 0" size="3xl" type="mark_email_unread"></Icon>
+        </span>
+      </RouterLink>
+    </div>
+
+  </div>
+
 </template>
 
 <style lang="scss" scoped>
