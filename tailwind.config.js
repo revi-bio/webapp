@@ -2,6 +2,15 @@
 export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
+    screens: {
+      xs: '370px',
+      sm: '480px',
+      md: '768px',
+      lg: '1050px',
+
+      xl: '1440px',
+    },
+
     extend: {
       scrollSnapType:{
         y: 'y-mandatory'

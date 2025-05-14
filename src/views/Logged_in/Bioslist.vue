@@ -127,7 +127,7 @@ onMounted(async () => {
 
 <template>
   <div class="w-full h-full flex flex-col space-y-6 p-6 pt-20">
-    <div class="flex flex-row justify-between content-center items-center w-full rounded-[16px] p-4 bg-zinc-700/50">
+    <div class="flex flex-row justify-between content-center items-center w-full rounded-[16px] p-4 bg-zinc-700/50 gap-5">
       <Searchbar v-model="search" :basearray="biolists" @filtered="changeSearch"></Searchbar>
       <Button
         primary

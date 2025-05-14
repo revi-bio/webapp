@@ -45,7 +45,7 @@ const saveChanges = async () => {
 
 <template>
   <div class="w-full h-full flex flex-col justify-start content-start items-start text-3xl py-20 px-6 gap-5">
-    <span class="flex flex-row justify-center content-start items-center gap-5">
+    <span class="flex flex-row justify-start content-center items-center gap-5 flex-wrap">
       <TabControl
         :items="[
           {
