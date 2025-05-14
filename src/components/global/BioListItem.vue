@@ -59,7 +59,7 @@ function handleModalClose() {
 </script>
 
 <template>
-  <div class="w-full rounded-2xl p-4 bg-zinc-700/50 hover:bg-zinc-600/50 transition-all duration-200 grid grid-cols-1 sm:grid-cols-[1fr,auto] lg:grid-cols-[1fr,2fr,auto] gap-4 items-center">
+  <div class="w-full rounded-2xl p-4 bg-zinc-700/50 hover:bg-zinc-600/50 transition-all duration-200 grid grid-cols-1 sm:grid-cols-[1fr,auto] lg:grid-cols-[1fr,2fr,2fr] gap-4 items-center">
 
     <!-- Avatar and basic info row -->
     <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
@@ -105,7 +105,7 @@ function handleModalClose() {
 
 
     <!-- Actions section -->
-    <div class="flex flex-row justify-end sm:justify-start content-center items-center gap-3 self-center">
+    <div class="flex flex-row justify-end sm:justify-start content-center items-center gap-3 self-center lg:ml-auto">
       <Button @click="deleteBio" text="Delete" icon="delete" primary />
       <Button @click="() => openEditor(handle)" text="Edit" icon="edit" primary />
     </div>
