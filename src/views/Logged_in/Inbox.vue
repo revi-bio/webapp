@@ -7,30 +7,37 @@ import Logo from '@/components/global/Logo.vue';
 import { useInboxStore } from '@/stores/inboxMessages';
 import type { InboxMessage } from '@/types/InboxMessage';
 import LoadingCircle from '@/components/global/LoadingCircle.vue';
+import Skeleton from '@/components/global/Skeleton.vue';
 
 const inboxStore = useInboxStore();
 const msgs = ref<InboxMessage[]>([]);
 const selectedMsg = ref<InboxMessage | undefined>();
 const isLoading = ref<boolean>(true);
+const isLoadingMsg = ref<boolean>(false);
 
 onMounted(async () => {
-  try{
-    isLoading.value=true;
+  try {
+    isLoading.value = true;
     await inboxStore.fetchInbox();
     msgs.value = inboxStore.getInboxMessages();
-  }catch(error:any){
+  } catch (error: any) {
     console.error("Error while fetching messages:", error);
-  }finally{
+  } finally {
     isLoading.value = false;
   }
-
 });
 
 async function selectMsg(index: number) {
-  await inboxStore.markAsRead(msgs.value[index]._id);
-  await inboxStore.fetchInbox();
-  msgs.value = [...inboxStore.getInboxMessages()];
-  selectedMsg.value = msgs.value[index];
+  try {
+    isLoadingMsg.value = true;
+    msgs.value = inboxStore.getInboxMessages();
+    selectedMsg.value = msgs.value[index];
+    await inboxStore.markAsRead(msgs.value[index]._id);
+  } catch (error: any) {
+    console.error("Error while selecting message:", error);
+  } finally {
+    isLoadingMsg.value = false;
+  }
 }
 
 async function deleteMsg() {
@@ -49,15 +56,36 @@ const countOfUnreaded = computed(() => msgs.value.filter((msg) => !msg.isRead).l
   <div class="flex h-full justify-center content-center items-center flex-row gap-4 p-6">
     <div class="w-full h-full flex-col flex items-center justify-center">
       <div v-if="selectedMsg" class="space-y-6 w-full max-w-[600px]">
-        <div class="w-full bg-zinc-700 rounded-2xl p-6">{{ selectedMsg.title }}</div>
-        <div class="w-full bg-zinc-700 rounded-2xl p-6 text-justify">{{ selectedMsg.text }}</div>
-        <div class="w-full bg-zinc-700 rounded-2xl p-6">From: Us</div>
-        <div class="text-rose-500 flex justify-between items-center">
-          <div class="bg-zinc-900 w-[70px] h-[40px] flex items-center rounded-2xl justify-center">
-            <span><Logo type="revibio" width="60"></Logo></span>
+        <div class="space-y-6" v-if="!isLoadingMsg">
+
+          <div class="w-full bg-zinc-700 rounded-2xl p-6">{{ selectedMsg.title }}</div>
+          <div class="w-full bg-zinc-700 rounded-2xl p-6 text-justify">{{ selectedMsg.text }}</div>
+          <div class="w-full bg-zinc-700 rounded-2xl p-6">From: Us</div>
+          <div class="text-rose-500 flex justify-between items-center">
+            <div class="bg-zinc-900 w-[70px] h-[40px] flex items-center rounded-2xl justify-center">
+              <span>
+                <Logo type="revibio" width="60"></Logo>
+              </span>
+            </div>
+            <div class="cursor-pointer" @click="deleteMsg()">
+              <Icon size="lg" type="delete"></Icon> Delete this mail
+            </div>
           </div>
-          <div class="cursor-pointer" @click="deleteMsg()">
-            <Icon size="lg" type="delete"></Icon> Delete this mail
+        </div>
+        <div class="space-y-6" v-else>
+
+          <div class="w-full bg-zinc-700 rounded-2xl p-6"><Skeleton :height="2"/></div>
+          <div class="w-full bg-zinc-700 rounded-2xl p-6"><Skeleton :height="2"/></div>
+          <div class="w-full bg-zinc-700 rounded-2xl p-6"><Skeleton/></div>
+          <div class="text-rose-500 flex justify-between items-center">
+            <div class="bg-zinc-900 w-[70px] h-[40px] p-2 flex items-center rounded-xl justify-center">
+              <span>
+                <Logo type="revibio" width="60"></Logo>
+              </span>
+            </div>
+            <div class="cursor-pointer" @click="deleteMsg()">
+              <Icon size="lg" type="delete"></Icon> Delete this mail
+            </div>
           </div>
         </div>
       </div>

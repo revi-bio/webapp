@@ -1,9 +1,16 @@
 <script lang="ts" setup>
+import { defineProps } from 'vue';
+
+const props = withDefaults(defineProps<{
+  height?: number;
+}>(), {
+  height: 1,
+});
 
 </script>
 
 <template>
-  <div class="skeleton w-full h-full rounded-xl"></div>
+  <div class="skeleton w-full rounded-lg" :style="{ height: `${height}rem` }"></div>
 </template>
 
 <style scoped>
@@ -17,6 +24,7 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
