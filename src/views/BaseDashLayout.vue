@@ -40,7 +40,7 @@ onMounted(() => {
     </main>
     <!--Blob svg-->
     <svg
-      class="blob origin-center absolute bottom-[-400px] right-[-400px] w-3/4 z-0 blur-3xl"
+      class="blob origin-center absolute bottom-[-600px] right-[-400px] sm:bottom-[-400px] sm:right-[-400px] sm:w-1/3 md:w-1/4 lg:w-3/4 z-0 blur-[100px] md:blur-3xl"
       id="10015.io"
       viewBox="0 0 480 480"
       xmlns="http://www.w3.org/2000/svg"
