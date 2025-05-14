@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref, watchEffect, watch } from 'vue';
+import { onMounted, ref, watchEffect, watch, onUnmounted } from 'vue';
 import Searchbar from '@/components/global/Searchbar.vue';
 import BioListItem from '@/components/global/BioListItem.vue';
 import Button from '@/components/global/Button.vue';
@@ -22,8 +22,22 @@ const alertMessage = ref<string>('');
 const alertActive = ref<boolean>(false);
 const isLoading = ref<boolean>(true);
 
-
 const pendingBioHandle = ref<string | null>(null);
+
+const isSmallScreen = ref(false);
+
+const checkScreenSize = () => {
+  isSmallScreen.value = window.innerWidth < 640;
+};
+
+onMounted(() => {
+  checkScreenSize();
+  window.addEventListener('resize', checkScreenSize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkScreenSize);
+});
 
 const onAlertHide = () => {
   alertActive.value = false;
@@ -43,7 +57,6 @@ const showAlert = (status: number, error: string, message: string) => {
 
 const bioName = ref('');
 const bioHandle = ref('');
-
 
 const resetBioInputs = () => {
   bioName.value = '';
@@ -132,8 +145,9 @@ onMounted(async () => {
       <Button
         primary
         small
-        text="Create bio"
-        iconRight
+        :text="isSmallScreen ? '' : 'Create bio'"
+        :iconRight="!isSmallScreen"
+        :iconOnly="isSmallScreen"
         icon="add"
         @click="openCreateModal"
       ></Button>
