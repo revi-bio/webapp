@@ -153,7 +153,7 @@ onMounted(async () => {
       ></Button>
     </div>
 
-    <div class="w-full h-full baseDash overflow-y-auto flex-col space-y-6 pb-10 pr-4">
+    <div class="w-full h-full baseDash overflow-y-auto flex-col space-y-6 pb-20 sm:pb-10 pr-4">
       <div v-for="item in filteredData" :key="item.handle">
         <BioListItem
           :avatar="item.handle"

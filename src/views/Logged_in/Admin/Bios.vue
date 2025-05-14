@@ -68,7 +68,7 @@ async function handleBioDeleted(bio: Bio) {
       <Searchbar v-model="search" :basearray="biolists" @filtered="changeSearch"></Searchbar>
     </div>
 
-    <div class="w-full h-full biosList overflow-y-auto flex-col space-y-6 pb-20 pr-4">
+    <div class="w-full h-full biosList overflow-y-auto flex-col space-y-6 pb-40 sm:pb-20 pr-4">
       <div class="w-full flex flex-col gap-5">
         <div class="w-full" v-for="item in filteredData" :key="item.handle">
           <BioListItem

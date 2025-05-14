@@ -147,7 +147,7 @@ function changeSearch(filtered: UserForAdmin[]) {
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col justify-start content-center items-center gap-5 pb-20">
+  <div class="w-full h-full flex flex-col justify-start content-center items-center gap-5 pb-40 sm:pb-20">
     <div class="flex flex-row justify-between content-center items-center w-full rounded-[16px] p-4 bg-zinc-700/50">
       <Searchbar v-model="search" :basearray="usersList" @filtered="changeSearch"></Searchbar>
     </div>
@@ -171,7 +171,7 @@ function changeSearch(filtered: UserForAdmin[]) {
         </div>
 
           <!-- Actions row -->
-        <div class="flex flex-row justify-end content-center items-center gap-2">
+        <div class="flex flex-row justify-end content-center items-center gap-2 flex-wrap">
           <Button v-if="needsEmailVerification(user)" primary small text="verify" iconRight
           icon="verified" @click.prevent="verifyUser(user)" ></Button>
           <Button primary small text="Bios" iconRight icon="recent_actors"
