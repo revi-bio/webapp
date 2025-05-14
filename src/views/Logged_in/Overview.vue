@@ -3,12 +3,15 @@ import Button from '@/components/global/Button.vue';
 import Dropdown from '@/components/global/Dropdown.vue';
 import LinkIcon from '@/components/global/LinkIcon.vue';
 import * as echarts from 'echarts';
-import { computed, nextTick, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref, type Ref } from 'vue';
 import BioPfp from '@/components/global/BioPfp.vue';
 import { useBioStore } from '@/stores/bio';
 import type { Bio } from '@/types/Bio';
 import router from '@/router';
 import { DateTime } from '@/composables/date';
+import { ApiWrapper } from '@/composables/ApiWrapper';
+import Skeleton from '@/components/global/Skeleton.vue';
+import LoadingCircle from '@/components/global/LoadingCircle.vue';
 
 const bioStore = useBioStore();
 const biosList = ref<Bio[]>([]);
@@ -32,6 +35,13 @@ const lastUpdatedBios = computed(() => {
   }).slice(0, 3);
 });
 
+const info: Ref<{ views: number, linksClicked: number, avgSecondsOnSites: number } | null> = ref(null);
+const countries: Ref<Map<string, number> | null> = ref(null);
+const socials: Ref<Map<string, number> | null> = ref(null);
+const referralDistribution: Ref<Map<string, number> | null> = ref(null);
+const views: Ref<Array<number>> = ref([]);
+
+
 var colorPalette = ['#fafafa', '#f43f5e', '#717179'];
 
 const referralColors = ['#d946ef', '#3b82f6', '#f97316', '#facc15', '#10b981'];
@@ -43,7 +53,6 @@ const referralData = ref([
   { name: 'Other', value: 10, color: referralColors[4] },
 ]);
 const totalValue = computed(() => referralData.value.reduce((sum, item) => sum + item.value, 0));
-const hoveredItem = ref('');
 
 const linkData = ref([
   { name: 'Youtube', icon: 'youtube', value: 123 },
@@ -126,6 +135,11 @@ const visitorData = computed(() =>
 );
 
 onMounted(async () => {
+  info.value = (await ApiWrapper.get('statistics/info', {})).data;
+  countries.value = (await ApiWrapper.get('statistics/countries', {})).data;
+  socials.value = (await ApiWrapper.get('statistics/socials', {})).data;
+  referralDistribution.value = (await ApiWrapper.get('statistics/referral-distribution', {})).data;
+  views.value = (await ApiWrapper.get('statistics/views', {})).data;
   generateBarData(30);
 
   nextTick(() => {
@@ -169,7 +183,7 @@ onMounted(async () => {
             name: 'Direct',
             type: 'bar',
             barWidth: '60%',
-            data: barViewsData.value.map((item) => item.value),
+            data: views,
             color: colorPalette,
           },
         ],
@@ -211,6 +225,20 @@ window.addEventListener('resize', () => {
         <!--Most viewed-->
         <div class="dashboardCard w-full gap-4 h-full h-min-[340px]">
           <h3>Most viewed bio pages</h3>
+          <template v-if="topBios.length == 0">
+          <div v-for="i in 2" :key="i"
+            class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2 cursor-pointer"
+            >
+            <div class="flex flex-row justify-start content-center items-center gap-2">
+              <Skeleton class="min-w-16 min-h-16 rounded-full"></Skeleton>
+              <span class="flex flex-col justify-center content-center items-start min-w-16 gap-1">
+                <Skeleton />
+                <Skeleton :height="1.5"/>
+              </span>
+            </div>
+            <h3 class="text-2xl"></h3>
+          </div>
+          </template>
           <div v-for="(bio, index) in topBios" :key="bio.handle"
             class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2 cursor-pointer"
             v-on:click="openBio(bio.handle)">
@@ -228,6 +256,20 @@ window.addEventListener('resize', () => {
         <!--Recently edited-->
         <div class="dashboardCard h-full w-full gap-4 p-4 h-min-[340px]">
           <h3>Recently edited</h3>
+          <template v-if="lastUpdatedBios == null">
+          <div v-for="i in 2" :key="i"
+            class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2 cursor-pointer"
+            >
+            <div class="flex flex-row justify-start content-center items-center gap-2">
+              <Skeleton class="min-w-16 min-h-16 rounded-full"></Skeleton>
+              <span class="flex flex-col justify-center content-center items-start min-w-16 gap-1">
+                <Skeleton />
+                <Skeleton :height="1.5"/>
+              </span>
+            </div>
+            <h3 class="text-2xl"></h3>
+          </div>
+          </template>
           <div v-for="(bio) in lastUpdatedBios" :key="bio?.handle"
             class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2 cursor-pointer"
             v-on:click="openBio(bio.handle)">
@@ -270,24 +312,29 @@ window.addEventListener('resize', () => {
           <div class="flex sm:flex-row flex-col w-full gap-4">
             <span class="dashboardCard w-full h-full min-h-[100px]">
               <h3 class="text-base text-zinc-300">Views gained</h3>
-              <h3 class="text-4xl">3020</h3>
+              <Skeleton :height="3" v-if="info == null" />
+              <h3 v-else class="text-4xl">{{ info.views }}</h3>
             </span>
 
             <span class="dashboardCard w-full h-full min-h-[90px]">
               <h3 class="text-base text-zinc-300">Links/Socials clicked</h3>
-              <h3 class="text-4xl">999 999</h3>
+              <Skeleton :height="3" v-if="info == null" />
+              <h3 v-else class="text-4xl">{{ info.linksClicked }}</h3>
             </span>
           </div>
 
           <div class="flex sm:flex-row flex-col w-full gap-4">
             <span class="dashboardCard w-full h-full min-h-[90px]">
               <h3 class="text-base text-zinc-300">Avarage time on-site</h3>
-              <h3 class="text-4xl">40s</h3>
+              <Skeleton :height="3" v-if="info == null" />
+              <h3 v-else class="text-4xl">{{ info.avgSecondsOnSites }}</h3>
             </span>
 
             <span class="dashboardCard w-full h-full min-h-[90px]">
+              <!--
               <h3 class="text-base text-zinc-300">Guest-Click ratio</h3>
               <h3 class="text-4xl">0</h3>
+              -->
             </span>
           </div>
         </div>
@@ -329,6 +376,7 @@ window.addEventListener('resize', () => {
         <!--Bottom-->
         <div class="dashboardCard w-full h-auto lg:h-full h-min-[100px]">
           <h3>Additional views</h3>
+          <LoadingCircle v-if="chartInstance == null" />
           <div ref="barDom" class="w-full h-[350px] flex justify-center content-center items-center"></div>
           <!--
 
