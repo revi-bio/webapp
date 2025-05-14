@@ -105,7 +105,7 @@ function handleModalClose() {
 
 
     <!-- Actions section -->
-    <div class="flex gap-3 self-center">
+    <div class="flex flex-row justify-end sm:justify-start content-center items-center gap-3 self-center">
       <Button @click="deleteBio" text="Delete" icon="delete" primary />
       <Button @click="() => openEditor(handle)" text="Edit" icon="edit" primary />
     </div>
