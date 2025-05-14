@@ -222,176 +222,179 @@ window.addEventListener('resize', () => {
         ]" />
     </span>
 
-    <div class="lg:grid max-lg:flex max-lg:flex-col w-full gap-4 lg:h-full overflow-y-auto lg:grid-cols-12 lg:grid-rows-7">
-      <!--Smaller left side-->
-      <!--Most viewed-->
-      <div class="dashboardCard gap-4 lg:overflow-y-scroll lg:row-start-1 row-span-3 lg:col-span-4">
-        <h3>Most viewed bio pages</h3>
-        <template v-if="topBios.length == 0">
-          <div
-            v-for="i in 2"
-            :key="i"
-            class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2 cursor-pointer">
-            <div class="flex flex-row justify-start content-center items-center gap-2">
-              <Skeleton class="min-w-16 min-h-16 rounded-full"></Skeleton>
-              <span class="flex flex-col justify-center content-center items-start min-w-16 gap-1">
-                <Skeleton />
-                <Skeleton :height="1.5" />
-              </span>
-            </div>
-            <h3 class="text-2xl"></h3>
-          </div>
-        </template>
-        <div
-          v-for="(bio, index) in topBios"
-          :key="bio.handle"
-          class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2 cursor-pointer"
-          v-on:click="openBio(bio.handle)">
-          <div class="flex flex-row justify-start content-center items-center gap-2">
-            <BioPfp class="w-16 h-16" :bioHandle="bio.handle"></BioPfp>
-            <span class="flex flex-col justify-center content-center items-start">
-              <h3 class="text-sm font-[300]">{{ bio.handle }}</h3>
-              <h3>{{ bio.name }}</h3>
-            </span>
-          </div>
-          <h3 class="text-2xl">#{{ index + 1 }}</h3>
-        </div>
-      </div>
-
-      <!--Recently edited-->
-      <div class="dashboardCard gap-4 p-4 lg:overflow-y-scroll lg:row-start-4 row-span-3 lg:col-span-4">
-        <h3>Recently edited</h3>
-        <template v-if="lastUpdatedBios == null">
-          <div
-            v-for="i in 2"
-            :key="i"
-            class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2 cursor-pointer">
-            <div class="flex flex-row justify-start content-center items-center gap-2">
-              <Skeleton class="min-w-16 min-h-16 rounded-full"></Skeleton>
-              <span class="flex flex-col justify-center content-center items-start min-w-16 gap-1">
-                <Skeleton />
-                <Skeleton :height="1.5" />
-              </span>
-            </div>
-            <h3 class="text-2xl"></h3>
-          </div>
-        </template>
-        <div
-          v-for="bio in lastUpdatedBios"
-          :key="bio?.handle"
-          class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2 cursor-pointer"
-          v-on:click="openBio(bio.handle)">
-          <div class="flex flex-row justify-start content-center items-center gap-2">
-            <BioPfp class="w-16 h-16" :bioHandle="bio?.handle"></BioPfp>
-            <span class="flex flex-col justify-center content-center items-start">
-              <h3 class="text-sm font-[300]">{{ bio?.handle }}</h3>
-              <h3>{{ bio?.name }}</h3>
-            </span>
-          </div>
-          <h3>
-            {{ DateTime.formatDate(bio?.updatedAt) }}
-          </h3>
-        </div>
-      </div>
-
-      <!--Referral distribution-->
-      <div class="dashboardCard flex flex-col gap-2 lg:row-start-7 lg:col-span-4">
-        <h3>Referral distribution</h3>
-        <div class="referralDom w-full h-full flex flex-row justify-center content-center items-center">
-          <!-- Referral distribution csíkok -->
-          <div
-            v-for="(item, index) in referralData"
-            :key="index"
-            class="h-3 first:rounded-l-full last:rounded-r-full relative group"
-            :style="{
-              backgroundColor: item.color,
-              width: `${(item.value / totalValue) * 100}%`,
-            }">
+    <div class="overflow-y-auto h-full w-full overflow-x-hidden">
+      <div
+        class="w-full gap-4 max-lg:flex max-lg:flex-col lg:min-h-[800px] lg:max-h-[800px] lg:grid lg:grid-cols-12 lg:grid-rows-7">
+        <!--Smaller left side-->
+        <!--Most viewed-->
+        <div class="dashboardCard gap-4 lg:overflow-y-scroll lg:row-start-1 row-span-3 lg:col-span-4">
+          <h3>Most viewed bio pages</h3>
+          <template v-if="topBios.length == 0">
             <div
-              class="absolute bottom-full top-5 left-1/2 transform mb-2 p-2 text-white bg-black rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              {{ item.name }}
+              v-for="i in 2"
+              :key="i"
+              class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2 cursor-pointer">
+              <div class="flex flex-row justify-start content-center items-center gap-2">
+                <Skeleton class="min-w-16 min-h-16 rounded-full"></Skeleton>
+                <span class="flex flex-col justify-center content-center items-start min-w-16 gap-1">
+                  <Skeleton />
+                  <Skeleton :height="1.5" />
+                </span>
+              </div>
+              <h3 class="text-2xl"></h3>
+            </div>
+          </template>
+          <div
+            v-for="(bio, index) in topBios"
+            :key="bio.handle"
+            class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2 cursor-pointer"
+            v-on:click="openBio(bio.handle)">
+            <div class="flex flex-row justify-start content-center items-center gap-2">
+              <BioPfp class="w-16 h-16" :bioHandle="bio.handle"></BioPfp>
+              <span class="flex flex-col justify-center content-center items-start">
+                <h3 class="text-sm font-[300]">{{ bio.handle }}</h3>
+                <h3>{{ bio.name }}</h3>
+              </span>
+            </div>
+            <h3 class="text-2xl">#{{ index + 1 }}</h3>
+          </div>
+        </div>
+
+        <!--Recently edited-->
+        <div class="dashboardCard gap-4 p-4 lg:overflow-y-scroll lg:row-start-4 row-span-3 lg:col-span-4">
+          <h3>Recently edited</h3>
+          <template v-if="lastUpdatedBios == null">
+            <div
+              v-for="i in 2"
+              :key="i"
+              class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2 cursor-pointer">
+              <div class="flex flex-row justify-start content-center items-center gap-2">
+                <Skeleton class="min-w-16 min-h-16 rounded-full"></Skeleton>
+                <span class="flex flex-col justify-center content-center items-start min-w-16 gap-1">
+                  <Skeleton />
+                  <Skeleton :height="1.5" />
+                </span>
+              </div>
+              <h3 class="text-2xl"></h3>
+            </div>
+          </template>
+          <div
+            v-for="bio in lastUpdatedBios"
+            :key="bio?.handle"
+            class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2 cursor-pointer"
+            v-on:click="openBio(bio.handle)">
+            <div class="flex flex-row justify-start content-center items-center gap-2">
+              <BioPfp class="w-16 h-16" :bioHandle="bio?.handle"></BioPfp>
+              <span class="flex flex-col justify-center content-center items-start">
+                <h3 class="text-sm font-[300]">{{ bio?.handle }}</h3>
+                <h3>{{ bio?.name }}</h3>
+              </span>
+            </div>
+            <h3>
+              {{ DateTime.formatDate(bio?.updatedAt) }}
+            </h3>
+          </div>
+        </div>
+
+        <!--Referral distribution-->
+        <div class="dashboardCard flex flex-col gap-2 lg:row-start-7 lg:col-span-4">
+          <h3>Referral distribution</h3>
+          <div class="referralDom w-full h-full flex flex-row justify-center content-center items-center">
+            <!-- Referral distribution csíkok -->
+            <div
+              v-for="(item, index) in referralData"
+              :key="index"
+              class="h-3 first:rounded-l-full last:rounded-r-full relative group"
+              :style="{
+                backgroundColor: item.color,
+                width: `${(item.value / totalValue) * 100}%`,
+              }">
+              <div
+                class="absolute bottom-full top-5 left-1/2 transform mb-2 p-2 text-white bg-black rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                {{ item.name }}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!--Bigger right side-->
-      <!--Top-->
-      <div class="grid w-full gap-4 max-lg:grid-cols-2 lg:grid-cols-4 lg:col-span-8 max-lg:order-first">
-        <span class="dashboardCard w-full h-full min-h-[100px]">
-          <h3 class="text-base text-zinc-300">Views gained</h3>
-          <Skeleton :height="2" v-if="info == null" />
-          <h3 v-else class="text-4xl">{{ info.views }}</h3>
-        </span>
+        <!--Bigger right side-->
+        <!--Top-->
+        <div class="grid w-full gap-4 max-lg:grid-cols-2 lg:grid-cols-4 lg:col-span-8 max-lg:order-first">
+          <span class="dashboardCard w-full h-full min-h-[100px]">
+            <h3 class="text-base text-zinc-300">Views gained</h3>
+            <Skeleton :height="2" v-if="info == null" />
+            <h3 v-else class="text-4xl">{{ info.views }}</h3>
+          </span>
 
-        <span class="dashboardCard w-full h-full min-h-[90px]">
-          <h3 class="text-base text-zinc-300">Links/Socials clicked</h3>
-          <Skeleton :height="2" v-if="info == null" />
-          <h3 v-else class="text-4xl">{{ info.linksClicked }}</h3>
-        </span>
+          <span class="dashboardCard w-full h-full min-h-[90px]">
+            <h3 class="text-base text-zinc-300">Links/Socials clicked</h3>
+            <Skeleton :height="2" v-if="info == null" />
+            <h3 v-else class="text-4xl">{{ info.linksClicked }}</h3>
+          </span>
 
-        <span class="dashboardCard w-full h-full min-h-[90px]">
-          <h3 class="text-base text-zinc-300">Avarage time on-site</h3>
-          <Skeleton :height="2" v-if="info == null" />
-          <h3 v-else class="text-4xl">{{ info.avgSecondsOnSites }}</h3>
-        </span>
+          <span class="dashboardCard w-full h-full min-h-[90px]">
+            <h3 class="text-base text-zinc-300">Avarage time on-site</h3>
+            <Skeleton :height="2" v-if="info == null" />
+            <h3 v-else class="text-4xl">{{ info.avgSecondsOnSites }}</h3>
+          </span>
 
-        <span class="dashboardCard w-full h-full min-h-[90px]">
-          <!--
+          <span class="dashboardCard w-full h-full min-h-[90px]">
+            <!--
               <h3 class="text-base text-zinc-300">Guest-Click ratio</h3>
               <h3 class="text-4xl">0</h3>
               -->
-        </span>
-      </div>
-
-      <!--Middle-->
-      <div class="dashboardCard w-full h-full max-lg:min-h-[300px] lg:row-span-3 lg:col-span-4">
-        <h3 class="">Most visitors per countries</h3>
-        <div ref="chartDom" class="w-full h-full flex flex-col justify-center content-center items-center"></div>
-        <span class="w-full flex flex-row justify-center content-center flex-wrap items-center gap-4">
-          <h3
-            v-for="(visitor, index) in visitorData"
-            :key="visitor.name"
-            :style="{ color: colorPalette[index % colorPalette.length] }">
-            {{ visitor.name }}
-          </h3>
-        </span>
-      </div>
-
-      <!--Most used links-->
-      <div class="dashboardCard w-full max-lg:min-h-[300px] h-full lg:row-span-3 lg:col-span-4">
-        <h3>Most used links</h3>
-        <div class="linkDom w-full h-full gap-2 md:gap-5 flex flex-row justify-center items-end">
-          <span
-            v-for="(link, id) in linkData"
-            :key="id"
-            class="w-full h-full flex flex-col items-center gap-2 relative">
-            <span
-              class="w-full flex flex-col items-center justify-start mt-auto"
-              :style="{ height: scaleHeight(link.value) + '%' }">
-              <div class="flex justify-center content-center items-center">
-                <LinkIcon :type="link.icon" :color="'zinc-100'" :width="'90%'"></LinkIcon>
-              </div>
-
-              <span class="bg-rose-500 rounded-lg w-full h-full"></span>
-            </span>
-
-            <h3 class="text-xs md:text-sm text-zinc-400">{{ link.value }}</h3>
           </span>
         </div>
-      </div>
 
-      <!--Bottom-->
-      <!-- the loading circle is slightly off-center but probably noone's going to notice it anyway lol -->
-      <div class="dashboardCard relative max-lg:min-h-[350px] h-[350px] w-full lg:col-span-8 lg:row-span-3">
-        <h3>Additional views</h3>
-        <div class="absolute w-full h-full flex justify-center items-center" v-if="chartInstance == null">
-          <LoadingCircle class="relative "  />
+        <!--Middle-->
+        <div class="dashboardCard w-full h-full max-lg:min-h-[300px] lg:row-span-3 lg:col-span-4">
+          <h3 class="">Most visitors per countries</h3>
+          <div ref="chartDom" class="w-full h-full flex flex-col justify-center content-center items-center"></div>
+          <span class="w-full flex flex-row justify-center content-center flex-wrap items-center gap-4">
+            <h3
+              v-for="(visitor, index) in visitorData"
+              :key="visitor.name"
+              :style="{ color: colorPalette[index % colorPalette.length] }">
+              {{ visitor.name }}
+            </h3>
+          </span>
         </div>
-        <div ref="barDom" class="w-full h-full flex justify-center content-center items-center"></div>
-        <!--
+
+        <!--Most used links-->
+        <div class="dashboardCard w-full max-lg:min-h-[300px] h-full lg:row-span-3 lg:col-span-4">
+          <h3>Most used links</h3>
+          <div class="linkDom w-full h-full gap-2 md:gap-5 flex flex-row justify-center items-end">
+            <span
+              v-for="(link, id) in linkData"
+              :key="id"
+              class="w-full h-full flex flex-col items-center gap-2 relative">
+              <span
+                class="w-full flex flex-col items-center justify-start mt-auto"
+                :style="{ height: scaleHeight(link.value) + '%' }">
+                <div class="flex justify-center content-center items-center">
+                  <LinkIcon :type="link.icon" :color="'zinc-100'" :width="'90%'"></LinkIcon>
+                </div>
+
+                <span class="bg-rose-500 rounded-lg w-full h-full"></span>
+              </span>
+
+              <h3 class="text-xs md:text-sm text-zinc-400">{{ link.value }}</h3>
+            </span>
+          </div>
+        </div>
+
+        <!--Bottom-->
+        <!-- the loading circle is slightly off-center but probably noone's going to notice it anyway lol -->
+        <div class="dashboardCard relative max-lg:min-h-[350px] h-[350px] w-full lg:col-span-8 lg:row-span-3">
+          <h3>Additional views</h3>
+          <div class="absolute w-full h-full flex justify-center items-center" v-if="chartInstance == null">
+            <LoadingCircle class="relative" />
+          </div>
+          <div ref="barDom" class="w-full h-full flex justify-center content-center items-center"></div>
+          <!--
 
             -->
+        </div>
       </div>
     </div>
   </div>
