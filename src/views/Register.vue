@@ -67,12 +67,12 @@ const onRegister = async () => {
 };
 </script>
 <template>
-  <div class="flex flex-row w-full h-full p-5">
-    <div class="w-2/5 h-full flex flex-row justify-center content-center items-center relative">
+  <div class="flex flex-row w-full h-full p-2">
+    <div class="w-full md:w-2/5 h-full flex flex-row justify-center content-center items-center relative">
       <RouterLink to="/"><Logo type="revibio" class="absolute top-4 left-4"></Logo></RouterLink>
-      <div class="w-3/4 h-full flex flex-col justify-center content-center items-center gap-[3rem]">
+      <div class="w-3/4 h-full flex flex-col justify-center content-center items-center gap-12">
         <div class="w-full flex flex-col justify-center content-center items-start gap-3">
-          <h3 class="text-6xl">Create an account</h3>
+          <h3 class="text-4xl md:text-6xl">Create an account</h3>
           <p class="text-[#52525B]">
             Welcome to revi.bio! You can start by completing the form below to register your account.
           </p>
@@ -95,7 +95,7 @@ const onRegister = async () => {
         </div>
       </div>
     </div>
-    <AuthBanner class="w-3/5"></AuthBanner>
+    <AuthBanner class="w-3/5 hidden md:block"></AuthBanner>
     <Alert
       :status="alertStatus"
       :error="alertError"
