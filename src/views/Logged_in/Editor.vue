@@ -24,6 +24,7 @@ import { ApiWrapper } from '@/composables/ApiWrapper';
 import Textbox from '@/components/global/Textbox.vue';
 import { default as Modal } from '@/components/global/NewModal.vue';
 import Icon from '@/components/global/Icon.vue';
+import PageSelector from '@/components/global/PageSelector.vue';
 
 const emits = defineEmits([
   'avatarChange',
@@ -480,19 +481,14 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
       </div>
 
       <!-- Page navigation -->
-      <div class="PageContainer">
-        <span @click="() => {
-          currentPageIndex = index;
-          selectedWidgetId = null;
-          widgetToolboxOpened = false;
-          bioSettingsOpened = false;
-          pagesSidebarOpened = false;
-        }" v-for="(page, index) in pages" :key="page.id" class="Page"
-          :selected="currentPageIndex == index">
-          <Icon :type="page.icon" class="Page__Icon" />
-          <span class="Page__Name">{{ page.name }}</span>
-        </span>
-      </div>
+
+      <PageSelector :pages="pages" @selectedPageIndex="(index) => {
+        currentPageIndex = index
+        selectedWidgetId = null;
+        widgetToolboxOpened = false;
+        bioSettingsOpened = false;
+        pagesSidebarOpened = false;
+      }"></PageSelector>
 
       <!-- Bio settings button -->
       <div class="flex justify-end gap-2">
@@ -681,30 +677,6 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
 <style lang="scss">
 #widgets *[selected='true'] {
   @apply ring-2 ring-rose-500;
-}
-
-.PageContainer {
-  @apply flex gap-2 items-center justify-center bg-zinc-900 place-self-center rounded-full border border-zinc-900;
-}
-
-.Page {
-  @apply bg-zinc-800 flex gap-2 items-center cursor-pointer rounded-full lg:pr-3 hover:bg-zinc-700 transition duration-200;
-
-  .Page__Icon {
-    @apply px-3 rounded-full bg-zinc-700;
-  }
-
-  .Page__Name {
-    @apply max-lg:hidden;
-  }
-
-  &[selected='true'] {
-    // @apply ;
-
-    .Page__Icon {
-      @apply bg-rose-500;
-    }
-  }
 }
 
 .sidebar {

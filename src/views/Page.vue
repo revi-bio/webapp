@@ -6,6 +6,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
 import type { Page } from '@/types/Page';
+import PageSelector from '@/components/global/PageSelector.vue';
 
 const route = useRoute();
 const handle = route.params.handle as string;
@@ -55,13 +56,18 @@ function findWidgetIndex(id: string): number {
 
 <template>
   <div class="flex justify-center items-center h-full w-full relative bg-cover" :style="backgroundStyle">
-    <div id="widgets" class="flex flex-col gap-3 justify-center z-0 h-[80%] w-1/2">
+    <div id="widgets" class="flex flex-col gap-3 justify-center z-0 h-[80%] max-w-[600px] w-1/2" >
       <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
         <div class="flex gap-2 relative">
           <!-- Widget component -->
           <Widget :data="widget" class="w-full" />
         </div>
       </template>
+    </div>
+    <div
+      class="absolute w-full bottom-0 flex justify-center items-center gap-2 p-4">
+
+      <PageSelector :pages="pages" @selectedPageIndex="(index) => currentPageIndex = index" />
     </div>
   </div>
 </template>
