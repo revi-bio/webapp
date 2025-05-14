@@ -108,7 +108,7 @@ const countOfUnreaded = computed(() => msgs.value.filter((msg) => !msg.isRead).l
         </div>
       </div>
     </div>
-    <div class="w-[400px] max-w-[400px] h-full flex-col space-y-2 p-6 bg-zinc-900 rounded-2xl">
+    <div class="w-[400px] max-w-[400px] h-full flex-col space-y-2 p-6 bg-zinc-900 rounded-2xl overflow-y-auto">
       <Inboxnoti :items="msgs" @selectMsg="selectMsg"></Inboxnoti>
       <div v-if="isLoading" class="w-full flex flex-col justify-center content-center items-center py-8">
         <LoadingCircle />
