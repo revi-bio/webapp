@@ -36,17 +36,21 @@ const filteredData = ref<UserForAdmin[]>([]);
 const isLoading = ref<boolean>(true);
 
 onMounted(async () => {
-  try{
+  fetchUsers();
+});
+
+async function fetchUsers() {
+  try {
     isLoading.value = true;
     await adminStore.fetchAllUsers();
     usersList.value = [...adminStore.users];
     filteredData.value = [...usersList.value];
-  }catch(error:any){
+  } catch (error) {
     console.error("Error while fetching users:", error);
   } finally {
     isLoading.value = false;
   }
-});
+}
 
 watch(() => adminStore.users, (newUsers) => {
   usersList.value = [...newUsers];
@@ -62,10 +66,8 @@ const needsEmailVerification = (user: UserForAdmin): boolean => {
   );
 };
 
-const verifyUser = (user: UserForAdmin): void => {
-  adminStore.verifyUser(user._id)
-
-
+const verifyUser = async (user: UserForAdmin): Promise<void> => {
+  adminStore.verifyUser(user._id);
 }
 
 const openBiosModal = async (user: UserForAdmin) => {
@@ -138,7 +140,6 @@ const sendMail = async () => {
   }
 };
 
-
 function changeSearch(filtered: UserForAdmin[]) {
   filteredData.value = filtered;
 }
@@ -152,7 +153,8 @@ function changeSearch(filtered: UserForAdmin[]) {
     </div>
 
     <div class="w-full flex flex-col gap-5 pr-4 userList overflow-y-auto ">
-      <div v-for="user in filteredData" :key="user?._id" :class="`w-full ${isLoading ? 'none' : 'flex'} flex-row justify-between content-center items-center p-4  bg-zinc-700/50 rounded-xl hover:bg-zinc-600/50 transition duration-200`">
+      <div v-for="user in filteredData" :key="user?._id"
+        :class="`w-full ${isLoading ? 'none' : 'flex'} flex-row justify-between content-center items-center p-4  bg-zinc-700/50 rounded-xl hover:bg-zinc-600/50 transition duration-200`">
         <div class="w-full flex flex-row justify-start content-center items-center gap-5">
           <Avatar class="w-16 h-16" :avatar-url="user?.avatar" />
           <div class="flex flex-col justify-center content-start items-start">
@@ -162,16 +164,15 @@ function changeSearch(filtered: UserForAdmin[]) {
           <h3 class="text-sm text-zinc-200">{{ user?.email }}</h3>
           <h3 class="text-sm text-zinc-400">{{ DateTime.formatDate(user?.createdAt) }}</h3>
           <Icon :type="!needsEmailVerification(user) ? 'verified' : 'verified_off'"
-            :class="!needsEmailVerification(user) ? 'text-cyan-500': 'text-red-500'"></Icon>
+            :class="!needsEmailVerification(user) ? 'text-cyan-500' : 'text-red-500'"></Icon>
         </div>
 
         <div class="flex flex-row justify-center content-center items-center gap-2">
-          <Button v-if="needsEmailVerification(user)" primary small text="verify" iconRight
-            icon="verified" @click.prevent="verifyUser(user)" ></Button>
+          <Button v-if="needsEmailVerification(user)" primary small text="verify" iconRight icon="verified"
+            @click.prevent="verifyUser(user)"></Button>
           <Button primary small text="Bios" iconRight icon="recent_actors"
             @click.prevent="openBiosModal(user)"></Button>
-          <Button primary small text="Mail" iconRight icon="mail"
-            @click.prevent="openMailModal(user)"></Button>
+          <Button primary small text="Mail" iconRight icon="mail" @click.prevent="openMailModal(user)"></Button>
           <Button primary small text="Delete" iconRight icon="delete"
             @click.prevent="adminStore.deleteUser(user._id)"></Button>
         </div>
@@ -182,9 +183,7 @@ function changeSearch(filtered: UserForAdmin[]) {
       </div>
     </div>
 
-    <NewModal
-      :show="showBiosModal"
-      @close="showBiosModal = false"
+    <NewModal :show="showBiosModal" @close="showBiosModal = false"
       :title="selectedUser ? `${selectedUser.displayName}'s Bios` : 'User Bios'">
       <div class="w-full h-full">
         <div v-if="selectedUserBios.length === 0" class="text-center text-zinc-400 my-4">
@@ -192,7 +191,7 @@ function changeSearch(filtered: UserForAdmin[]) {
         </div>
         <div v-else class="flex w-full h-full flex-col justify-center content-center gap-5 overflow-y-auto">
           <div v-for="(bio, index) in selectedUserBios" :key="index"
-               class="p-3 gap-2 bg-zinc-700 rounded-lg cursor-pointer hover:bg-zinc-600/80 transition-colors">
+            class="p-3 gap-2 bg-zinc-700 rounded-lg cursor-pointer hover:bg-zinc-600/80 transition-colors">
             <div class="flex flex-row justify-between items-center mb-2" @click="navigateToBio(bio.handle)">
               <div>
                 <h4 class="text-lg text-zinc-200">{{ bio.name || 'Unnamed Bio' }}</h4>
@@ -228,13 +227,11 @@ function changeSearch(filtered: UserForAdmin[]) {
       </div>
     </NewModal>
 
-    <NewModal
-      :show="showMailModal"
-      @close="closeMailModal"
+    <NewModal :show="showMailModal" @close="closeMailModal"
       :title="mailRecipient ? `Send Message to ${mailRecipient.displayName}` : 'Send Message'">
       <div class="flex flex-col gap-4 w-full">
         <Input v-model="mailTitle" placeholder="Title" type="text" />
-        <Input v-model="mailContent" placeholder="Content" type="textarea" class=""/>
+        <Input v-model="mailContent" placeholder="Content" type="textarea" class="" />
         <div class="flex justify-end gap-2">
           <Button text="Cancel" @click="closeMailModal" />
           <Button primary text="Send" icon="send" @click="sendMail" />
@@ -264,4 +261,3 @@ function changeSearch(filtered: UserForAdmin[]) {
   @apply bg-zinc-700 rounded-full
 }
 </style>
-
