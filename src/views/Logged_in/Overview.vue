@@ -295,7 +295,7 @@ window.addEventListener('resize', () => {
       </div>
 
       <!--Referral distribution-->
-      <div class="dashboardCard h-min-[40px] lg:row-start-7 lg:col-span-4">
+      <div class="dashboardCard flex flex-col gap-2 lg:row-start-7 lg:col-span-4">
         <h3>Referral distribution</h3>
         <div class="referralDom w-full h-full flex flex-row justify-center content-center items-center">
           <!-- Referral distribution csíkok -->
@@ -317,7 +317,7 @@ window.addEventListener('resize', () => {
 
       <!--Bigger right side-->
       <!--Top-->
-      <div class="grid w-full h-min-[212px] gap-4 grid-cols-4 lg:col-span-8 max-lg:order-first">
+      <div class="grid w-full gap-4 max-lg:grid-cols-2 lg:grid-cols-4 lg:col-span-8 max-lg:order-first">
         <span class="dashboardCard w-full h-full min-h-[100px]">
           <h3 class="text-base text-zinc-300">Views gained</h3>
           <Skeleton :height="2" v-if="info == null" />
