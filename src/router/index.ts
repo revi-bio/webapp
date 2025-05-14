@@ -16,12 +16,28 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       meta: { public: true },
+      beforeEnter: (to, from, next) => {
+        const userStore = useUserStore();
+        if (userStore.loggedIn()) {
+          next('/baseDash/overview');
+        } else {
+          next();
+        }
+      },
       component: () => import('../views/Login.vue'),
     },
     {
       path: '/register',
       name: 'register',
       meta: { public: true },
+      beforeEnter: (to, from, next) => {
+        const userStore = useUserStore();
+        if (userStore.loggedIn()) {
+          next('/baseDash/overview');
+        } else {
+          next();
+        }
+      },
       component: () => import('../views/Register.vue'),
     },
     {
@@ -97,28 +113,28 @@ const router = createRouter({
           path: 'admin',
           name: 'Admin',
           meta: { public: false, requiresAdmin: true },
-          component: ()=> import('../views/Logged_in/Admin.vue'),
+          component: () => import('../views/Logged_in/Admin.vue'),
           redirect: '/baseDash/admin/adminUsers',
-          children:[
+          children: [
             {
               path: 'adminUsers',
               name: 'Users',
               meta: { public: false, requiresAdmin: true },
-              component: ()=> import('../views/Logged_in/Admin/Users.vue'),
+              component: () => import('../views/Logged_in/Admin/Users.vue'),
             },
             {
               path: 'adminBios',
               name: 'Bios',
               meta: { public: false, requiresAdmin: true },
-              component: ()=> import('../views/Logged_in/Admin/Bios.vue'),
+              component: () => import('../views/Logged_in/Admin/Bios.vue'),
             },
             {
               path: 'adminMail',
               name: 'Mail',
               meta: { public: false, requiresAdmin: true },
-              component: ()=> import('../views/Logged_in/Admin/Mail.vue'),
+              component: () => import('../views/Logged_in/Admin/Mail.vue'),
             },
-          ]
+          ],
         },
         {
           path: ':pathMatch(.*)*',
@@ -130,7 +146,7 @@ const router = createRouter({
               return '/login';
             }
           },
-        }
+        },
       ],
     },
     {

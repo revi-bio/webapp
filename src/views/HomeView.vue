@@ -8,8 +8,10 @@ import { onMounted, ref } from 'vue';
 import { animate, inView, scroll, stagger } from 'motion';
 import { useIntersectionObserver } from '@vueuse/core';
 import { useWindowSize } from '@vueuse/core';
+import { useUserStore } from '@/stores/user';
 
 const { width } = useWindowSize();
+const userStore = useUserStore();
 
 onMounted(() => {
   const elements = document.querySelectorAll(
@@ -184,8 +186,10 @@ onMounted(() => {
         <Logo type="revi"></Logo>
         <div class="flex flex-row justify-center content-center items-center gap-10">
           <!--RouterLinks-->
-          <RouterLink to="/login">Log In</RouterLink>
-          <RouterLink to="/register">Register</RouterLink>
+          <RouterLink v-if="!userStore.loggedIn()" to="/login">Log In</RouterLink>
+          <RouterLink v-if="!userStore.loggedIn()" to="/register">Register</RouterLink>
+
+          <RouterLink v-if="userStore.loggedIn()" to="/baseDash/overview">Go to overview</RouterLink>
         </div>
       </nav>
 

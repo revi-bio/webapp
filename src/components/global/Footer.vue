@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import Logo from '@/components/global/Logo.vue';
 import Button from '@/components/global/Button.vue';
-import Icon from './Icon.vue';
+import { RouterLink } from 'vue-router';
+import { useUserStore } from '@/stores/user';
+
+const userStore = useUserStore();
 
 </script>
 
@@ -18,8 +21,10 @@ import Icon from './Icon.vue';
     </div>
     <div class="flex flex-col items-center lg:space-y-20 space-y-5 justify-self-auto w-full">
       <div class="flex flex-col sm:flex-row justify-between items-center text-zinc-500  text-2xl space-x-2">
-        <RouterLink to="login" class="px-10 text-lg hover:text-zinc-400">Log In</RouterLink>
-        <RouterLink to="register" class="px-10 text-lg hover:text-zinc-400">Register</RouterLink>
+
+          <RouterLink v-if="!userStore.loggedIn()" to="login" class="px-10 text-lg hover:text-zinc-400">Log In</RouterLink>
+          <RouterLink v-if="!userStore.loggedIn()" to="register" class="px-10 text-lg hover:text-zinc-400">Register</RouterLink>
+          <RouterLink v-if="userStore.loggedIn()" to="/baseDash/overview"  class="px-10 text-lg hover:text-zinc-400">Go to overview</RouterLink>
         <RouterLink to="/" class="px-10 text-lg hover:text-zinc-400">Home</RouterLink>
       </div>
       <div class="flex flex-col items-center w-full text-3xl space-y-1 relative">
