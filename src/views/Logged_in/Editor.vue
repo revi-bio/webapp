@@ -480,15 +480,15 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
     :style="backgroundStyle">
     <!-- Bottom toolbar -->
     <div
-      class="absolute w-full bottom-0 p-4 justify-between space-x-2 text-zinc-200 grid grid-cols-3 bg-zinc-900/50 rounded-2xl">
+      class="absolute w-full bottom-0 p-4 gap-2 justify-between space-x-2 text-zinc-200 grid md:grid-cols-2 lg:grid-cols-7 bg-zinc-900/50 lg:rounded-2xl">
       <!-- Add widget button -->
-      <div class="flex gap-2">
+      <div class="flex gap-2 lg:col-span-2">
         <Button @click="toggleWidgetToolbox" text="Add widget" icon="add" primary small />
       </div>
 
       <!-- Page navigation -->
 
-      <PageSelector :pages="pages" @selectedPageIndex="(index) => {
+      <PageSelector class="lg:col-span-3 max-lg:col-span-2 max-lg:row-start-1 max-lg:w-full" :pages="pages" @selectedPageIndex="(index) => {
         currentPageIndex = index
         selectedWidgetId = null;
         widgetToolboxOpened = false;
@@ -497,7 +497,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
       }"></PageSelector>
 
       <!-- Bio settings button -->
-      <div class="flex justify-end gap-2">
+      <div class="flex justify-end gap-2 lg:col-span-2">
         <Button @click="togglePagesSidebar" text="Pages" icon="settings" small />
         <Button @click="toggleBioSettings" text="Bio settings" icon="settings" small />
       </div>
