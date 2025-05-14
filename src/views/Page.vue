@@ -55,7 +55,7 @@ function findWidgetIndex(id: string): number {
 </script>
 
 <template>
-  <div class="flex justify-center items-center h-full w-full relative bg-cover" :style="backgroundStyle">
+  <div class="flex justify-center items-center h-full w-full relative bg-cover bg-center" :style="backgroundStyle">
     <div id="widgets" class="flex flex-col gap-3 justify-center z-0 h-[80%] max-w-[600px] w-1/2 max-md:w-full max-md:p-4" >
       <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
         <div class="flex gap-2 relative">
