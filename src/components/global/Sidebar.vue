@@ -118,7 +118,7 @@ const toggleMenu = async () => {
   <div class="w-full md:hidden flex flex-col justify-center content-center items-center absolute bottom-0 z-[100] mobileMenu">
 
     <div class="w-full p-2 md:hidden flex flex-row justify-evenly content-center items-center bg-zinc-900 transition-transform duration-300">
-      <span @click.prevent="toggleMenu" class="py-1 px-3 flex justify-center content-center items-center rounded-md bg-zinc-950 hover:bg-zinc-950/80 active:bg-zinc-800 transition-colors duration-200">
+      <span @click.prevent="toggleMenu" class="py-1 px-3 flex justify-center content-center items-center rounded-md bg-zinc-950 hover:bg-zinc-950/80 active:bg-zinc-800 transition-colors duration-200 cursor-pointer">
         <Icon :type="mobileMenuOpen ? 'close': 'menu'"></Icon>
       </span>
       <Logo type="revi" :animated="true"></Logo>
