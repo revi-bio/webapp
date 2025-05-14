@@ -236,7 +236,7 @@ const removeSelectedUser = (user: UserForAdmin) => {
   </div>
 
   <!--Mobile view-->
-  <div class="flex md:hidden flex-col justify-start content-start items-start w-full h-full p-4 gap-4 pb-20">
+  <div class="flex md:hidden flex-col justify-start content-start items-start w-full h-full gap-4 pb-20">
     <!-- Search and users section - fixed height -->
     <div class="flex flex-col justify-start content-start items-start w-full bg-zinc-700/50 rounded-lg p-4 gap-4">
       <Searchbar v-model="search" :basearray="usersList" @filtered="changeSearch"></Searchbar>
