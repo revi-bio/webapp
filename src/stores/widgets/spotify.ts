@@ -1,55 +1,55 @@
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import axios from 'axios';
-import type { Spotify, TrackItem } from '@/types/widgets/Spotify';
+import { ApiWrapper } from '@/composables/ApiWrapper';
+
+
+export interface TrackItem {
+  track: {
+    name: string;
+    artists: {
+      name: string;
+      external_urls: {
+        spotify: string;
+      };
+    }[];
+    album: {
+      images: {
+        url: string;
+        height: number;
+        width: number;
+      }[];
+    };
+    external_urls: {
+      spotify: string;
+    };
+  };
+}
+
+export interface Spotify {
+  accessToken: string;
+  data?: {
+    playlistId: string;
+    image: string;
+    playlistName: string;
+    owner?: {
+      href: string;
+      displayName: string;
+    };
+    tracks?: {
+      items: TrackItem[];
+    };
+    playlistUrl?: string;
+  };
+}
 
 export const useSpotifyStore = defineStore('spotify', () => {
-  const TOKENURL = 'https://accounts.spotify.com/api/token';
-  const clientId = '44583529b1f04c2b89fb776bc52f9929'; // ENV
-  const clientSecret = 'f425ba741b7a4a26bf7ec592f3fff245'; // ENV
-
   const spotifyData = ref<Spotify>({
     accessToken: '',
     data: undefined,
   });
 
-  const tokenExpiresAt = ref<number>(0);
   const error = ref<string | null>(null);
-
-  const hasValidToken = computed(() => {
-    return !!spotifyData.value.accessToken && Date.now() < tokenExpiresAt.value;
-  });
-
-  function setToken(token: string, expiresAt: number) {
-    spotifyData.value.accessToken = token;
-    tokenExpiresAt.value = expiresAt;
-  }
-
-  async function getAccessToken(): Promise<string> {
-    if (hasValidToken.value) {
-      return spotifyData.value.accessToken;
-    }
-
-    try {
-      const credentials = btoa(`${clientId}:${clientSecret}`);
-      const response = await axios.post(TOKENURL, new URLSearchParams({ grant_type: 'client_credentials' }), {
-        headers: {
-          Authorization: `Basic ${credentials}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
-
-      const { access_token, expires_in } = response.data;
-      setToken(access_token, Date.now() + expires_in * 1000);
-
-      return access_token;
-    } catch (err) {
-      const errorMsg = 'Failed to get Spotify access token';
-      error.value = errorMsg;
-      console.error(errorMsg, err);
-      throw new Error(errorMsg);
-    }
-  }
+  const loading = ref<boolean>(false);
 
   function setPlaylistData(data: Spotify['data']) {
     spotifyData.value.data = data;
@@ -57,21 +57,19 @@ export const useSpotifyStore = defineStore('spotify', () => {
 
   async function getPlaylistTracks(playlistId: string): Promise<{ items: TrackItem[] } | null> {
     if (!playlistId) {
-      error.value = 'Hiányzó playlist ID';
+      error.value = 'Missing playlist ID';
       return null;
     }
 
+    loading.value = true;
+    error.value = null;
+
     try {
-      const { SpotifyApi } = await import('@/composables/widgets/SpotifyApi');
-
-      const response = await SpotifyApi.get(`playlists/${playlistId}/tracks`, {
-        params: {
-          fields: 'items(track(name,artists(name,external_urls),album(images),external_urls))',
-        },
-      });
-
-      return { items: response.data.items };
+      const response = await ApiWrapper.get(`spotify/playlist/${playlistId}/tracks`, {});
+      loading.value = false;
+      return response.data;
     } catch (err) {
+      loading.value = false;
       error.value = err instanceof Error ? err.message : 'Unknown error';
       console.error('Error while fetching playlist tracks:', err);
       return null;
@@ -83,35 +81,20 @@ export const useSpotifyStore = defineStore('spotify', () => {
       error.value = 'Hiányzó playlist ID';
       return null;
     }
+
+    loading.value = true;
     error.value = null;
 
     try {
-      const { SpotifyApi } = await import('@/composables/widgets/SpotifyApi');
-
-      const response = await SpotifyApi.get(`playlists/${playlistId}`, {
-        fields: 'id,name,images,owner(display_name,external_urls),external_urls',
-      });
-
-      const data = response.data;
-
-      const tracksData = await getPlaylistTracks(playlistId);
-
-      const playlistData: Spotify['data'] = {
-        playlistId: data.id,
-        playlistName: data.name,
-        image: data.images[0]?.url || '',
-        owner: {
-          displayName: data.owner.display_name,
-          href: data.owner.external_urls.spotify,
-        },
-        playlistUrl: data.external_urls.spotify,
-        tracks: tracksData || undefined,
-      };
+      const response = await ApiWrapper.get(`spotify/playlist/${playlistId}`, {});
+      const playlistData = response.data;
 
       setPlaylistData(playlistData);
+      loading.value = false;
 
       return playlistData;
     } catch (err) {
+      loading.value = false;
       error.value = err instanceof Error ? err.message : 'Unknown error';
       console.error('Error while fetching spotify data:', err);
       return null;
@@ -119,15 +102,31 @@ export const useSpotifyStore = defineStore('spotify', () => {
   }
 
   async function refreshSpotifyData(playlistId: string) {
-    return await getPlaylist(playlistId);
+    loading.value = true;
+    error.value = null;
+
+    try {
+      const response = await ApiWrapper.get(`spotify/playlist/${playlistId}`, {
+        params: { refresh: 'true' }
+      });
+
+      const playlistData = response.data;
+      setPlaylistData(playlistData);
+      loading.value = false;
+
+      return playlistData;
+    } catch (err) {
+      loading.value = false;
+      error.value = err instanceof Error ? err.message : 'Unknown error';
+      console.error('Error while refreshing spotify data:', err);
+      return null;
+    }
   }
 
   return {
     spotifyData,
     error,
-    hasValidToken,
-    setToken,
-    getAccessToken,
+    loading,
     setPlaylistData,
     getPlaylist,
     getPlaylistTracks,

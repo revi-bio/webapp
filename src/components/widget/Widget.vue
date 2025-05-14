@@ -7,6 +7,7 @@ import Markdown from './Markdown.vue';
 import Youtube from './Youtube.vue';
 import Gallery from './Gallery.vue';
 import LinkContainer from './LinkContainer.vue';
+import Spotify from './Spotify.vue';
 
 const props = withDefaults(defineProps<{
   data: Widget;
@@ -29,6 +30,7 @@ let style = computed(() =>
     <Youtube :data="data" v-if="data.type == 'youtube'" />
     <Gallery :data="data" v-if="data.type == 'gallery'" />
     <LinkContainer :data="data" :in-editor="inEditor" v-if="data.type == 'linkContainer'" />
+    <Spotify :data="data" :in-editor="inEditor" v-if="data.type == 'spotify'" />
     <!-- <span class="absolute right-4 bottom-2 text-zinc-900/80">meta: {{ data.type }} - {{ data.id }} - {{ data.page }}:{{ data.position }}</span> -->
   </div>
 </template>

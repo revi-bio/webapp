@@ -1,43 +1,4 @@
-import type { SettingDefinition } from '../Widget';
-
-export interface TrackItem {
-  track: {
-    name: string;
-    artists: {
-      name: string;
-      external_urls: {
-        spotify: string;
-      };
-    }[];
-    album: {
-      images: {
-        url: string;
-        height: number;
-        width: number;
-      }[];
-    };
-    external_urls: {
-      spotify: string;
-    };
-  };
-}
-
-export interface Spotify {
-  accessToken: string;
-  data?: {
-    playlistId: string;
-    image: string;
-    playlistName: string;
-    owner?: {
-      href: string;
-      displayName: string;
-    };
-    tracks?: {
-      items: TrackItem[];
-    };
-    playlistUrl?: string;
-  };
-}
+import { Widget, type SettingDefinition, type WidgetInitializer } from '../Widget';
 
 export const SpotifySettingDefinitions: SettingDefinition[] = [
   {
@@ -48,4 +9,37 @@ export const SpotifySettingDefinitions: SettingDefinition[] = [
     name: 'showArtwork',
     type: 'boolean',
   },
+  {
+    name: 'displayLimit',
+    type: 'number',
+  },
+  {
+    name: 'showOwner',
+    type: 'boolean',
+  },
+  {
+    name: 'showPlaylistName',
+    type: 'boolean',
+  },
+  {
+    name: 'showTrackArtist',
+    type: 'boolean',
+  },
 ];
+
+export class SpotifyWidget extends Widget {
+  constructor(options: Omit<Partial<WidgetInitializer>, 'type'>) {
+    super({
+      type: 'spotify',
+      specificSettings: {
+        playlistId: '',
+        showArtwork: true,
+        displayLimit: 10,
+        showOwner:true,
+        showPlaylistName: true,
+        showTrackArtist:  true,
+      },
+      genericSettings: options.genericSettings ?? {},
+    });
+  }
+}

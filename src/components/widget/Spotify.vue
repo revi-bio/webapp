@@ -1,120 +1,191 @@
-<script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue';
+<script setup lang="ts">
+import { ref, onMounted, computed, watch } from 'vue';
 import { useSpotifyStore } from '@/stores/widgets/spotify';
-import { SpotifyApi } from '@/composables/widgets/SpotifyApi';
+import NewModal from '@/components/global/NewModal.vue';
+import Button from '@/components/global/Button.vue';
+import Input from '@/components/global/Input.vue';
+import Icon from '@/components/global/Icon.vue';
+import LoadingCircle from '@/components/global/LoadingCircle.vue';
 import type { Widget } from '@/types/Widget';
-import type { Spotify } from '@/types/widgets/Spotify';
+import { SpotifyWidget } from '@/types/widgets/Spotify';
 
 const props = defineProps<{
-  data:Widget;
-  isUsed: boolean;
+  data: Widget;
 }>();
 
-const icons = import.meta.glob('../../assets/LinkIcons/spotify-fill-svgrepo-com.svg', { eager: true, as: 'raw' });
+const spotifyStore = useSpotifyStore();
+const isLoading = ref(false);
+const error = ref<string>('');
+const showModal = ref(false);
+const tempPlaylistId = ref('');
 
-const logo = computed(() => {
-  const iconPath = Object.values(icons)[0];
-  if (!iconPath) return null;
-
-  return iconPath
-    .replace(/<svg/, '<svg width="100%" height="100%" preserveAspectRatio="xMidYMid meet"')
-    .replace(/fill="[^"]*"/g, 'fill="#1DB954"')
-    .replace(/stroke="[^"]*"/g, 'stroke="#1DB954"');
+const settings = computed(() => props.data.specificSettings as any);
+const playlistData = computed(() => {
+  return settings.value.playlistId && spotifyStore.spotifyData.data?.playlistId === settings.value.playlistId
+    ? spotifyStore.spotifyData.data
+    : null;
 });
 
-const spotifyStore = useSpotifyStore();
-const playlistId = "6el3eI1j7EpF2xNpgxUtGj";
+function extractPlaylistId(url: string): string {
+  const match = url.match(/playlist\/([a-zA-Z0-9]+)/);
+  return match ? match[1] : url;
+}
 
-watch(() => spotifyStore.spotifyData, (newVal) => {
-  console.log('Spotify data changed:', newVal);
-}, { deep: true });
-
-
-watch(() => spotifyStore.error, (error) => {
-  if (error) {
-    console.error('Spotify error:', error);
+onMounted(async () => {
+  if (settings.value.playlistId) {
+    await fetchPlaylistData();
   }
 });
 
-const playlistData = ref<Spotify['data'] | null>(null);
+watch(() => settings.value.playlistId, async (newId) => {
+  if (newId) {
+    await fetchPlaylistData();
+  }
+});
 
-const getPlaylistForWidget = async () => {
+async function fetchPlaylistData() {
+  if (!settings.value.playlistId) return;
+
+  isLoading.value = true;
+  error.value = '';
+
   try {
-    const token = await spotifyStore.getAccessToken();
-    
-    const playlist = await spotifyStore.getPlaylist(playlistId);
-    playlistData.value = playlist ? playlist : null;
+    await spotifyStore.getPlaylist(settings.value.playlistId);
+    if (spotifyStore.error) {
+      error.value = spotifyStore.error;
+    }
   } catch (err) {
-    console.error('Error fetching Spotify data:', err);
-    playlistData.value = null;
+    error.value = 'Failed to load playlist';
+    console.error('Error fetching playlist:', err);
+  } finally {
+    isLoading.value = false;
   }
 }
 
+const displayedTracks = computed(() => {
+  if (!playlistData.value?.tracks?.items) return [];
+  const limit = settings.value.displayLimit || 10;
+  return playlistData.value.tracks.items.slice(0, limit);
+});
+
+async function refreshPlaylist() {
+  if (!settings.value.playlistId) return;
+
+  isLoading.value = true;
+  error.value = '';
+
+  try {
+    await spotifyStore.refreshSpotifyData(settings.value.playlistId);
+    if (spotifyStore.error) {
+      error.value = spotifyStore.error;
+    }
+  } catch (err) {
+    error.value = 'Failed to refresh playlist';
+    console.error('Error refreshing playlist:', err);
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+function openModal() {
+  tempPlaylistId.value = settings.value.playlistId || '';
+  showModal.value = true;
+}
+
+function closeModal() {
+  showModal.value = false;
+  tempPlaylistId.value = '';
+}
+
+async function savePlaylistId() {
+  const playlistId = extractPlaylistId(tempPlaylistId.value);
+  settings.value.playlistId = playlistId;
+  closeModal();
+
+  if (playlistId) {
+    await fetchPlaylistData();
+  }
+}
 </script>
 
 <template>
-  <div v-if="!isUsed" class="w-full py-5 px-2 gap-2 
-  flex flex-row justify-start content-center items-center rounded-lg 
-  border border-zinc-100/30 bg-zinc-200/10 hover:bg-zinc-200/20 active:bg-zinc-200/30 duration-200"
-    @click.prevent="getPlaylistForWidget">
-    
-    <div class="w-20 h-20" v-html="logo"></div>
-    
-    <div class="flex flex-col">
-      <h3 class="text-lg">Spotify playlist</h3>
-      
-      
-      <div v-if="spotifyStore.error" class="text-sm text-red-500">
-        {{ spotifyStore.error }}
+  <div class="w-full">
+    <div class="p-4">
+      <!-- Error state -->
+      <div v-if="error" class="text-red-500 text-center py-4 gap-2 flex flex-col justify-center content-center items-center">
+        <Icon type="error" />
+        <h3 class="mt-2">{{ error }}</h3>
+        <Button text="Refresh" primary small iconRight icon="refresh" @click="refreshPlaylist" class="mt-3">
+          <Icon type="error" />
+          Try again
+        </Button>
       </div>
-      
-      <div v-else-if="spotifyStore.spotifyData.data" class="text-sm">
-        {{ spotifyStore.spotifyData.data.playlistName }}
-      </div>
-    </div>
-  </div>
 
-  <a v-else :href="spotifyStore.spotifyData.data?.playlistUrl" target="_blank">
-  <div class="flex flex-col justify-start content-start items-start w-full bg-zinc-950">
-    <div class="w-full h-full p-4 gap-2 flex flex-row flex-start content-start items-start ">
-      <img :src="spotifyStore.spotifyData.data?.image" alt="playlist_cover" class="w-24 h-24">
-      <div class="gap-2 w-full h-full flex flex-col justify-center content-start items-start text-zinc-100">
-        <h3 class="text-lg">{{ spotifyStore.spotifyData.data?.playlistName}}</h3>
-        <h3 class="text-base">{{ spotifyStore.spotifyData.data?.owner?.displayName }}</h3>
+      <div v-else-if="isLoading" class="flex justify-center content-center items-center py-8">
+        <LoadingCircle/>
       </div>
-    </div>
-    <div 
-      v-for="(item, index) in spotifyStore.spotifyData.data?.tracks?.items.slice(0,5)" 
-      :key="index" 
-      class="flex flex-row justify-start content-center items-center w-full p-2 gap-4 border-zinc-800 hover:bg-zinc-900"
-    >
-      <img 
-        :src="item.track.album.images[0]?.url" 
-        alt="Track cover" 
-        class="w-12 h-12"
-      >
-      <div class="flex flex-col">
-        <a 
-          :href="item.track.external_urls.spotify" 
-          target="_blank" 
-          class="text-white hover:underline"
-        >
-          {{ item.track.name }}
-        </a>
-        <div class="text-zinc-400 text-sm">
-          <a 
-            v-for="(artist, artistIndex) in item.track.artists" 
-            :key="artistIndex"
-            :href="artist.external_urls.spotify"
-            target="_blank"
-            class="hover:underline"
+
+      <div v-else-if="!settings.playlistId" class="text-center text-xl gap-2 flex flex-col justify-center content-center items-center opacity-70 ">
+        <Icon type="library_music"/>
+        <h3 class="mb-4">No Spotify playlist chosen</h3>
+      </div>
+
+      <!-- Playlist content -->
+      <div v-else-if="playlistData" class="flex flex-col justify-start content-start items-start gap-4">
+        <!-- Playlist header -->
+        <div class="flex flex-row justify-start content-center items-center gap-4">
+          <!-- Playlist artwork -->
+          <img
+            v-if="settings.showArtwork && playlistData.image"
+            :src="playlistData.image"
+            :alt="playlistData.playlistName"
+            class="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+          />
+
+          <div class="flex flex-col justify-start content-start items-start">
+            <!-- Playlist name -->
+            <h3 v-if="settings.showPlaylistName" class="text-lg">
+              {{ playlistData.playlistName }}
+            </h3>
+
+            <!-- Playlist owner -->
+            <p v-if="settings.showOwner && playlistData.owner" class="text-sm opacity-70">
+              by {{ playlistData.owner.displayName }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Track list -->
+        <div class="flex flex-col justify-start content-start items-start gap-2">
+          <div
+            v-for="(item, index) in displayedTracks"
+            :key="index"
+            class="flex items-center gap-3 p-2 rounded-lg transition-colors group"
           >
-            {{ artist.name }}{{ artistIndex < item.track.artists.length - 1 ? ', ' : '' }}
-          </a>
+            <!-- Track artwork -->
+            <img
+              v-if="settings.showArtwork && item.track.album?.images?.[0]?.url"
+              :src="item.track.album.images[0].url"
+              :alt="item.track.name"
+              class="w-10 h-10 rounded object-cover flex-shrink-0"
+            />
+
+            <div class="flex-1 min-w-0">
+              <!-- Track name -->
+              <p class="font-medium truncate">{{ item.track.name }}</p>
+
+              <!-- Artist names -->
+              <p v-if="settings.showTrackArtist && item.track.artists" class="text-sm opacity-70 truncate">
+                {{ item.track.artists.map(artist => artist.name).join(', ') }}
+              </p>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
   </div>
-</a>
-
 </template>
+
+<style scoped>
+</style>

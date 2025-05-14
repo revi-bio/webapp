@@ -12,6 +12,7 @@ import { YoutubeWidget } from '@/types/widgets/YouTube';
 import { MarkdownWidget } from '@/types/widgets/Markdown';
 import { GalleryWidget } from '@/types/widgets/Gallery';
 import { LinkContainerWidget } from '@/types/widgets/LinkContainer';
+import { SpotifyWidget } from '@/types/widgets/Spotify';
 import ColorPicker from '@/components/global/ColorPicker.vue';
 import { GENERIC_SETTINGS_DEFINITIONS, SPECIFIC_SETTINGS_DEFINITIONS } from '@/types/WidgetSettings';
 import { useBioStore } from '@/stores/bio';
@@ -343,6 +344,10 @@ function addWidget(type: WidgetType) {
         currentPage.value.widgets.push(new LinkContainerWidget(data));
         break;
       }
+      case 'spotify': {
+        currentPage.value.widgets.push(new SpotifyWidget(data));
+        break;
+      }
     }
   } catch (error: any) {
     console.error(`Error adding ${type} widget:`, error);
@@ -466,7 +471,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
 
 <template>
   <Modal @close="widgetToolboxOpened = false" :show="widgetToolboxOpened" title="Add widget">
-    <div class="grid grid-cols-3 grid-rows-2 [&>*]:aspect-square">
+    <div class="grid grid-cols-3 grid-rows-3 [&>*]:aspect-square">
       <div @click="addWidget('profile')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Profile widget</div>
       <div @click="addWidget('link')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Link widget</div>
       <div @click="addWidget('youtube')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">YouTube widget</div>
@@ -474,6 +479,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
       <div @click="addWidget('gallery')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Gallery widget</div>
       <div @click="addWidget('linkContainer')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Link container
         widget</div>
+      <div @click="addWidget('spotify')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Spotify widget</div>
     </div>
   </Modal>
   <div class="flex justify-center items-center h-full w-full relative rounded-2xl bg-cover bg-center"
