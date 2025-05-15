@@ -35,7 +35,6 @@ async function selectMsg(index: number) {
     selectedMsg.value = msgs.value[index];
     await inboxStore.markAsRead(msgs.value[index]._id);
 
-    // Mobile nézetnél átváltunk a levél megjelenítésére
     showMobileMessage.value = true;
   } catch (error: any) {
     console.error("Error while selecting message:", error);
@@ -102,7 +101,6 @@ const countOfUnreaded = computed(() => msgs.value.filter((msg) => !msg.isRead).l
       <div v-if="!selectedMsg" class="space-y-4 text-3xl flex items-center justify-center flex-col text-center">
         <h3>Keep</h3>
         <h3>track of <span class="text-rose-500">your</span> notifications</h3>
-        <Button icon-position="none" rank="primary" size="normal" text="Have any question?" @click=""></Button>
         <div>
           (Looks like you have <span class="text-rose-500">{{ countOfUnreaded }} unread</span> message)
         </div>
