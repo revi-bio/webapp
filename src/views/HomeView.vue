@@ -228,9 +228,9 @@ onMounted(() => {
       <div class="our-goal flex flex-col w-full justify-center content-end items-end gap-5 h-screen snap-center z-30">
         <h3 class="text-4xl text-rose-600">Our goal</h3>
         <p class="text-2xl text-right text-rose-100 sm:w-3/5 w-4/5">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Et distinctio ex rem illum dolorum unde non molestiae
-          ducimus dolorem tempora ut quis obcaecati nobis impedit aperiam, facere enim dignissimos illo! Lorem ipsum
-          dolor sit amet consectetur adipisicing elit.
+          An open-source, link-in-bio site that strives not to fit users into modern-day schemas but to let them express their individuality.
+          We are building something that is not just a tool for people on social media, something more remarkable.
+          Online communication and presence have truly become an art. We would like people to express their talent and identity using <span class="text-rose-500">revi</span><span class="text-zinc-600">bio</span>.
         </p>
       </div>
 
@@ -246,10 +246,8 @@ onMounted(() => {
       <div class="creating flex flex-col w-full justify-center content-end items-end gap-5 h-screen snap-center z-30">
         <h3 class="text-4xl text-rose-500">Creating a bio site</h3>
         <p class="text-2xl text-right text-rose-100 sm:w-3/5 w-4/5">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Et distinctio ex rem illum dolorum unde non molestiae
-          ducimus dolorem tempora ut quis obcaecati nobis impedit aperiam, facere enim dignissimos illo! Lorem ipsum
-          dolor sit amet consectetur adipisicing elit. Nostrum tempora excepturi voluptates reiciendis repellat a nihil
-          consectetur. Fuga sapiente expedita doloremque alias unde consequatur velit. Vel odit eveniet fugiat quasi.
+          Create your name and handle. Add links of whatever you want.
+          Markdown, YouTube, Spotify, galleries – the choice is yours to explore and configure.
         </p>
       </div>
 
@@ -263,10 +261,9 @@ onMounted(() => {
       <div class="explore flex flex-col w-full justify-center content-end items-end gap-5 h-screen snap-center z-30">
         <h3 class="text-4xl text-rose-400">Explore our services</h3>
         <p class="text-2xl text-right text-rose-50 sm:w-3/5 w-4/5">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Et distinctio ex rem illum dolorum unde non molestiae
-          ducimus dolorem tempora ut quis obcaecati nobis impedit aperiam, facere enim dignissimos illo! Lorem ipsum
-          dolor sit amet consectetur adipisicing elit. Nostrum tempora excepturi voluptates reiciendis repellat a nihil
-          consectetur. Fuga sapiente expedita doloremque alias unde consequatur velit. Vel odit eveniet fugiat quasi.
+          Monitor your bio's popularity and target audience with graphs and reliable data provided.
+          Create more than one bio in your <span class="text-rose-500">revi</span><span class="text-zinc-600">bio</span> account, manage them separately.
+          You get notified about major events or issues. We manage your sensitive data with Argon2, so you don't have to worry.
         </p>
       </div>
 
