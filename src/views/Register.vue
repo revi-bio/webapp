@@ -80,7 +80,7 @@ const onRegister = async () => {
           <Input type="email" placeholder="Email" v-model="email" :styleclass="errorClass"></Input>
           <Input type="password" placeholder="Password" v-model="password" :styleclass="errorClass"></Input>
           <Input type="password" placeholder="Confirm password" v-model="confPassword" :styleclass="errorClass"></Input>
-          <Checkbox text="I agree to sell my insides to revi.bio"></Checkbox>
+          <Checkbox text="I agree to use revi.bio :)"></Checkbox>
         </form>
         <div class="w-full flex flex-row justify-start content-center items-center gap-3">
           <Button
