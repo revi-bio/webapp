@@ -379,40 +379,44 @@ function openBio(handle: string) {
         </div>
 
         <!--Most used links-->
-        <div class="dashboardCard w-full max-lg:min-h-[300px] h-full lg:row-span-3 lg:col-span-4">
+        <div class="dashboardCard w-full max-lg:min-h-[400px] max-lg:h-auto h-full lg:row-span-3 lg:col-span-4">
           <h3>Most used links</h3>
-          <div class="linkDom w-full h-full flex flex-row justify-center items-center pt-8 gap-2">
+          <div class="w-full max-lg:h-[320px] h-full flex flex-row justify-center items-center pt-8 gap-4 lg:gap-2">
             <LoadingCircle v-if="!socials" />
             <span
               v-for="(link, id) in linkData"
               :key="id"
               class="w-full h-full flex flex-col justify-end content-center items-center gap-2 relative">
-              <div class="w-full flex flex-col justify-center content-center items-center" style="height: 24px;">
+              <div class="w-full flex flex-col justify-center content-center items-center">
                 <LinkIcon :type="link.icon" color="zinc-100" width="50px"></LinkIcon>
               </div>
+              <!-- Mobile view with text label -->
+
               <span
-                class="bg-rose-500 rounded-lg w-1/3 lg:w-3/4 mt-8 self-center"
+                class="bg-rose-500 rounded-lg max-lg:w-full lg:w-3/4 mt-2 lg:mt-8 self-center transition-all duration-300"
                 :style="{ height: scaleHeight(link.value) + '%' }">
               </span>
-
               <h3 class="text-xs md:text-sm text-zinc-400">{{ link.value }}</h3>
+              <div class="w-full flex flex-col justify-center content-center items-center text-xs text-zinc-300 pb-2">
+                {{ link.name }}
+              </div>
             </span>
           </div>
         </div>
 
         <!--Bottom-->
-        <div class="dashboardCard relative max-lg:min-h-[350px] h-[350px] w-full lg:col-span-8 lg:row-span-3">
+        <div class="dashboardCard relative max-lg:min-h-[350px] h-[350px] w-full lg:col-span-8 lg:row-span-3 max-lg:overflow-hidden">
           <h3>Additional views</h3>
 
-          <div class="w-full h-full flex justify-center content-center items-end p-4">
+          <div class="w-full h-full max-lg:overflow-x-auto lg:overflow-x-visible overflow-y-hidden p-4">
             <div class="w-full h-full flex justify-center items-center" v-if="!views.length">
               <LoadingCircle class="relative" />
             </div>
-            <div v-else class="w-full h-full flex flex-row justify-center items-end gap-2 pt-8 pb-8">
+            <div v-else class="max-lg:min-w-max h-full flex flex-row justify-center items-end gap-2 pt-8 pb-8">
               <span
                 v-for="(bar, index) in barChartBars"
                 :key="index"
-                class="flex flex-col justify-end items-center gap-2 flex-1 max-w-[40px]"
+                class="flex flex-col justify-end items-center gap-2 max-lg:w-8 max-lg:min-w-8 lg:flex-1 lg:max-w-[40px]"
                 style="height: calc(100% - 30px);">
                 <span
                   class="bg-zinc-100 rounded-md w-3/4 transition-all duration-300"
@@ -421,8 +425,8 @@ function openBio(handle: string) {
                 <h3 class="text-xs text-zinc-400">{{ bar.date }}</h3>
               </span>
             </div>
-            <div class="absolute top-5 left-1/2 transform -translate-x-1/2 text-xs text-gray-400">{{ selectedPeriod }}</div>
           </div>
+          <div class="absolute top-5 left-1/2 transform -translate-x-1/2 text-xs text-gray-400">{{ selectedPeriod }}</div>
         </div>
       </div>
     </div>
