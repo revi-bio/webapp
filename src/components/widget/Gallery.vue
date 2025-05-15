@@ -40,22 +40,20 @@ function prevImage() {
   <div class="flex flex-col gap-4 p-4">
     <h3 class="text-2xl">{{ data.specificSettings['title'] }}</h3>
     <div class="relative">
-      <img v-if="images.length" :src="getImg(images[currentIndex])" alt="Gallery image" class="w-full h-auto rounded-lg object-cover max-h-[300px]" />
-      <p v-else class="text-center text-zinc-500">No images available</p>
+      <img v-if="images.length" :src="getImg(images[currentIndex])" alt="Gallery image"
+        class="w-full h-auto rounded-lg object-cover max-h-[300px]" />
+      <p v-else class="text-center text-2xl text-zinc-400">
+        There are no selected images
+      </p>
 
-      <Icon
-        v-if="currentIndex > 0"
+      <Icon v-if="currentIndex > 0 && images.length"
         class="absolute top-1/2 left-2 py-1 px-2 text-zinc-200 bg-zinc-700/70 rounded-full cursor-pointer text-3xl"
-        @click="prevImage"
-        type="chevron_left" />
-      <Icon
-        v-if="currentIndex < images.length - 1"
+        @click="prevImage" type="chevron_left" />
+      <Icon v-if="currentIndex < images.length - 1 && images.length"
         class="absolute top-1/2 right-2 py-1 px-2 text-zinc-200 bg-zinc-700/70 rounded-full cursor-pointer text-3xl"
-        @click="nextImage"
-        type="chevron_right" />
+        @click="nextImage" type="chevron_right" />
 
-      <p
-        v-if="images.length > 1"
+      <p v-if="images.length > 1"
         class="absolute bottom-1 left-1/2 text-zinc-200 text-sm bg-black/50 px-3 py-1 rounded-full">
         {{ currentIndex + 1 }} / {{ images.length }}
       </p>

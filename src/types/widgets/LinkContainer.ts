@@ -3,7 +3,7 @@ import { Widget, type SettingDefinition, type WidgetInitializer } from '../Widge
 export const LinkContainerSettingDefinitions: SettingDefinition[] = [
   {
     name: 'links',
-    type: 'links', //{ link: string, name: string, background: Color }[]
+    type: 'links', //{ link: string, name: string }[]
   }
 ];
 
@@ -12,13 +12,7 @@ export class LinkContainerWidget extends Widget {
     super({
       type: 'linkContainer',
       specificSettings: {
-        links: [
-          {link: "https://tylerpalko.github.io/Is-My-Computer-ON/", name: "uno"},
-          {link: "https://tylerpalko.github.io/Is-My-Computer-ON/", name: "dos"},
-          {link: "https://tylerpalko.github.io/Is-My-Computer-ON/", name: "három"},
-          {link: "https://tylerpalko.github.io/Is-My-Computer-ON/", name: "vier"},
-          {link: "https://tylerpalko.github.io/Is-My-Computer-ON/", name: "five"},
-        ]
+        links: []
       },
       genericSettings: options.genericSettings ?? {},
     });

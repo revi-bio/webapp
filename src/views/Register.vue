@@ -40,8 +40,6 @@ const onRegister = async () => {
       return;
     }
 
-    console.log(displayName.value, email.value, password.value, confPassword.value);
-
     const res = await ApiWrapper.post<{ jwt: string }>('auth/register', {
       displayName: displayName.value,
       email: email.value,
