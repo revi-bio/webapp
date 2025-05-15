@@ -46,52 +46,66 @@ const views: Ref<Array<number>> = ref([]);
 var colorPalette = ['#fafafa', '#f43f5e', '#717179'];
 
 const referralColors = ['#d946ef', '#3b82f6', '#f97316', '#facc15', '#10b981'];
-const referralData = ref([
-  { name: 'No referral', value: 35, color: referralColors[0] },
-  { name: 'YouTube', value: 20, color: referralColors[1] },
-  { name: 'Instagram', value: 25, color: referralColors[2] },
-  { name: 'Twitter', value: 10, color: referralColors[3] },
-  { name: 'Other', value: 10, color: referralColors[4] },
-]);
+
+// Backend-ről jövő adatok használata referral distribution-höz
+const referralData = computed(() => {
+  if (!referralDistribution.value) return [];
+
+  const entries = Array.from(referralDistribution.value.entries());
+  return entries.map(([name, value], index) => ({
+    name,
+    value,
+    color: referralColors[index % referralColors.length]
+  }));
+});
+
 const totalValue = computed(() => referralData.value.reduce((sum, item) => sum + item.value, 0));
 
-const linkData = ref([
-  { name: 'Youtube', icon: 'youtube', value: 123 },
-  { name: 'Instagram', icon: 'instagram', value: 103 },
-  { name: 'Steam', icon: 'steam', value: 88 },
-  { name: 'Github', icon: 'github', value: 46 },
-  { name: 'Other', icon: 'other', value: 22 },
-  { name: 'Something', icon: 'something', value: 21 },
-]);
+// Backend-ról jövő adatok használata social/link clicks-hez
+const linkData = computed(() => {
+  if (!socials.value) return [];
 
-const scaleHeight = (value) => {
+  return Array.from(socials.value.entries()).map(([name, value]) => ({
+    name: name.charAt(0).toUpperCase() + name.slice(1),
+    icon: name.toLowerCase(),
+    value
+  }));
+});
+
+const scaleHeight = (value: number) => {
   const maxValue = Math.max(...linkData.value.map((link) => link.value));
-  return (value / maxValue) * 80;
+  if (maxValue === 0) return 0;
+  // Valódi arányosítás - nincs minimum magasság
+  return (value / maxValue) * 85; // max 85% a teljes magasságból
 };
+
 const chartDom = ref<HTMLElement | null>(null);
 const barDom = ref<HTMLElement | null>(null);
 const barInstance = ref<echarts.ECharts | null>(null);
 const chartInstance = ref<echarts.ECharts | null>(null);
 
-//Doughnut chart
-const rawVisitorData = ref([
-  { value: 420, country: 'Germany' },
-  { value: 210, country: 'Brazil' },
-  { value: 69, country: 'Hungary' },
-]);
+// Backend-ről jövő országok adatai
+const visitorData = computed(() => {
+  if (!countries.value) return [];
+
+  return Array.from(countries.value.entries()).map(([country, value]) => ({
+    value,
+    name: `${country} - ${value}`,
+  }));
+});
 
 //Bar (Additional views)
 const barViewsData = ref<{ date: string; value: number }[]>([]);
 
 const generateBarData = (days: number) => {
-  const data = [];
-  for (let i = days - 1; i >= 0; i--) {
-    data.push({
-      date: (days - i).toString(),
-      value: Math.floor(Math.random() * 500), //random
-    });
+  // views adatok már a backend-ről jönnek, azokat használjuk
+  if (views.value.length > 0) {
+    const data = views.value.slice(-days).map((value, index) => ({
+      date: (index + 1).toString(),
+      value
+    }));
+    barViewsData.value = data;
   }
-  barViewsData.value = data;
 };
 
 const handleDropdownSelect = (selected: string) => {
@@ -128,69 +142,69 @@ const handleDropdownSelect = (selected: string) => {
   });
 };
 
-const visitorData = computed(() =>
-  rawVisitorData.value.map((item) => ({
-    value: item.value,
-    name: `${item.country} - ${item.value}`,
-  })),
-);
-
 onMounted(async () => {
-  info.value = (await ApiWrapper.get('statistics/info', {})).data;
-  countries.value = (await ApiWrapper.get('statistics/countries', {})).data;
-  socials.value = (await ApiWrapper.get('statistics/socials', {})).data;
-  referralDistribution.value = (await ApiWrapper.get('statistics/referral-distribution', {})).data;
-  views.value = (await ApiWrapper.get('statistics/views', {})).data;
-  generateBarData(30);
+  try {
+    // Backend adatok betöltése
+    info.value = (await ApiWrapper.get('statistics/info', {})).data;
+    countries.value = new Map(Object.entries((await ApiWrapper.get('statistics/countries', {})).data));
+    socials.value = new Map(Object.entries((await ApiWrapper.get('statistics/socials', {})).data));
+    referralDistribution.value = new Map(Object.entries((await ApiWrapper.get('statistics/referral-distribution', {})).data));
+    views.value = (await ApiWrapper.get('statistics/views', {})).data;
 
-  nextTick(() => {
-    if (chartDom.value) {
-      chartInstance.value = echarts.init(chartDom.value);
-      chartInstance.value.setOption({
-        series: [
-          {
-            name: 'Access From',
-            type: 'pie',
-            radius: ['40%', '70%'],
-            avoidLabelOverlap: false,
-            label: { show: false, position: 'center' },
-            emphasis: { label: { show: true, fontSize: 20, fontWeight: 'bold' } },
-            labelLine: { show: false },
-            data: visitorData.value,
-            color: colorPalette,
-          },
-        ],
-      });
-    }
+    generateBarData(30);
 
-    if (barDom.value) {
-      barInstance.value?.resize();
-      barInstance.value = echarts.init(barDom.value);
-      barInstance.value.setOption({
-        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-        grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-        xAxis: [
-          {
-            type: 'category',
-            data: barViewsData.value.map((item) => item.date),
-            axisTick: { alignWithLabel: true },
-          },
-        ],
-        yAxis: [{ type: 'value' }],
-        series: [
-          {
-            name: 'Direct',
-            type: 'bar',
-            barWidth: '60%',
-            data: views,
-            color: colorPalette,
-          },
-        ],
-      });
-    }
-  });
-  await bioStore.fetchBios();
-  biosList.value = [...bioStore.bios];
+    nextTick(() => {
+      if (chartDom.value) {
+        chartInstance.value = echarts.init(chartDom.value);
+        chartInstance.value.setOption({
+          series: [
+            {
+              name: 'Access From',
+              type: 'pie',
+              radius: ['40%', '70%'],
+              avoidLabelOverlap: false,
+              label: { show: false, position: 'center' },
+              emphasis: { label: { show: true, fontSize: 20, fontWeight: 'bold' } },
+              labelLine: { show: false },
+              data: visitorData.value,
+              color: colorPalette,
+            },
+          ],
+        });
+      }
+
+      if (barDom.value) {
+        barInstance.value?.resize();
+        barInstance.value = echarts.init(barDom.value);
+        barInstance.value.setOption({
+          tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+          grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+          xAxis: [
+            {
+              type: 'category',
+              data: barViewsData.value.map((item) => item.date),
+              axisTick: { alignWithLabel: true },
+            },
+          ],
+          yAxis: [{ type: 'value' }],
+          series: [
+            {
+              name: 'Views',
+              type: 'bar',
+              barWidth: '60%',
+              data: barViewsData.value.map((item) => item.value),
+              color: colorPalette,
+            },
+          ],
+        });
+      }
+    });
+
+    await bioStore.fetchBios();
+    biosList.value = [...bioStore.bios];
+  } catch (error) {
+    console.error('Error loading statistics:', error);
+  }
 });
 
 function openBio(handle: string) {
@@ -300,7 +314,6 @@ window.addEventListener('resize', () => {
         <div class="dashboardCard flex flex-col gap-2 lg:row-start-7 lg:col-span-4">
           <h3>Referral distribution</h3>
           <div class="referralDom w-full h-full flex flex-row justify-center content-center items-center">
-            <!-- Referral distribution csíkok -->
             <div
               v-for="(item, index) in referralData"
               :key="index"
@@ -333,9 +346,9 @@ window.addEventListener('resize', () => {
           </span>
 
           <span class="dashboardCard w-full h-full min-h-[90px]">
-            <h3 class="text-base text-zinc-300">Avarage time on-site</h3>
+            <h3 class="text-base text-zinc-300">Average time on-site</h3>
             <Skeleton :height="2" v-if="info == null" />
-            <h3 v-else class="text-4xl">{{ info.avgSecondsOnSites }}</h3>
+            <h3 v-else class="text-4xl">{{ info.avgSecondsOnSites }}s</h3>
           </span>
 
           <span class="dashboardCard w-full h-full min-h-[90px]">
@@ -349,7 +362,12 @@ window.addEventListener('resize', () => {
         <!--Middle-->
         <div class="dashboardCard w-full h-full max-lg:min-h-[300px] lg:row-span-3 lg:col-span-4">
           <h3 class="">Most visitors per countries</h3>
-          <div ref="chartDom" class="w-full h-full flex flex-col justify-center content-center items-center"></div>
+
+          <div ref="chartDom" class="w-full h-full flex flex-col justify-center content-center items-center">
+            <div class="w-full h-full flex justify-center items-center" v-if="!countries || chartInstance == null">
+              <LoadingCircle class="relative" />
+            </div>
+          </div>
           <span class="w-full flex flex-row justify-center content-center flex-wrap items-center gap-4">
             <h3
               v-for="(visitor, index) in visitorData"
@@ -363,19 +381,18 @@ window.addEventListener('resize', () => {
         <!--Most used links-->
         <div class="dashboardCard w-full max-lg:min-h-[300px] h-full lg:row-span-3 lg:col-span-4">
           <h3>Most used links</h3>
-          <div class="linkDom w-full h-full gap-2 md:gap-5 flex flex-row justify-center items-end">
+          <div class="linkDom w-full h-full flex flex-row justify-center items-center pt-8 gap-2">
+            <LoadingCircle v-if="!socials" />
             <span
               v-for="(link, id) in linkData"
               :key="id"
-              class="w-full h-full flex flex-col items-center gap-2 relative">
+              class="w-full h-full flex flex-col justify-end content-center items-center gap-2 relative">
+              <div class="w-full flex flex-col justify-center content-center items-center" style="height: 24px;">
+                <LinkIcon :type="link.icon" color="zinc-100" width="50px"></LinkIcon>
+              </div>
               <span
-                class="w-full flex flex-col items-center justify-start mt-auto"
+                class="bg-rose-500 rounded-lg w-1/3 lg:w-3/4 mt-8 self-center"
                 :style="{ height: scaleHeight(link.value) + '%' }">
-                <div class="flex justify-center content-center items-center">
-                  <LinkIcon :type="link.icon" :color="'zinc-100'" :width="'90%'"></LinkIcon>
-                </div>
-
-                <span class="bg-rose-500 rounded-lg w-full h-full"></span>
               </span>
 
               <h3 class="text-xs md:text-sm text-zinc-400">{{ link.value }}</h3>
@@ -384,16 +401,14 @@ window.addEventListener('resize', () => {
         </div>
 
         <!--Bottom-->
-        <!-- the loading circle is slightly off-center but probably noone's going to notice it anyway lol -->
         <div class="dashboardCard relative max-lg:min-h-[350px] h-[350px] w-full lg:col-span-8 lg:row-span-3">
           <h3>Additional views</h3>
-          <div class="absolute w-full h-full flex justify-center items-center" v-if="chartInstance == null">
-            <LoadingCircle class="relative" />
-          </div>
-          <div ref="barDom" class="w-full h-full flex justify-center content-center items-center"></div>
-          <!--
 
-            -->
+          <div ref="barDom" class="w-full h-full flex justify-center content-center items-center">
+            <div class=" w-full h-full flex justify-center items-center" v-if="!views.length || !barInstance  ">
+              <LoadingCircle class="relative" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
