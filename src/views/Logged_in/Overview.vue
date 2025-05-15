@@ -2,8 +2,7 @@
 import Button from '@/components/global/Button.vue';
 import Dropdown from '@/components/global/Dropdown.vue';
 import LinkIcon from '@/components/global/LinkIcon.vue';
-import * as echarts from 'echarts';
-import { computed, nextTick, onMounted, ref, type Ref } from 'vue';
+import { computed, onMounted, ref, type Ref } from 'vue';
 import BioPfp from '@/components/global/BioPfp.vue';
 import { useBioStore } from '@/stores/bio';
 import type { Bio } from '@/types/Bio';
@@ -15,13 +14,13 @@ import LoadingCircle from '@/components/global/LoadingCircle.vue';
 
 const bioStore = useBioStore();
 const biosList = ref<Bio[]>([]);
+
 const topBios = computed(() => {
   return [...biosList.value]
     .sort((a, b) => {
       if (b.views !== a.views) {
         return b.views - a.views;
       }
-
       return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
     })
     .slice(0, 3);
@@ -29,7 +28,6 @@ const topBios = computed(() => {
 
 const lastUpdatedBios = computed(() => {
   if (biosList.value.length === 0) return null;
-
   return [...biosList.value]
     .sort((a, b) => {
       return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
@@ -44,12 +42,10 @@ const referralDistribution: Ref<Map<string, number> | null> = ref(null);
 const views: Ref<Array<number>> = ref([]);
 
 var colorPalette = ['#fafafa', '#f43f5e', '#717179'];
-
 const referralColors = ['#d946ef', '#3b82f6', '#f97316', '#facc15', '#10b981'];
 
 const referralData = computed(() => {
   if (!referralDistribution.value) return [];
-
   const entries = Array.from(referralDistribution.value.entries());
   return entries.map(([name, value], index) => ({
     name,
@@ -62,7 +58,6 @@ const totalValue = computed(() => referralData.value.reduce((sum, item) => sum +
 
 const linkData = computed(() => {
   if (!socials.value) return [];
-
   return Array.from(socials.value.entries()).map(([name, value]) => ({
     name: name.charAt(0).toUpperCase() + name.slice(1),
     icon: name.toLowerCase(),
@@ -76,22 +71,67 @@ const scaleHeight = (value: number) => {
   return (value / maxValue) * 85;
 };
 
-const chartDom = ref<HTMLElement | null>(null);
-const barDom = ref<HTMLElement | null>(null);
-const barInstance = ref<echarts.ECharts | null>(null);
-const chartInstance = ref<echarts.ECharts | null>(null);
-
 const visitorData = computed(() => {
   if (!countries.value) return [];
-
   return Array.from(countries.value.entries()).map(([country, value]) => ({
     value,
     name: `${country} - ${value}`,
   }));
 });
 
-//Bar (Additional views)
+// Pie chart computed
+const pieSlices = computed(() => {
+  if (!visitorData.value.length) return [];
+
+  const total = visitorData.value.reduce((sum, item) => sum + item.value, 0);
+  let currentAngle = 0;
+
+  return visitorData.value.map((item, index) => {
+    const percentage = item.value / total;
+    const angle = percentage * 360;
+    const startAngle = currentAngle;
+    const endAngle = currentAngle + angle;
+
+    // SVG path calculation for pie slice
+    const centerX = 100;
+    const centerY = 100;
+    const radius = 80;
+    const innerRadius = 40;
+
+    const x1 = centerX + innerRadius * Math.cos((startAngle * Math.PI) / 180);
+    const y1 = centerY + innerRadius * Math.sin((startAngle * Math.PI) / 180);
+    const x2 = centerX + radius * Math.cos((startAngle * Math.PI) / 180);
+    const y2 = centerY + radius * Math.sin((startAngle * Math.PI) / 180);
+    const x3 = centerX + radius * Math.cos((endAngle * Math.PI) / 180);
+    const y3 = centerY + radius * Math.sin((endAngle * Math.PI) / 180);
+    const x4 = centerX + innerRadius * Math.cos((endAngle * Math.PI) / 180);
+    const y4 = centerY + innerRadius * Math.sin((endAngle * Math.PI) / 180);
+
+    const largeArcFlag = angle > 180 ? 1 : 0;
+
+    const path = [
+      `M ${x1} ${y1}`,
+      `L ${x2} ${y2}`,
+      `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x3} ${y3}`,
+      `L ${x4} ${y4}`,
+      `A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 0 ${x1} ${y1}`,
+      'Z'
+    ].join(' ');
+
+    currentAngle += angle;
+
+    return {
+      path,
+      color: colorPalette[index % colorPalette.length],
+      name: item.name,
+      value: item.value
+    };
+  });
+});
+
+// Bar chart data
 const barViewsData = ref<{ date: string; value: number }[]>([]);
+const selectedPeriod = ref('Last 30 days');
 
 const generateBarData = (days: number) => {
   if (views.value.length > 0) {
@@ -103,7 +143,25 @@ const generateBarData = (days: number) => {
   }
 };
 
+const barChartBars = computed(() => {
+  if (!barViewsData.value.length) return [];
+
+  const maxValue = Math.max(...barViewsData.value.map(item => item.value));
+  const chartHeight = 200;
+  const barWidth = 280 / barViewsData.value.length;
+
+  return barViewsData.value.map((item, index) => ({
+    x: index * barWidth + barWidth * 0.1,
+    y: chartHeight - (item.value / maxValue) * chartHeight,
+    width: barWidth * 0.8,
+    height: (item.value / maxValue) * chartHeight,
+    value: item.value,
+    date: item.date
+  }));
+});
+
 const handleDropdownSelect = (selected: string) => {
+  selectedPeriod.value = selected;
   let days = 30;
   if (selected === 'Last 30 days') days = 30;
   else if (selected === 'Last 60 days') days = 60;
@@ -111,88 +169,26 @@ const handleDropdownSelect = (selected: string) => {
   else if (selected === 'Last 6 months') days = 180;
 
   generateBarData(days);
-
-  nextTick(() => {
-    if (barInstance.value) {
-      barInstance.value.setOption({
-        xAxis: [
-          {
-            type: 'category',
-            data: barViewsData.value.map((item) => item.date),
-            axisTick: { alignWithLabel: true },
-          },
-        ],
-        yAxis: [{ type: 'value' }],
-        series: [
-          {
-            name: 'Views',
-            type: 'bar',
-            barWidth: '60%',
-            data: barViewsData.value.map((item) => item.value),
-            color: colorPalette,
-          },
-        ],
-      });
-    }
-  });
 };
 
 onMounted(async () => {
   try {
-    info.value = (await ApiWrapper.get('statistics/info', {})).data;
-    countries.value = new Map(Object.entries((await ApiWrapper.get('statistics/countries', {})).data));
-    socials.value = new Map(Object.entries((await ApiWrapper.get('statistics/socials', {})).data));
-    referralDistribution.value = new Map(Object.entries((await ApiWrapper.get('statistics/referral-distribution', {})).data));
-    views.value = (await ApiWrapper.get('statistics/views', {})).data;
+    const [infoResult, countriesResult, socialsResult, referralResult, viewsResult] = await Promise.all([
+      ApiWrapper.get('statistics/info', {}),
+      ApiWrapper.get('statistics/countries', {}),
+      ApiWrapper.get('statistics/socials', {}),
+      ApiWrapper.get('statistics/referral-distribution', {}),
+      ApiWrapper.get('statistics/views', {})
+    ]);
 
+    info.value = infoResult.data;
+    countries.value = new Map(Object.entries(countriesResult.data));
+    socials.value = new Map(Object.entries(socialsResult.data));
+    referralDistribution.value = new Map(Object.entries(referralResult.data));
+    views.value = viewsResult.data;
+
+    // Initialize with 30 days
     generateBarData(30);
-
-    nextTick(() => {
-      if (chartDom.value) {
-        chartInstance.value = echarts.init(chartDom.value);
-        chartInstance.value.setOption({
-          series: [
-            {
-              name: 'Access From',
-              type: 'pie',
-              radius: ['40%', '70%'],
-              avoidLabelOverlap: false,
-              label: { show: false, position: 'center' },
-              emphasis: { label: { show: true, fontSize: 20, fontWeight: 'bold' } },
-              labelLine: { show: false },
-              data: visitorData.value,
-              color: colorPalette,
-            },
-          ],
-        });
-      }
-
-      if (barDom.value) {
-        barInstance.value?.resize();
-        barInstance.value = echarts.init(barDom.value);
-        barInstance.value.setOption({
-          tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-          grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-          xAxis: [
-            {
-              type: 'category',
-              data: barViewsData.value.map((item) => item.date),
-              axisTick: { alignWithLabel: true },
-            },
-          ],
-          yAxis: [{ type: 'value' }],
-          series: [
-            {
-              name: 'Views',
-              type: 'bar',
-              barWidth: '60%',
-              data: barViewsData.value.map((item) => item.value),
-              color: colorPalette,
-            },
-          ],
-        });
-      }
-    });
 
     await bioStore.fetchBios();
     biosList.value = [...bioStore.bios];
@@ -211,10 +207,6 @@ function openBio(handle: string) {
     window.location.href = `/baseDash/editor/${handle}`;
   });
 }
-
-window.addEventListener('resize', () => {
-  barInstance.value?.resize();
-});
 </script>
 
 <template>
@@ -259,7 +251,7 @@ window.addEventListener('resize', () => {
             v-for="(bio, index) in topBios"
             :key="bio.handle"
             class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2 cursor-pointer"
-            v-on:click="openBio(bio.handle)">
+            @click="openBio(bio.handle)">
             <div class="flex flex-row justify-start content-center items-center gap-2">
               <BioPfp class="w-16 h-16" :bioHandle="bio.handle"></BioPfp>
               <span class="flex flex-col justify-center content-center items-start">
@@ -293,7 +285,7 @@ window.addEventListener('resize', () => {
             v-for="bio in lastUpdatedBios"
             :key="bio?.handle"
             class="text-lg flex flex-row justify-between content-center items-center bg-zinc-700 w-full rounded-lg overflow-hidden p-2 cursor-pointer"
-            v-on:click="openBio(bio.handle)">
+            @click="openBio(bio.handle)">
             <div class="flex flex-row justify-start content-center items-center gap-2">
               <BioPfp class="w-16 h-16" :bioHandle="bio?.handle"></BioPfp>
               <span class="flex flex-col justify-center content-center items-start">
@@ -360,9 +352,20 @@ window.addEventListener('resize', () => {
         <div class="dashboardCard w-full h-full max-lg:min-h-[300px] lg:row-span-3 lg:col-span-4">
           <h3 class="">Most visitors per countries</h3>
 
-          <div ref="chartDom" class="w-full h-full flex flex-col justify-center content-center items-center">
-            <div class="w-full h-full flex justify-center items-center" v-if="!countries || chartInstance == null">
+          <div class="w-full h-full flex flex-col justify-center content-center items-center p-4">
+            <div class="w-full h-full flex justify-center items-center" v-if="!countries">
               <LoadingCircle class="relative" />
+            </div>
+            <div v-else class="w-full h-full flex flex-col items-center justify-center">
+              <svg viewBox="0 0 200 200" class="w-48 h-48">
+                <path
+                  v-for="slice in pieSlices"
+                  :key="slice.name"
+                  :d="slice.path"
+                  :fill="slice.color"
+                  class="opacity-90"
+                />
+              </svg>
             </div>
           </div>
           <span class="w-full flex flex-row justify-center content-center flex-wrap items-center gap-4">
@@ -401,10 +404,24 @@ window.addEventListener('resize', () => {
         <div class="dashboardCard relative max-lg:min-h-[350px] h-[350px] w-full lg:col-span-8 lg:row-span-3">
           <h3>Additional views</h3>
 
-          <div ref="barDom" class="w-full h-full flex justify-center content-center items-center">
-            <div class=" w-full h-full flex justify-center items-center" v-if="!views.length || !barInstance  ">
+          <div class="w-full h-full flex justify-center content-center items-end p-4">
+            <div class="w-full h-full flex justify-center items-center" v-if="!views.length">
               <LoadingCircle class="relative" />
             </div>
+            <div v-else class="w-full h-full flex flex-row justify-center items-end gap-2 pt-8 pb-8">
+              <span
+                v-for="(bar, index) in barChartBars"
+                :key="index"
+                class="flex flex-col justify-end items-center gap-2 flex-1 max-w-[40px]"
+                style="height: calc(100% - 30px);">
+                <span
+                  class="bg-zinc-100 rounded-md w-3/4 transition-all duration-300"
+                  :style="{ height: bar.height + '%' }">
+                </span>
+                <h3 class="text-xs text-zinc-400">{{ bar.date }}</h3>
+              </span>
+            </div>
+            <div class="absolute top-5 left-1/2 transform -translate-x-1/2 text-xs text-gray-400">{{ selectedPeriod }}</div>
           </div>
         </div>
       </div>
