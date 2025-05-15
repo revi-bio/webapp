@@ -101,7 +101,6 @@ const createBio = async () => {
 
 const openEditor = (id: string) => {
   router.push({ name: 'Editor', params: { id } });
-  console.log(`Opening editor for bio with id: ${id}`);
 };
 
 function changeSearch(filtered: Bio[]) {

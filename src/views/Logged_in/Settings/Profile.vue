@@ -14,9 +14,6 @@ userStore.refreshUserData();
 
 const currentDisplayName = computed(() => userStore.getUserData()?.displayName);
 
-
-console.log('displayname:',currentDisplayName)
-
 const handleChangePicture = () => {
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
@@ -31,7 +28,6 @@ const handleChangePicture = () => {
     }
   };
   fileInput.click();
-  userStore.xd().then(x => console.log(x));
 };
 
 

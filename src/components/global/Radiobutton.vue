@@ -14,7 +14,7 @@ const emit = defineEmits(['change', 'selected']);
 const handleChange = (value: string | number) => {
   emit('change', value);
   emit('selected', value);
-  console.log('Radio selection changed:', value);
+
 };
 
 const isSelected = (value: string | number) => {

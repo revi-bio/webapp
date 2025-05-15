@@ -45,7 +45,6 @@ export const useAdminStore =  defineStore('admin', ()=>{
   async function getUserBios(userId: string) {
     try{
       const res = await ApiWrapper.get<Bio>(`admin/users/${userId}/bios`, {});
-      console.log("users bios:", res.data)
       return res.data;
 
     }catch(error: any){
