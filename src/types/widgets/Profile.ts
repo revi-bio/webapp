@@ -7,7 +7,7 @@ export const ProfileSettingDefinitions: SettingDefinition[] = [
   },
   {
     name: 'profileOver',
-    type: 'string',
+    type: 'boolean',
   },
   {
     name: 'rounded',
