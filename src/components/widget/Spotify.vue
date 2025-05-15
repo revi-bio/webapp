@@ -164,7 +164,7 @@ async function refreshPlaylist() {
         </div>
 
         <!-- Track list -->
-        <div class="flex flex-col justify-start content-start items-start gap-2">
+        <div class="flex flex-col justify-start content-start items-start gap-2 overflow-y-scroll max-h-[200px] w-full">
           <div
             v-for="(item, index) in displayedTracks"
             :key="index"
