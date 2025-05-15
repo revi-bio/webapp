@@ -47,7 +47,6 @@ var colorPalette = ['#fafafa', '#f43f5e', '#717179'];
 
 const referralColors = ['#d946ef', '#3b82f6', '#f97316', '#facc15', '#10b981'];
 
-// Backend-ről jövő adatok használata referral distribution-höz
 const referralData = computed(() => {
   if (!referralDistribution.value) return [];
 
@@ -61,7 +60,6 @@ const referralData = computed(() => {
 
 const totalValue = computed(() => referralData.value.reduce((sum, item) => sum + item.value, 0));
 
-// Backend-ról jövő adatok használata social/link clicks-hez
 const linkData = computed(() => {
   if (!socials.value) return [];
 
@@ -75,8 +73,7 @@ const linkData = computed(() => {
 const scaleHeight = (value: number) => {
   const maxValue = Math.max(...linkData.value.map((link) => link.value));
   if (maxValue === 0) return 0;
-  // Valódi arányosítás - nincs minimum magasság
-  return (value / maxValue) * 85; // max 85% a teljes magasságból
+  return (value / maxValue) * 85;
 };
 
 const chartDom = ref<HTMLElement | null>(null);
@@ -84,7 +81,6 @@ const barDom = ref<HTMLElement | null>(null);
 const barInstance = ref<echarts.ECharts | null>(null);
 const chartInstance = ref<echarts.ECharts | null>(null);
 
-// Backend-ről jövő országok adatai
 const visitorData = computed(() => {
   if (!countries.value) return [];
 
@@ -98,7 +94,6 @@ const visitorData = computed(() => {
 const barViewsData = ref<{ date: string; value: number }[]>([]);
 
 const generateBarData = (days: number) => {
-  // views adatok már a backend-ről jönnek, azokat használjuk
   if (views.value.length > 0) {
     const data = views.value.slice(-days).map((value, index) => ({
       date: (index + 1).toString(),
@@ -144,7 +139,6 @@ const handleDropdownSelect = (selected: string) => {
 
 onMounted(async () => {
   try {
-    // Backend adatok betöltése
     info.value = (await ApiWrapper.get('statistics/info', {})).data;
     countries.value = new Map(Object.entries((await ApiWrapper.get('statistics/countries', {})).data));
     socials.value = new Map(Object.entries((await ApiWrapper.get('statistics/socials', {})).data));
@@ -212,6 +206,9 @@ function openBio(handle: string) {
   router.push({
     name: 'Editor',
     params: { handle },
+  }).catch(err => {
+    console.error('Navigation error:', err);
+    window.location.href = `/baseDash/editor/${handle}`;
   });
 }
 
