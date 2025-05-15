@@ -1,12 +1,12 @@
 <script setup lang="ts">
 
 const props = defineProps<{
-  text: string;
-  options: {key: string, value: string | number}[];
+  text?: string;
+  options: {key: string, value: string | number | boolean}[];
   disabled?: boolean;
   icon?: string;
   direction: "col" | "row";
-  selected?: string | number;
+  selected?: string | number | boolean;
 }>();
 
 const emit = defineEmits(['change', 'selected']);

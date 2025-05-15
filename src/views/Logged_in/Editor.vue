@@ -27,6 +27,8 @@ import { default as Modal } from '@/components/global/NewModal.vue';
 import Icon from '@/components/global/Icon.vue';
 import PageSelector from '@/components/global/PageSelector.vue';
 import LoadingCircle from '@/components/global/LoadingCircle.vue';
+import Radiobutton from '@/components/global/Radiobutton.vue';
+import Checkbox from '@/components/global/Checkbox.vue';
 
 const emits = defineEmits([
   'avatarChange',
@@ -553,7 +555,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
 
         <!-- Widget-specific settings -->
         <span>Widget-specific settings</span>
-        <span v-for="setting in SPECIFIC_SETTINGS_DEFINITIONS[selectedWidget.type]" :key="setting.name">
+        <div v-for="setting in SPECIFIC_SETTINGS_DEFINITIONS[selectedWidget.type]" :key="setting.name" class="flex flex-col items-start">
           <span class="text-zinc-400">{{ setting.name }}</span>
           <Input v-if="setting.type === 'string'" type="text"
             v-model="(selectedWidget.specificSettings as any)[setting.name]" />
@@ -579,7 +581,10 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
             v-else-if="setting.type === 'number'" />
           <Input v-model="(selectedWidget.specificSettings as any)[setting.name]" type="textarea" class="h-[200px]"
             v-else-if="setting.type === 'text'" />
-        </span>
+          <Checkbox v-model="(selectedWidget.specificSettings as any)[setting.name]" text=""
+            v-else-if="setting.type === 'boolean'" />
+
+        </div>
 
         <!-- Generic settings -->
         <span>Generic settings</span>
