@@ -202,7 +202,7 @@ document.addEventListener('click', closeColorPicker);
 <template>
   <div class="flex flex-col justify-center content-center items-center gap-2 relative">
     <div
-      class="flex flex-row justify-evenly content-center items-center px-3 py-2 gap-5 w-full rounded-full bg-zinc-900 border-zinc-800 border-[1px] cursor-pointer"
+      class="flex flex-row justify-evenly content-center items-center px-3 py-2 gap-5 w-full rounded-lg bg-zinc-900 border-zinc-800 border-[1px] cursor-pointer"
       @click="toggleColorPicker"
     >
       <h3>{{ type }} color</h3>
@@ -248,8 +248,8 @@ document.addEventListener('click', closeColorPicker);
           </div>
         </div>
       </div>
-      <div class="flex flex-col content-end items-end gap-4 w-full">
-        <h3 class="text-lg text-zinc-200">{{ opacity }}%</h3>
+      <div class="flex flex-col content-start items-start gap-4 w-full">
+        <h3 class="text-zinc-200">Opacity</h3>
         <input
           type="range"
           min="0"

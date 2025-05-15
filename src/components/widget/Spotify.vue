@@ -7,7 +7,6 @@ import Input from '@/components/global/Input.vue';
 import Icon from '@/components/global/Icon.vue';
 import LoadingCircle from '@/components/global/LoadingCircle.vue';
 import type { Widget } from '@/types/Widget';
-import { SpotifyWidget } from '@/types/widgets/Spotify';
 
 const props = defineProps<{
   data: Widget;
@@ -16,8 +15,6 @@ const props = defineProps<{
 const spotifyStore = useSpotifyStore();
 const isLoading = ref(false);
 const error = ref<string>('');
-const showModal = ref(false);
-const tempPlaylistId = ref('');
 
 const settings = computed(() => props.data.specificSettings as any);
 const playlistData = computed(() => {
