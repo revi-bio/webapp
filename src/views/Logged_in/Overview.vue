@@ -163,7 +163,8 @@ const barChartBars = computed(() => {
   const minValue = Math.min(...values);
   const valueRange = maxValue - minValue;
   const chartHeight = 200;
-  const barWidth = 280 / barViewsData.value.length;
+  // Fixed width for each bar to ensure consistent sizing when scrolling
+  const barWidth = 30;
 
   return barViewsData.value.map((item, index) => {
     let heightPercentage;
@@ -177,10 +178,8 @@ const barChartBars = computed(() => {
       heightPercentage = Math.max(0.05, heightPercentage);
     }
 
+    // No need to calculate x position since we're using flexbox for positioning
     return {
-      x: index * barWidth + barWidth * 0.1,
-      y: chartHeight - (heightPercentage * chartHeight),
-      width: barWidth * 0.8,
       height: heightPercentage * chartHeight,
       value: item.value,
       date: item.date
@@ -253,7 +252,7 @@ function openBio(handle: string) {
         ]" />
     </span>
 
-    <div class="overflow-y-auto h-full w-full overflow-x-hidden">
+    <div class="overflow-y-auto h-full w-full overflow-x-hidden fullPage">
       <div
         class="w-full gap-4 max-lg:flex max-lg:flex-col lg:min-h-[800px] lg:max-h-[800px] lg:grid lg:grid-cols-12 lg:grid-rows-7">
         <!--Smaller left side-->
@@ -330,7 +329,13 @@ function openBio(handle: string) {
         <!--Referral distribution-->
         <div class="dashboardCard flex flex-col gap-2 lg:row-start-7 lg:col-span-4">
           <h3>Referral distribution</h3>
-          <div class="referralDom w-full h-full flex flex-row justify-center content-center items-center">
+          <div class="w-full h-full flex justify-center items-center" v-if="!referralDistribution">
+            <LoadingCircle class="relative" />
+          </div>
+          <div class="w-full h-full flex justify-center items-center" v-else-if="referralData.length === 0">
+            <h3 class="text-zinc-400">No referral data yet</h3>
+          </div>
+          <div v-else class="referralDom w-full h-full flex flex-row justify-center content-center items-center">
             <div
               v-for="(item, index) in referralData"
               :key="index"
@@ -384,6 +389,9 @@ function openBio(handle: string) {
             <div class="w-full h-full flex justify-center items-center" v-if="!countries">
               <LoadingCircle class="relative" />
             </div>
+            <div class="w-full h-full flex justify-center items-center" v-else-if="visitorData.length === 0">
+              <h3 class="text-zinc-400">No visitor data yet</h3>
+            </div>
             <div v-else class="w-full h-full flex flex-col items-center justify-center">
               <svg viewBox="0 0 200 200" class="w-48 h-48">
                 <path
@@ -410,7 +418,12 @@ function openBio(handle: string) {
         <div class="dashboardCard w-full max-lg:min-h-[400px] max-lg:h-auto h-full lg:row-span-3 lg:col-span-4">
           <h3>Most used links</h3>
           <div class="w-full max-lg:h-[320px] h-full flex flex-row justify-center items-center pt-8 gap-4 lg:gap-2">
-            <LoadingCircle v-if="!socials" />
+            <div class="w-full h-full flex justify-center items-center" v-if="!socials">
+              <LoadingCircle class="relative" />
+            </div>
+            <div class="w-full h-full flex justify-center items-center" v-else-if="linkData.length === 0">
+              <h3 class="text-zinc-400">No links clicked yet</h3>
+            </div>
             <span
               v-for="(link, id) in linkData"
               :key="id"
@@ -433,28 +446,31 @@ function openBio(handle: string) {
         </div>
 
         <!--Bottom-->
-        <div class="dashboardCard relative max-lg:min-h-[350px] h-[350px] w-full lg:col-span-8 lg:row-span-3 max-lg:overflow-hidden">
+        <div class="dashboardCard relative max-lg:min-h-[350px] h-[350px] w-full lg:col-span-8 lg:row-span-3">
           <h3>Additional views</h3>
 
-          <div class="w-full h-full max-lg:overflow-x-auto lg:overflow-x-visible overflow-y-hidden p-4">
+          <div class="w-full h-full overflow-x-auto views overflow-y-hidden p-4">
             <div class="w-full h-full flex justify-center items-center" v-if="!views.length">
-              <LoadingCircle class="relative" />
+              <h3 class="text-zinc-400">No views yet</h3>
             </div>
-            <div v-else class="max-lg:min-w-max h-full flex flex-row justify-center items-end gap-2 pt-8 pb-8">
+            <div class="w-full h-full flex justify-center items-center" v-else-if="views.every(v => v === 0)">
+              <h3 class="text-zinc-400">No views yet</h3>
+            </div>
+            <div v-else class="h-full min-w-max flex flex-row justify-center items-end gap-2 pt-8 pb-8">
               <span
                 v-for="(bar, index) in barChartBars"
                 :key="index"
-                class="flex flex-col justify-end items-center gap-2 max-lg:w-8 max-lg:min-w-8 lg:flex-1 lg:max-w-[40px]"
+                class="flex flex-col justify-end items-center gap-2 w-[30px] min-w-[30px]"
                 style="height: calc(100% - 30px);">
                 <span
                   class="bg-zinc-100 rounded-md w-3/4 transition-all duration-300"
-                  :style="{ height: bar.height + '%' }">
+                  :style="{ height: bar.height + 'px' }">
                 </span>
                 <h3 class="text-xs text-zinc-400">{{ bar.date }}</h3>
               </span>
             </div>
           </div>
-          <div class="absolute top-5 left-1/2 transform -translate-x-1/2 text-xs text-gray-400">{{ selectedPeriod }}</div>
+          <div class="absolute top-14 left-1/2 transform -translate-x-1/2 text-xs text-gray-400">{{ selectedPeriod }}</div>
         </div>
       </div>
     </div>
@@ -468,5 +484,26 @@ function openBio(handle: string) {
 
 .referralDom div {
   position: relative;
+}
+.views::-webkit-scrollbar{
+  @apply h-2 rounded-full
+}
+.fullPage::-webkit-scrollbar{
+  @apply w-2 rounded-full
+}
+
+/* Track */
+.fullPage::-webkit-scrollbar-track, .views::-webkit-scrollbar-track {
+  @apply bg-zinc-800 rounded-full
+}
+
+/* Handle */
+.fullPage::-webkit-scrollbar-thumb, .views::-webkit-scrollbar-thumb {
+  @apply bg-zinc-600/50 rounded-full border-4
+}
+
+/* Handle on hover */
+.fullPage::-webkit-scrollbar-thumb:hover, .views::-webkit-scrollbar-thumb:hover {
+  @apply bg-zinc-700 rounded-full
 }
 </style>
