@@ -56,16 +56,19 @@ function findWidgetIndex(id: string): number {
 
 <template>
   <div class="flex justify-center items-center h-full w-full relative bg-cover bg-center" :style="backgroundStyle">
-    <div id="widgets" class="flex flex-col gap-3 justify-center z-0 h-[80%] max-w-[600px] w-1/2 max-md:w-full max-md:p-4" >
-      <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
-        <div class="flex gap-2 relative">
-          <!-- Widget component -->
-          <Widget :data="widget" class="w-full" />
-        </div>
-      </template>
+    <div class="h-[80%] max-w-[600px] w-1/2 max-md:w-full max-md:p-4 overflow-y-scroll pr-2">
+      <div id="widgets"
+        class="flex flex-col gap-3 justify-center z-0 ">
+        <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
+          <div class="flex gap-2 relative">
+            <!-- Widget component -->
+            <Widget :data="widget" class="w-full" />
+          </div>
+        </template>
+      </div>
     </div>
-    <div
-      class="absolute w-full bottom-0 flex justify-center items-center gap-2 p-4">
+
+    <div class="absolute w-full bottom-0 flex justify-center items-center gap-2 p-4">
 
       <PageSelector :pages="pages" @selectedPageIndex="(index) => currentPageIndex = index" />
     </div>
