@@ -40,7 +40,33 @@ let playListNameColorStyle = computed(() => {
 
 let playListOwnerColorStyle = computed(() => {
   try {
-    const color = props.data.specificSettings['playListOwnerColor'];
+    const color = props.data.specificSettings['playListOwnerColorStyle'];
+    if (color && typeof color === 'object' && 'hue' in color) {
+      return `color: hsla(${color.hue}, ${color.saturation}%, ${color.value}%, ${color.opacity});`;
+    } else {
+      return 'color: var(--color-zinc-200);';
+    }
+  } catch (err) {
+    return 'color: var(--color-zinc-200);';
+  }
+});
+
+let trackNameColor = computed(() => {
+  try {
+    const color = props.data.specificSettings['trackNameColor'];
+    if (color && typeof color === 'object' && 'hue' in color) {
+      return `color: hsla(${color.hue}, ${color.saturation}%, ${color.value}%, ${color.opacity});`;
+    } else {
+      return 'color: var(--color-zinc-200);';
+    }
+  } catch (err) {
+    return 'color: var(--color-zinc-200);';
+  }
+});
+
+let trackArtistColor = computed(() => {
+  try {
+    const color = props.data.specificSettings['trackArtistColor'];
     if (color && typeof color === 'object' && 'hue' in color) {
       return `color: hsla(${color.hue}, ${color.saturation}%, ${color.value}%, ${color.opacity});`;
     } else {
@@ -163,8 +189,8 @@ async function refreshPlaylist() {
           </div>
         </div>
 
-        <!-- Track list -->
-        <div class="flex flex-col justify-start content-start items-start gap-2 overflow-y-scroll max-h-[200px] w-full">
+        <!-- Track list column-->
+        <div v-if="!props.data.specificSettings['tracksRowAlign']" class="flex flex-col justify-start content-start items-start gap-2 overflow-y-scroll max-h-[200px] w-full">
           <div
             v-for="(item, index) in displayedTracks"
             :key="index"
@@ -183,11 +209,36 @@ async function refreshPlaylist() {
               <p class="font-medium truncate">{{ item.track.name }}</p>
 
               <!-- Artist names -->
-              <p v-if="props.data.specificSettings['showTrackArtist'] && item.track.artists" class="text-sm opacity-70 truncate">
+              <p v-if="props.data.specificSettings['showTrackArtist'] && item.track.artists" class="text-sm truncate">
                 {{ item.track.artists.map(artist => artist.name).join(', ') }}
               </p>
             </div>
+          </div>
+        </div>
 
+        <!-- Track list row (FIXED) -->
+        <div v-else class="w-full tracks overflow-x-auto overflow-y-hidden pb-2" style="scroll-behavior: smooth;">
+          <div class="flex flex-row justify-start content-center items-center gap-4 min-w-max">
+            <div
+              v-for="(item, index) in displayedTracks"
+              :key="index"
+              class="flex flex-col justify-center content-center items-center gap-3 p-2 rounded-lg transition-colors group flex-shrink-0"
+            >
+              <img
+                v-if="props.data.specificSettings['showArtwork'] && item.track.album?.images?.[0]?.url"
+                :src="item.track.album.images[0].url"
+                :alt="item.track.name"
+                class="w-52 h-52 rounded object-cover flex-shrink-0"
+              />
+              <div class="flex flex-col justify-center content-center items-center text-center w-full">
+                <!-- Track name -->
+                <p class="font-medium  w-full px-1" :style="trackNameColor">{{ item.track.name }}</p>
+                <!-- Artist names -->
+                <p v-if="props.data.specificSettings['showTrackArtist'] && item.track.artists" class="w-full px-1" :style="trackArtistColor">
+                  {{ item.track.artists.map(artist => artist.name).join(', ') }}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -196,4 +247,23 @@ async function refreshPlaylist() {
 </template>
 
 <style scoped>
+/* width */
+.tracks::-webkit-scrollbar {
+  @apply h-2 rounded-full
+}
+
+/* Track */
+.tracks::-webkit-scrollbar-track {
+  @apply bg-zinc-800 rounded-full
+}
+
+/* Handle */
+.tracks::-webkit-scrollbar-thumb {
+  @apply bg-zinc-600/50 rounded-full border-4
+}
+
+/* Handle on hover */
+.tracks::-webkit-scrollbar-thumb:hover {
+  @apply bg-zinc-700 rounded-full
+}
 </style>
