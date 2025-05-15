@@ -680,7 +680,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
     </Teleport>
 
     <!-- Widgets display -->
-    <div class="flex flex-col overflow-y-auto w-full items-center h-full -z-10">
+    <div class="flex flex-col overflow-y-auto justify-center w-full items-center h-full -z-10">
     <div class="flex flex-col max-w-[600px] justify-center z-0 h-[80%] p-2">
       <div id="widgets" v-if="!isLoadingBio" class="flex flex-col gap-3 h-full">
         <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
