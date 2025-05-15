@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, computed, watch } from 'vue';
 import Button from './Button.vue';
-import Slider from './Slider.vue';
+import Icon from './Icon.vue';
 
 const generateTWColors = (colors: string[]) => {
   const shades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
@@ -75,18 +75,9 @@ function tailwindClassToHsv(colorName, shade, opacity = 100) {
     v = 100 - (shade - 50) * (70 / 900);
   }
 
-  // Apply opacity effect to HSV
-  // When opacity decreases, we can:
-  // 1. Decrease saturation proportionally
-  // 2. Increase value/brightness to simulate transparency
-
-  // Adjust saturation based on opacity
   s = s * (opacity / 100);
 
-  // Adjust value (increase as opacity decreases to simulate transparency blending with white)
-  // This is a simplification - true opacity would depend on background color
   if (opacity < 100) {
-    // Blend toward white as opacity decreases
     v = v + ((100 - v) * (1 - opacity / 100));
   }
 
@@ -130,16 +121,14 @@ function tailwindClassToHsla(colorName: string, shade: number, opacity = 100) {
 
   if (isGrayscale) {
     s = 0;
-    l = 100 - (shade - 50) * (60 / 900); // egyszerűsített világosság-gradiens
+    l = 100 - (shade - 50) * (60 / 900);
   } else {
-    s = 60 - (shade - 50) * (30 / 900); // telítettség csökken a sötétebb árnyalatok felé
-    l = 50 + (shade - 500) * (-40 / 900); // világosság csökken a sötét árnyalatok felé
+    s = 60 - (shade - 50) * (30 / 900);
+    l = 50 + (shade - 500) * (-40 / 900);
   }
 
-  // Alkalmazzuk az opacitást az alpha csatornában
   const a = parseFloat((opacity / 100).toFixed(2));
 
-  // Szaturáció és világosság korlátozása
   s = Math.max(0, Math.min(100, Math.round(s)));
   l = Math.max(0, Math.min(100, Math.round(l)));
 
@@ -205,7 +194,7 @@ document.addEventListener('click', closeColorPicker);
       class="flex flex-row justify-evenly content-center items-center px-3 py-2 gap-5 w-full rounded-lg bg-zinc-900 border-zinc-800 border-[1px] cursor-pointer"
       @click="toggleColorPicker"
     >
-      <h3>{{ type }} color</h3>
+      <h3 class="capitalize">{{ type }} color</h3>
       <span class="rounded-full w-5 h-5 bg-gradient-to-r from-rose-400 from-20% via-violet-500 via-50% to-green-500 to-80%"></span>
     </div>
 
@@ -232,7 +221,10 @@ document.addEventListener('click', closeColorPicker);
       class="flex flex-col justify-between content-start items-start px-3 py-2 gap-4 bg-zinc-900 border-zinc-800 border-[1px] rounded-md z-[200] absolute top-16"
     >
       <div class="w-full h-full flex flex-col justify-between content-start items-start gap-4">
-        <div class="text-white text-lg">{{ baseColor }} shades</div>
+        <div class="flex flex-row justify-start content-center items-center text-white text-lg gap-2">
+          <h3 class="capitalize">{{ baseColor }} shades</h3>
+          <Icon type="tonality"></Icon>
+        </div>
         <div class="w-full h-full flex flex-row flex-wrap justify-center items-center content-center gap-5">
           <div
             v-for="(shade, index) in chosenShades"
@@ -249,7 +241,10 @@ document.addEventListener('click', closeColorPicker);
         </div>
       </div>
       <div class="flex flex-col content-start items-start gap-4 w-full">
-        <h3 class="text-zinc-200">Opacity</h3>
+        <div class="flex flex-row justify-start content-center items-center gap-2">
+          <h3 class="text-zinc-200">Opacity</h3>
+          <Icon type="opacity"></Icon>
+        </div>
         <input
           type="range"
           min="0"
@@ -260,10 +255,11 @@ document.addEventListener('click', closeColorPicker);
         />
         <div
           v-if="selectedShade !== null"
-          class="w-full h-12 rounded-lg flex items-center justify-center"
+          class="w-full h-12 rounded-lg flex items-center justify-center gap-2"
           :class="colorWithOpacity"
         >
           <span class="text-xs text-white">{{ opacity }}%</span>
+          <Icon type="opacity"></Icon>
         </div>
       </div>
       <Button

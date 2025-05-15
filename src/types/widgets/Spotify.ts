@@ -6,6 +6,14 @@ export const SpotifySettingDefinitions: SettingDefinition[] = [
     type: 'string',
   },
   {
+    name: 'playListNameColor',
+    type:'color',
+  },
+  {
+    name: 'playListOwnerColor',
+    type:'color',
+  },
+  {
     name: 'showArtwork',
     type: 'boolean',
   },
@@ -33,6 +41,8 @@ export class SpotifyWidget extends Widget {
       type: 'spotify',
       specificSettings: {
         playlistId: '',
+        playListNameColor: 'zinc-200',
+        playListOwnerColor: 'zinc-200',
         showArtwork: true,
         displayLimit: 10,
         showOwner:true,

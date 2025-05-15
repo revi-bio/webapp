@@ -49,7 +49,6 @@ export const useSpotifyStore = defineStore('spotify', () => {
   });
 
   const error = ref<string | null>(null);
-  const loading = ref<boolean>(false);
 
   function setPlaylistData(data: Spotify['data']) {
     spotifyData.value.data = data;
@@ -61,15 +60,12 @@ export const useSpotifyStore = defineStore('spotify', () => {
       return null;
     }
 
-    loading.value = true;
     error.value = null;
 
     try {
       const response = await ApiWrapper.get(`spotify/playlist/${playlistId}/tracks`, {});
-      loading.value = false;
       return response.data;
     } catch (err) {
-      loading.value = false;
       error.value = err instanceof Error ? err.message : 'Unknown error';
       console.error('Error while fetching playlist tracks:', err);
       return null;
@@ -82,7 +78,6 @@ export const useSpotifyStore = defineStore('spotify', () => {
       return null;
     }
 
-    loading.value = true;
     error.value = null;
 
     try {
@@ -90,11 +85,8 @@ export const useSpotifyStore = defineStore('spotify', () => {
       const playlistData = response.data;
 
       setPlaylistData(playlistData);
-      loading.value = false;
-
       return playlistData;
     } catch (err) {
-      loading.value = false;
       error.value = err instanceof Error ? err.message : 'Unknown error';
       console.error('Error while fetching spotify data:', err);
       return null;
@@ -102,7 +94,6 @@ export const useSpotifyStore = defineStore('spotify', () => {
   }
 
   async function refreshSpotifyData(playlistId: string) {
-    loading.value = true;
     error.value = null;
 
     try {
@@ -112,11 +103,8 @@ export const useSpotifyStore = defineStore('spotify', () => {
 
       const playlistData = response.data;
       setPlaylistData(playlistData);
-      loading.value = false;
-
       return playlistData;
     } catch (err) {
-      loading.value = false;
       error.value = err instanceof Error ? err.message : 'Unknown error';
       console.error('Error while refreshing spotify data:', err);
       return null;
@@ -126,7 +114,6 @@ export const useSpotifyStore = defineStore('spotify', () => {
   return {
     spotifyData,
     error,
-    loading,
     setPlaylistData,
     getPlaylist,
     getPlaylistTracks,

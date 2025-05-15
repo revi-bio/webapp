@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue';
 import { useSpotifyStore } from '@/stores/widgets/spotify';
-import NewModal from '@/components/global/NewModal.vue';
 import Button from '@/components/global/Button.vue';
-import Input from '@/components/global/Input.vue';
 import Icon from '@/components/global/Icon.vue';
 import LoadingCircle from '@/components/global/LoadingCircle.vue';
 import type { Widget } from '@/types/Widget';
+
 
 const props = defineProps<{
   data: Widget;
@@ -16,34 +15,63 @@ const spotifyStore = useSpotifyStore();
 const isLoading = ref(false);
 const error = ref<string>('');
 
-const settings = computed(() => props.data.specificSettings as any);
 const playlistData = computed(() => {
-  return settings.value.playlistId && spotifyStore.spotifyData.data?.playlistId === settings.value.playlistId
+  return props.data.specificSettings['playlistId'] && spotifyStore.spotifyData.data?.playlistId === props.data.specificSettings['playlistId']
     ? spotifyStore.spotifyData.data
     : null;
 });
 
+const isLoadingData = computed(() => {
+  return isLoading.value;
+});
+
+let playListNameColorStyle = computed(() => {
+  try {
+    const color = props.data.specificSettings['playListNameColor'];
+    if (color && typeof color === 'object' && 'hue' in color) {
+      return `color: hsla(${color.hue}, ${color.saturation}%, ${color.value}%, ${color.opacity});`;
+    } else {
+      return 'color: var(--color-zinc-200);';
+    }
+  } catch (err) {
+    return 'color: var(--color-zinc-200);';
+  }
+});
+
+let playListOwnerColorStyle = computed(() => {
+  try {
+    const color = props.data.specificSettings['playListOwnerColor'];
+    if (color && typeof color === 'object' && 'hue' in color) {
+      return `color: hsla(${color.hue}, ${color.saturation}%, ${color.value}%, ${color.opacity});`;
+    } else {
+      return 'color: var(--color-zinc-200);';
+    }
+  } catch (err) {
+    return 'color: var(--color-zinc-200);';
+  }
+});
 
 onMounted(async () => {
-  if (settings.value.playlistId) {
+  if (props.data.specificSettings['playlistId']) {
     await fetchPlaylistData();
   }
 });
 
-watch(() => settings.value.playlistId, async (newId) => {
+watch(() => props.data.specificSettings['playlistId'], async (newId) => {
   if (newId) {
     await fetchPlaylistData();
   }
 });
 
 async function fetchPlaylistData() {
-  if (!settings.value.playlistId) return;
+  if (!props.data.specificSettings['playlistId']) return;
 
   isLoading.value = true;
   error.value = '';
 
   try {
-    await spotifyStore.getPlaylist(settings.value.playlistId);
+    await spotifyStore.getPlaylist(props.data.specificSettings['playlistId']);
+
     if (spotifyStore.error) {
       error.value = spotifyStore.error;
     }
@@ -57,18 +85,18 @@ async function fetchPlaylistData() {
 
 const displayedTracks = computed(() => {
   if (!playlistData.value?.tracks?.items) return [];
-  const limit = settings.value.displayLimit || 10;
+  const limit = props.data.specificSettings['displayLimit'] || 10;
   return playlistData.value.tracks.items.slice(0, limit);
 });
 
 async function refreshPlaylist() {
-  if (!settings.value.playlistId) return;
+  if (!props.data.specificSettings['playlistId']) return;
 
   isLoading.value = true;
   error.value = '';
 
   try {
-    await spotifyStore.refreshSpotifyData(settings.value.playlistId);
+    await spotifyStore.refreshSpotifyData(props.data.specificSettings['playlistId']);
     if (spotifyStore.error) {
       error.value = spotifyStore.error;
     }
@@ -79,7 +107,6 @@ async function refreshPlaylist() {
     isLoading.value = false;
   }
 }
-
 </script>
 
 <template>
@@ -95,13 +122,20 @@ async function refreshPlaylist() {
         </Button>
       </div>
 
-      <div v-else-if="isLoading" class="flex justify-center content-center items-center py-8">
+      <div v-else-if="isLoadingData" class="flex justify-center content-center items-center py-8">
         <LoadingCircle/>
       </div>
 
-      <div v-else-if="!settings.playlistId" class="text-center text-xl gap-2 flex flex-col justify-center content-center items-center opacity-70 ">
+      <div v-else-if="!props.data.specificSettings['playlistId']" class="text-center text-xl gap-2 flex flex-col justify-center content-center items-center opacity-70 ">
         <Icon type="library_music"/>
         <h3 class="mb-4">No Spotify playlist chosen</h3>
+      </div>
+
+      <div v-else-if="!playlistData && !isLoadingData" class="text-center text-xl gap-2 flex flex-col justify-center content-center items-center opacity-70 ">
+        <Icon type="error"/>
+        <h3 class="mb-4">Failed to load playlist data</h3>
+        <Button text="Retry" primary small iconRight icon="refresh" @click="fetchPlaylistData">
+        </Button>
       </div>
 
       <!-- Playlist content -->
@@ -110,7 +144,7 @@ async function refreshPlaylist() {
         <div class="flex flex-row justify-start content-center items-center gap-4">
           <!-- Playlist artwork -->
           <img
-            v-if="settings.showArtwork && playlistData.image"
+            v-if="props.data.specificSettings['showArtwork'] && playlistData.image"
             :src="playlistData.image"
             :alt="playlistData.playlistName"
             class="w-16 h-16 rounded-lg object-cover flex-shrink-0"
@@ -118,14 +152,14 @@ async function refreshPlaylist() {
 
           <div class="flex flex-col justify-start content-start items-start">
             <!-- Playlist name -->
-            <h3 v-if="settings.showPlaylistName" class="text-lg">
+            <h3 v-if="props.data.specificSettings['showPlaylistName']" class="text-lg" :style="playListNameColorStyle">
               {{ playlistData.playlistName }}
             </h3>
 
             <!-- Playlist owner -->
-            <p v-if="settings.showOwner && playlistData.owner" class="text-sm opacity-70">
+            <h3 v-if="props.data.specificSettings['showOwner'] && playlistData.owner" class="text-sm" :style="playListOwnerColorStyle">
               by {{ playlistData.owner.displayName }}
-            </p>
+            </h3>
           </div>
         </div>
 
@@ -138,7 +172,7 @@ async function refreshPlaylist() {
           >
             <!-- Track artwork -->
             <img
-              v-if="settings.showArtwork && item.track.album?.images?.[0]?.url"
+              v-if="props.data.specificSettings['showArtwork'] && item.track.album?.images?.[0]?.url"
               :src="item.track.album.images[0].url"
               :alt="item.track.name"
               class="w-10 h-10 rounded object-cover flex-shrink-0"
@@ -149,7 +183,7 @@ async function refreshPlaylist() {
               <p class="font-medium truncate">{{ item.track.name }}</p>
 
               <!-- Artist names -->
-              <p v-if="settings.showTrackArtist && item.track.artists" class="text-sm opacity-70 truncate">
+              <p v-if="props.data.specificSettings['showTrackArtist'] && item.track.artists" class="text-sm opacity-70 truncate">
                 {{ item.track.artists.map(artist => artist.name).join(', ') }}
               </p>
             </div>
