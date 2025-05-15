@@ -48,7 +48,6 @@ export class WidgetGenericSettings {
 
   blurAmount: number = 12;
 
-  sex: string = 'asasd';
 }
 
 export interface WidgetInitializer {

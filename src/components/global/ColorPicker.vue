@@ -136,7 +136,6 @@ function tailwindClassToHsla(colorName: string, shade: number, opacity = 100) {
   if (shadeMap[shade] !== undefined) {
     l = shadeMap[shade];
   } else {
-    // ha nincs benne a map-ben, interpolálunk
     const minShade = 50;
     const maxShade = 950;
     const minL = 15;
@@ -209,7 +208,7 @@ document.addEventListener('click', closeColorPicker);
       class="flex flex-row justify-evenly content-center items-center px-3 py-2 gap-5 w-full rounded-lg bg-zinc-900 border-zinc-800 border-[1px] cursor-pointer"
       @click="toggleColorPicker"
     >
-      <h3 class="capitalize">{{ type }} color</h3>
+      <h3 class="">{{ type }}</h3>
       <span class="rounded-full w-5 h-5 bg-gradient-to-r from-rose-400 from-20% via-violet-500 via-50% to-green-500 to-80%"></span>
     </div>
 

@@ -240,7 +240,7 @@ function openBio(handle: string) {
 <template>
   <div class="flex flex-col p-6 gap-4 w-full h-full max-lg:h-full">
     <span class="flex flex-row justify-end w-full gap-4">
-      <Button text="Export" icon="check" primary />
+      <Button text="Export" icon="check" small primary />
       <Dropdown
         type="normal"
         baseText="Choose one"
@@ -258,7 +258,7 @@ function openBio(handle: string) {
         class="w-full gap-4 max-lg:flex max-lg:flex-col lg:min-h-[800px] lg:max-h-[800px] lg:grid lg:grid-cols-12 lg:grid-rows-7">
         <!--Smaller left side-->
         <!--Most viewed-->
-        <div class="dashboardCard gap-4 lg:overflow-y-scroll lg:row-start-1 row-span-3 lg:col-span-4">
+        <div class="dashboardCard gap-4 lg:row-start-1 row-span-3 lg:col-span-4">
           <h3>Most viewed bio pages</h3>
           <template v-if="topBios.length == 0">
             <div
@@ -292,7 +292,7 @@ function openBio(handle: string) {
         </div>
 
         <!--Recently edited-->
-        <div class="dashboardCard gap-4 p-4 lg:overflow-y-scroll lg:row-start-4 row-span-3 lg:col-span-4">
+        <div class="dashboardCard gap-4 p-4 lg:row-start-4 row-span-3 lg:col-span-4">
           <h3>Recently edited</h3>
           <template v-if="lastUpdatedBios == null">
             <div
@@ -321,7 +321,7 @@ function openBio(handle: string) {
                 <h3>{{ bio?.name }}</h3>
               </span>
             </div>
-            <h3>
+            <h3 class="text-zinc-500 text-sm max-w-[4rem]">
               {{ DateTime.formatDate(bio?.updatedAt) }}
             </h3>
           </div>

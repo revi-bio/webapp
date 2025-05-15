@@ -30,8 +30,4 @@ export const GENERIC_SETTINGS_DEFINITIONS: SettingDefinition<keyof (typeof Widge
     name: 'blurAmount',
     type: 'number',
   },
-  {
-    name: 'sex',
-    type: 'string',
-  },
 ];

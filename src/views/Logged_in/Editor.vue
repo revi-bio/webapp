@@ -1,5 +1,10 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watchEffect, type Ref } from 'vue';
+
+function formatCamelCase(str: string): string {
+  const words = str.replace(/([A-Z])/g, ' $1').trim();
+  return words.charAt(0).toUpperCase() + words.slice(1).toLowerCase();
+}
 import Button from '@/components/global/Button.vue';
 import { WidgetGenericSettings, type WidgetType } from '@/types/Widget';
 import Widget from '@/components/widget/Widget.vue';
@@ -256,7 +261,6 @@ function moveWidgetToPage(direction: 'prev' | 'next') {
   // Remove widget from source page
   sourcePage.widgets = sourcePage.widgets.filter((w) => w.id !== selectedWidgetId.value);
 
-  // Check if source page is now empty and remove it if it is
   if (sourcePage.widgets.length === 0) {
     // Remove the empty page
     const pageToRemoveIndex = pages.value.findIndex((p) => p.id === sourcePage.id);
@@ -525,7 +529,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
         <!-- Generic settings -->
         <span>Generic settings for all widgets</span>
         <div v-for="setting in GENERIC_SETTINGS_DEFINITIONS" :key="setting.name" class="mb-4">
-          <span class="text-zinc-400">{{ setting.name }}</span>
+          <span class="text-zinc-400">{{ formatCamelCase(setting.name) }}</span>
           <Input v-if="setting.type === 'string'" type="text" v-model="globalGenericSettings[setting.name]"
             @input="updateAllWidgetsGenericSettings(setting.name, globalGenericSettings[setting.name])" />
           <ColorPicker v-else-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
@@ -556,10 +560,10 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
         <!-- Widget-specific settings -->
         <span>Widget-specific settings</span>
         <div v-for="setting in SPECIFIC_SETTINGS_DEFINITIONS[selectedWidget.type]" :key="setting.name" class="flex flex-col items-start">
-          <span class="text-zinc-400">{{ setting.name }}</span>
+          <span class="text-zinc-400">{{ formatCamelCase(setting.name) }}</span>
           <Input v-if="setting.type === 'string'" type="text"
-            v-model="(selectedWidget.specificSettings as any)[setting.name]" />
-          <ColorPicker v-else-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
+            v-model="(selectedWidget.specificSettings as any)[formatCamelCase(setting.name)]" />
+          <ColorPicker v-else-if="setting.type === 'color'" class="w-full" :type="formatCamelCase(setting.name)" @color-selected="
             (_baseColor, _shade, opacity, hslaValue) => {
               (selectedWidget!.specificSettings as any)[setting.name] = {
                 hue: hslaValue.h,
@@ -577,11 +581,11 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
             v-else-if="setting.type === 'links'" @change-links="(links) => {
               selectedWidget.specificSettings['links'] = links;
             }" />
-          <Slider :max="100" :min="0" v-model="(selectedWidget.specificSettings as any)[setting.name]"
+          <Slider :max="100" :min="0" v-model="(selectedWidget.specificSettings as any)[formatCamelCase(setting.name)]"
             v-else-if="setting.type === 'number'" />
-          <Input v-model="(selectedWidget.specificSettings as any)[setting.name]" type="textarea" class="h-[200px]"
+          <Input v-model="(selectedWidget.specificSettings as any)[formatCamelCase(setting.name)]" type="textarea" class="h-[200px]"
             v-else-if="setting.type === 'text'" />
-          <Checkbox v-model="(selectedWidget.specificSettings as any)[setting.name]" text=""
+          <Checkbox v-model="(selectedWidget.specificSettings as any)[formatCamelCase(setting.name)]" text=""
             v-else-if="setting.type === 'boolean'" />
 
         </div>
@@ -589,12 +593,12 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
         <!-- Generic settings -->
         <span>Generic settings</span>
         <span v-for="setting in GENERIC_SETTINGS_DEFINITIONS" :key="setting.name">
-          <span class="text-zinc-400">{{ setting.name }}</span>
+          <span class="text-zinc-400">{{ formatCamelCase(setting.name) }}</span>
           <Input v-if="setting.type === 'string'" type="text"
             v-model="(currentPage?.widgets.find((w) => w.id === selectedWidgetId)?.genericSettings as any)[setting.name]" />
-          <ColorPicker v-else-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
+          <ColorPicker v-else-if="setting.type === 'color'" class="w-full" :type="formatCamelCase(setting.name)" @color-selected="
             (_baseColor, _shade, opacity, hslaValue) => {
-              (selectedWidget!.genericSettings as any)[setting.name] = {
+              (selectedWidget!.genericSettings as any)[formatCamelCase(setting.name)] = {
                 hue: hslaValue.h,
                 saturation: hslaValue.s,
                 value: hslaValue.l,
