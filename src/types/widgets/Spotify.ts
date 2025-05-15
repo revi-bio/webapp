@@ -14,6 +14,14 @@ export const SpotifySettingDefinitions: SettingDefinition[] = [
     type:'color',
   },
   {
+    name: 'trackNameColor',
+    type:'color',
+  },
+  {
+    name: 'trackArtistColor',
+    type:'color',
+  },
+  {
     name: 'showArtwork',
     type: 'boolean',
   },
@@ -33,6 +41,10 @@ export const SpotifySettingDefinitions: SettingDefinition[] = [
     name: 'showTrackArtist',
     type: 'boolean',
   },
+  {
+    name:'tracksRowAlign',
+    type:'boolean'
+  }
 ];
 
 export class SpotifyWidget extends Widget {
@@ -43,11 +55,14 @@ export class SpotifyWidget extends Widget {
         playlistId: '',
         playListNameColor: 'zinc-200',
         playListOwnerColor: 'zinc-200',
+        trackNameColor:'zinc-200',
+        trackOwnerColor:'zinc-300',
         showArtwork: true,
         displayLimit: 10,
         showOwner:true,
         showPlaylistName: true,
         showTrackArtist:  true,
+        tracksAlign: false
       },
       genericSettings: options.genericSettings ?? {},
     });
