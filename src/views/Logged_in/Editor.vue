@@ -494,13 +494,14 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
 
       <!-- Page navigation -->
 
-      <PageSelector class="lg:col-span-3 max-lg:col-span-2 max-lg:row-start-1 max-lg:w-full" :pages="pages" @selectedPageIndex="(index) => {
-        currentPageIndex = index
-        selectedWidgetId = null;
-        widgetToolboxOpened = false;
-        bioSettingsOpened = false;
-        pagesSidebarOpened = false;
-      }"></PageSelector>
+      <PageSelector class="lg:col-span-3 max-lg:col-span-2 max-lg:row-start-1 max-lg:w-full" :pages="pages"
+        @selectedPageIndex="(index) => {
+          currentPageIndex = index
+          selectedWidgetId = null;
+          widgetToolboxOpened = false;
+          bioSettingsOpened = false;
+          pagesSidebarOpened = false;
+        }"></PageSelector>
 
       <!-- Bio settings button -->
       <div class="flex justify-end gap-2 lg:col-span-2">
@@ -654,29 +655,32 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
     </Teleport>
 
     <!-- Widgets display -->
-    <div id="widgets" v-if="!isLoadingBio" class="flex flex-col gap-3 max-w-[600px] justify-center z-0 h-[80%] w-1/2">
-      <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
-        <div class="flex gap-2 relative">
-          <!-- Widget component -->
-          <Widget @click="toggleSelection(widget.id)" :data="widget" :in-editor="true" class="w-full"
-            :selected="widget.id === selectedWidgetId" />
+    <div class="overflow-y-scroll flex flex-col max-w-[600px] justify-center z-0 h-[80%] w-1/2 p-2">
+      <div id="widgets" v-if="!isLoadingBio" class="flex flex-col gap-3 h-full">
+        <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
+          <div class="flex gap-2 relative">
+            <!-- Widget component -->
+            <Widget @click="toggleSelection(widget.id)" :data="widget" :in-editor="true" class="w-full"
+              :selected="widget.id === selectedWidgetId" />
 
-          <!-- Widget controls - only show for widgets on the current page -->
-          <div class="flex absolute left-[calc(100%+12px)] gap-2 z-10"
-            v-if="widget.id === selectedWidgetId && isSelectedWidgetOnCurrentPage">
-            <div class="flex flex-col gap-2">
-              <Button @click="() => moveWidget('up')" icon="arrow_upward" icon-only small />
-              <Button @click="() => moveWidget('down')" icon="arrow_downward" icon-only small />
-              <Button @click="deleteWidget" icon="delete" icon-only small />
-            </div>
-            <div class="flex gap-2">
-              <Button @click="() => moveWidgetToPage('prev')" icon="arrow_back" icon-only small />
-              <Button @click="() => moveWidgetToPage('next')" icon="arrow_forward" icon-only small />
+            <!-- Widget controls - only show for widgets on the current page -->
+            <div class="flex absolute left-[calc(100%+12px)] gap-2 z-10"
+              v-if="widget.id === selectedWidgetId && isSelectedWidgetOnCurrentPage">
+              <div class="flex flex-col gap-2">
+                <Button @click="() => moveWidget('up')" icon="arrow_upward" icon-only small />
+                <Button @click="() => moveWidget('down')" icon="arrow_downward" icon-only small />
+                <Button @click="deleteWidget" icon="delete" icon-only small />
+              </div>
+              <div class="flex gap-2">
+                <Button @click="() => moveWidgetToPage('prev')" icon="arrow_back" icon-only small />
+                <Button @click="() => moveWidgetToPage('next')" icon="arrow_forward" icon-only small />
+              </div>
             </div>
           </div>
-        </div>
-      </template>
+        </template>
+      </div>
     </div>
+
     <LoadingCircle v-if="isLoadingBio" />
 
     <div class="top-0 right-0 m-6 absolute flex gap-2">
