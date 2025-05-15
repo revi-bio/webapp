@@ -26,10 +26,6 @@ const playlistData = computed(() => {
     : null;
 });
 
-function extractPlaylistId(url: string): string {
-  const match = url.match(/playlist\/([a-zA-Z0-9]+)/);
-  return match ? match[1] : url;
-}
 
 onMounted(async () => {
   if (settings.value.playlistId) {
@@ -87,25 +83,6 @@ async function refreshPlaylist() {
   }
 }
 
-function openModal() {
-  tempPlaylistId.value = settings.value.playlistId || '';
-  showModal.value = true;
-}
-
-function closeModal() {
-  showModal.value = false;
-  tempPlaylistId.value = '';
-}
-
-async function savePlaylistId() {
-  const playlistId = extractPlaylistId(tempPlaylistId.value);
-  settings.value.playlistId = playlistId;
-  closeModal();
-
-  if (playlistId) {
-    await fetchPlaylistData();
-  }
-}
 </script>
 
 <template>

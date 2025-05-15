@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, computed, watch } from 'vue';
 import Button from './Button.vue';
+import Slider from './Slider.vue';
 
 const generateTWColors = (colors: string[]) => {
   const shades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
@@ -248,18 +249,18 @@ document.addEventListener('click', closeColorPicker);
         </div>
       </div>
       <div class="flex flex-col content-end items-end gap-4 w-full">
-        <h3 class="text-lg text-zinc-200">Opacity: {{ opacity }}%</h3>
+        <h3 class="text-lg text-zinc-200">{{ opacity }}%</h3>
         <input
           type="range"
           min="0"
           max="100"
           step="5"
           v-model.number="opacity"
-          class="opacityRange w-full h-3 rounded-full bg-rose-500/80 outline-none hover:bg-rose-500"
+          class="slider w-full h-2 rounded-full bg-rose-500 outline-none opacity-100 transition-all duration-200 ease-in-out cursor-pointer focus:outline-none hover:bg-rose-500/80"
         />
         <div
           v-if="selectedShade !== null"
-          class="w-12 h-12 rounded-full flex items-center justify-center"
+          class="w-full h-12 rounded-lg flex items-center justify-center"
           :class="colorWithOpacity"
         >
           <span class="text-xs text-white">{{ opacity }}%</span>
@@ -278,18 +279,54 @@ document.addEventListener('click', closeColorPicker);
 </template>
 
 <style lang="scss" scoped>
-.opacityRange{
-  -webkit-appearance: none;
-  -webkit-transition: .2s;
-}
-.opacityRange::-webkit-slider-thumb{
+.slider {
   -webkit-appearance: none;
   appearance: none;
-  @apply bg-zinc-300 cursor-pointer w-5 h-5 rounded-full
+  @apply bg-rose-500 rounded-full h-2;
+
+  &:focus {
+    @apply outline-none;
+  }
+
+  &:hover {
+    @apply bg-rose-500/80;
+  }
 }
-.opacityRange::-moz-range-thumb{
+
+/* Webkit browsers (Chrome, Safari, newer Edge) */
+.slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  @apply bg-zinc-300 cursor-pointer w-5 h-5 rounded-full
+  @apply w-5 h-5 rounded-full bg-zinc-500 ring-1 ring-zinc-300 cursor-pointer shadow-sm;
+}
+
+/* Firefox */
+.slider::-moz-range-thumb {
+  @apply w-5 h-5 rounded-full bg-zinc-500 cursor-pointer shadow-sm;
+  border: 1px solid theme('colors.zinc.300');
+  /* Firefox specifikus resetelés */
+  background: theme('colors.zinc.500');
+}
+
+/* Firefox track */
+.slider::-moz-range-track {
+  @apply w-full h-2 rounded-full bg-rose-500;
+  border: none;
+}
+
+/* IE and Edge (non-Chromium) */
+.slider::-ms-thumb {
+  @apply w-5 h-5 rounded-full bg-zinc-500 ring-1 ring-zinc-300 cursor-pointer shadow-sm;
+}
+
+.slider::-ms-track {
+  @apply w-full bg-transparent border-transparent;
+  color: transparent;
+  height: 8px;
+}
+
+.slider::-ms-fill-lower,
+.slider::-ms-fill-upper {
+  @apply bg-rose-500 rounded-full;
 }
 </style>
