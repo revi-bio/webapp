@@ -504,7 +504,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
       </div>
     </div>
   </Modal>
-  <div class="flex justify-center items-center h-full w-full relative rounded-2xl bg-cover bg-center"
+  <div class="flex justify-center items-center h-full w-full relative rounded-2xl bg-cover bg-center z-30"
     :style="backgroundStyle">
     <!-- Bottom toolbar -->
     <div
@@ -680,7 +680,8 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
     </Teleport>
 
     <!-- Widgets display -->
-    <div class="flex flex-col max-w-[600px] justify-center z-0 h-[80%] w-1/2 p-2">
+    <div class="flex flex-col overflow-y-auto w-full items-center h-full -z-10">
+    <div class="flex flex-col max-w-[600px] justify-center z-0 h-[80%] p-2">
       <div id="widgets" v-if="!isLoadingBio" class="flex flex-col gap-3 h-full">
         <template v-for="widget in widgetsOnCurrentPage" :key="widget.id">
           <div class="flex gap-2 relative">
@@ -704,6 +705,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
           </div>
         </template>
       </div>
+    </div>
     </div>
 
     <LoadingCircle v-if="isLoadingBio" />
