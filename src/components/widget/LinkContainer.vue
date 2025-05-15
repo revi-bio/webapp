@@ -2,13 +2,14 @@
 import type { Widget } from '@/types/Widget';
 import { ref, watch } from 'vue';
 import LinkIcon from '../global/LinkIcon.vue';
+import Icon from '../global/Icon.vue';
 
 const props = defineProps<{
   data: Widget
   inEditor: boolean,
 }>();
 
-const links = ref<[{ link: string; name: string }]>();
+const links = ref<{ link: string; name: string }[]>([]);
 
 watch(
   () => props.data.specificSettings['links'],
@@ -42,6 +43,13 @@ watch(
       >
         {{ link.name }}
         <LinkIcon width="48px" color="zinc-200" :url="link.link" />
+      </p>
+
+    </div>
+    <div v-if="!links || links.length === 0" class="w-full text-center text-zinc-400 text-2xl py-4">
+      <Icon type="account_tree" size="2xl"/>
+      <p class="w-full text-center text-2xl py-4">
+        No links selected.
       </p>
     </div>
   </div>
