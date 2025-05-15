@@ -4,9 +4,11 @@ import BioPfp from '../global/BioPfp.vue';
 import Icon from '../global/Icon.vue';
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { useBioStore } from '@/stores/bio';
 
-const handle = ref('');
 
+const bioStore = useBioStore();
+const handle = bioStore.getCurrentHandle()
 const props = defineProps<{
   data: Widget;
 }>();
@@ -31,10 +33,6 @@ let textStyle = computed(
     `color: hsla(${props.data.specificSettings['textColor'].hue}, ${props.data.specificSettings['textColor'].saturation}%, ${props.data.specificSettings['textColor'].value}%, ${props.data.specificSettings['textColor'].opacity});`,
 );
 
-onMounted(() => {
-  const route = useRoute();
-  handle.value = route.params['handle'] as string;
-});
 
 </script>
 
@@ -52,7 +50,7 @@ onMounted(() => {
 
         <!--Bio name/badge, BADGE VISIBLE / BADGE INVISIBLE-->
         <div class="flex flex-row justify-center content-center items-center text-xl gap-2 mt-2">
-          <h3 :style=nameStyle>{{ data.specificSettings['name'] }}</h3>
+          <h3 :style=nameStyle>{{ bioStore.getCurrentDisplayName() }}</h3>
           <div v-if="data.specificSettings['badgeVisible']"
             class="flex flex-row justify-center content-center items-center" :style=badgeStyle>
             <Icon type="shield_person" size="2xl"></Icon>
@@ -75,7 +73,7 @@ onMounted(() => {
 
     <!-- Avatar with higher z-index -->
     <div v-if="data.specificSettings['profileOver']" class="absolute w-full flex justify-center top-[-2.5rem] z-10">
-      <BioPfp class="w-20 h-20" :bioHandle="data.specificSettings['handle']"></BioPfp>
+      <BioPfp class="w-20 h-20" :bioHandle="handle"></BioPfp>
     </div>
   </div>
 </template>
