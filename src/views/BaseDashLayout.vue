@@ -38,9 +38,21 @@ onMounted(() => {
         <RouterView></RouterView>
       </div>
     </main>
-    <!--Blob svg-->
+    <!--Blob svg - Egységes arányos pozicionálás és méret-->
     <svg
-      class="blob origin-center absolute bottom-[-600px] right-[-400px] sm:bottom-[-400px] sm:right-[-400px] sm:w-1/3 md:w-1/4 lg:w-3/4 z-0 blur-[100px] md:blur-3xl"
+      class="blob origin-center absolute
+             bottom-[-30vh] right-[-20vw]
+             sm:bottom-[-25vh] sm:right-[-18vw]
+             md:bottom-[-22vh] md:right-[-16vw]
+             lg:bottom-[-20vh] lg:right-[-14vw]
+             xl:bottom-[-18vh] xl:right-[-12vw]
+             w-[90vw] h-[90vw]
+             sm:w-[80vw] sm:h-[80vw]
+             md:w-[70vw] md:h-[70vw]
+             lg:w-[60vw] lg:h-[60vw]
+             xl:w-[50vw] xl:h-[50vw]
+             max-w-[800px] max-h-[800px]
+             z-0 blur-[180px] md:blur-3xl"
       id="10015.io"
       viewBox="0 0 480 480"
       xmlns="http://www.w3.org/2000/svg"
