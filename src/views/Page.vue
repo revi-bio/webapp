@@ -31,7 +31,6 @@ const pages = ref<Page[]>(
 
 async function updateBackgroundStyle() {
   const currentBio = await bioStore.fetchBio(handle);
-  console.log('currentBio', currentBio);
   backgroundStyle.value = `background-image: url(${import.meta.env.VITE_API_BASE_URL}/file/${currentBio.backgroundImage});`;
 }
 
