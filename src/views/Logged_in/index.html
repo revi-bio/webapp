@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script type="text/javascript" src="murmurhash3js.min.js"></script>
+  </head>
+  <script>
+    function randomHash() {
+      return murmurHash3.x86.hash128(`secret`, Math.ceil(Math.random() * 1000000));
+    }
+
+    // server
+    const answer = randomHash();
+    console.log('ezt kell kitalalni, ezt generalta a server:', answer);
+
+    // client
+    let tries = 0;
+    while (true) {
+      if (randomHash() == answer) {
+        console.log('client kitalalta ennyi proba utan', tries);
+        break;
+      }
+      tries++;
+    }
+  </script>
+  <body></body>
+</html>

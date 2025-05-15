@@ -7,6 +7,9 @@ import { useRoute } from 'vue-router';
 import { v4 as uuidv4 } from 'uuid';
 import type { Page } from '@/types/Page';
 import PageSelector from '@/components/global/PageSelector.vue';
+import * as murmur from 'murmurhash3js';
+import { ApiWrapper } from '@/composables/ApiWrapper';
+
 
 const route = useRoute();
 const handle = route.params.handle as string;
@@ -16,6 +19,8 @@ const widgetToolboxOpened = ref(false);
 const bioSettingsOpened = ref(false);
 const bioStore = useBioStore();
 const backgroundStyle = ref('');
+const visitorId = Math.ceil(Math.random() * 10000000000000000);
+let challengeAnswer: Promise<number> = new Promise(() => {});
 
 // Initialize pages with sample widgets
 const pages = ref<Page[]>(
@@ -29,6 +34,10 @@ const pages = ref<Page[]>(
   ]
 );
 
+function randomHash() {
+  return murmur.x86.hash128(`secret`, Math.ceil(Math.random() * 1000000));
+}
+
 async function updateBackgroundStyle() {
   const currentBio = await bioStore.fetchBio(handle);
   backgroundStyle.value = `background-image: url(${import.meta.env.VITE_API_BASE_URL}/file/${currentBio.backgroundImage});`;
@@ -37,6 +46,24 @@ async function updateBackgroundStyle() {
 onMounted(async () => {
   pages.value = await bioStore.getBioPages(handle);
   await updateBackgroundStyle();
+
+  await ApiWrapper.get(`bio/${handle}/visitor/${visitorId}/challenge`, null).then(res => {
+    let answer: number;
+
+    do {
+      // console.log(answer)
+      answer = Math.ceil(Math.random() * 1000000);
+    } while (murmur.x86.hash128('secret', answer) != res.data);
+
+    challengeAnswer = Promise.resolve(answer);
+  });
+
+  await challengeAnswer.then(async answer => {
+    console.log('JSKDOLFHJASDLKFJHLSKDJ')
+    await ApiWrapper.post(`bio/${handle}/visitor/${visitorId}/view`, null, {
+      'Challenge-Answer': answer,
+    });
+  })
 })
 
 // Computed properties
