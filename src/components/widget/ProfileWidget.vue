@@ -2,13 +2,26 @@
 import type { Widget } from '@/types/Widget';
 import BioPfp from '../global/BioPfp.vue';
 import Icon from '../global/Icon.vue';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, inject } from 'vue';
 import { useRoute } from 'vue-router';
 import { useBioStore } from '@/stores/bio';
 
 
 const bioStore = useBioStore();
-const handle = bioStore.getCurrentHandle()
+const route = useRoute();
+const pageHandle = route.params.handle as string;
+const handle = pageHandle || bioStore.getCurrentHandle();
+const displayName = ref<string | undefined>(bioStore.getCurrentDisplayName());
+
+// Fetch the display name for the handle if it's from the route
+onMounted(async () => {
+  if (pageHandle) {
+    const bio = await bioStore.fetchBio(pageHandle);
+    if (bio) {
+      displayName.value = bio.name;
+    }
+  }
+});
 const props = defineProps<{
   data: Widget;
 }>();
@@ -50,7 +63,7 @@ let textStyle = computed(
 
         <!--Bio name/badge, BADGE VISIBLE / BADGE INVISIBLE-->
         <div class="flex flex-row justify-center content-center items-center text-xl gap-2 mt-2">
-          <h3 :style=nameStyle>{{ bioStore.getCurrentDisplayName() }}</h3>
+          <h3 :style=nameStyle>{{ displayName }}</h3>
           <div v-if="data.specificSettings['badgeVisible']"
             class="flex flex-row justify-center content-center items-center" :style=badgeStyle>
             <Icon type="shield_person" size="2xl"></Icon>
