@@ -113,26 +113,41 @@ function tailwindClassToHsla(colorName: string, shade: number, opacity = 100) {
     stone: 20
   };
 
-  const hue = colorHues[colorName] || 0;
-  const isGrayscale = ['gray', 'zinc', 'neutral', 'stone'].includes(colorName);
+  const hue = colorHues[colorName] ?? 0;
+  const isGrayscale = ['gray', 'zinc', 'neutral', 'stone', 'slate'].includes(colorName);
 
-  let s = 0;
-  let l = 0;
+  let s = isGrayscale ? 5 : 50;
+  let l = 100;
 
-  if (isGrayscale) {
-    s = 0;
-    l = 100 - (shade - 50) * (60 / 900);
+  const shadeMap = {
+    50:  97,
+    100: 94,
+    200: 86,
+    300: 77,
+    400: 66,
+    500: 56,
+    600: 48,
+    700: 39,
+    800: 31,
+    900: 23,
+    950: 14
+  };
+
+  if (shadeMap[shade] !== undefined) {
+    l = shadeMap[shade];
   } else {
-    s = 60 - (shade - 50) * (30 / 900);
-    l = 50 + (shade - 500) * (-40 / 900);
+    // ha nincs benne a map-ben, interpolálunk
+    const minShade = 50;
+    const maxShade = 950;
+    const minL = 15;
+    const maxL = 97;
+    const ratio = (shade - minShade) / (maxShade - minShade);
+    l = maxL - ratio * (maxL - minL);
   }
 
   const a = parseFloat((opacity / 100).toFixed(2));
 
-  s = Math.max(0, Math.min(100, Math.round(s)));
-  l = Math.max(0, Math.min(100, Math.round(l)));
-
-  return { h: hue, s, l, a };
+  return { h: hue, s, l: Math.round(l), a };
 }
 
 const selectBaseColor = (color: string) => {
