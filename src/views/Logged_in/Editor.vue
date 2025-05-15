@@ -87,7 +87,6 @@ onMounted(async () => {
     const stored = await bioStore.getBioPages(handle);
     if (stored.length != 0) {
       pages.value = stored;
-      console.log(pages.value)
     }
 
     await updateBackgroundStyle();
@@ -158,8 +157,6 @@ function toggleSelection(id: string) {
   widgetToolboxOpened.value = false;
   bioSettingsOpened.value = false;
   pagesSidebarOpened.value = false;
-
-  console.log(selectedWidget.value)
 }
 
 function toggleWidgetToolbox() {
@@ -419,7 +416,6 @@ const onAlertHide = () => {
 };
 
 async function savePages() {
-  console.log(pages.value);
   try {
     const response = await bioStore.saveBioPages(handle, pages.value);
     showAlert(200, '', "Bio saved successfully!");

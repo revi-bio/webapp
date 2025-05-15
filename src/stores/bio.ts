@@ -82,15 +82,11 @@ export const useBioStore = defineStore('bios', () => {
       const formData = new FormData();
       formData.append('file', file);
 
-      console.log('File being uploaded:', file.name, file.size, file.type);
-
       const response = await ApiWrapper.patch(`bio/${handle}/bioPfp`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-
-      console.log('Upload response:', response);
 
       await fetchBios();
       return response.data;
@@ -148,7 +144,6 @@ export const useBioStore = defineStore('bios', () => {
   }
 
   async function saveBioPages(handle: string, pages: Page[]) {
-    console.log(pages);
     const response = await ApiWrapper.post<[Page]>(`bio/${handle}/pages`, pages);
     return response.data;
   }
@@ -163,15 +158,11 @@ export const useBioStore = defineStore('bios', () => {
       const formData = new FormData();
       formData.append('file', file);
 
-      console.log('File being uploaded:', file.name, file.size, file.type);
-
       const response = await ApiWrapper.post(`bio/widgetImg`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-
-      console.log('Upload response:', response);
 
       return response.data;
     } catch (error) {

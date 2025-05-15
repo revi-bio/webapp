@@ -46,10 +46,8 @@ export const useSettingsStore = defineStore('settings', () => {
   async function loadSettings() {
     try {
       isLoading.value = true;
-      console.log('Loading settings...');
 
       const response = await ApiWrapper.get('setting', {});
-      console.log('API response:', response.data);
 
       if (response && response.data) {
 
@@ -64,7 +62,6 @@ export const useSettingsStore = defineStore('settings', () => {
           draft.value.adultContent = response.data['preferences.autoAcceptAdultContent'];
         }
 
-        console.log('Settings loaded successfully:', draft.value);
       }
     } catch (error) {
       console.error('Error while loading settings:', error);
@@ -105,11 +102,9 @@ export const useSettingsStore = defineStore('settings', () => {
     if (field === 'newPassword' || field === 'currentPasswordForPassword') isDirty.value.password = true;
     if (field === 'pronounce' || field === 'adultContent') isDirty.value.preferences = true;
 
-    console.log(`Updated ${field}:`, value, 'isDirty:', isDirty.value);
   }
 
   async function saveSettings() {
-    console.log('Saving settings...');
     try {
       if (isDirty.value.displayName && draft.value.displayName) {
         await ApiWrapper.patch('user/displayname', { displayName: draft.value.displayName });
@@ -137,11 +132,8 @@ export const useSettingsStore = defineStore('settings', () => {
           "preferences.autoAcceptAdultContent": draft.value.adultContent
         };
 
-        console.log('Saving preferences:', serverSettings);
-
         try {
           await ApiWrapper.post('setting', serverSettings);
-          console.log('Preferences saved successfully with dotted notation');
         } catch (error) {
           console.error('Error saving with dotted notation, trying without dots:', error);
 
@@ -149,7 +141,6 @@ export const useSettingsStore = defineStore('settings', () => {
       }
 
       resetDirty();
-      console.log('All settings saved successfully');
     } catch (error) {
       console.error('Error saving settings:', error);
       throw error;

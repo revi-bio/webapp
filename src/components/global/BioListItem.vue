@@ -34,8 +34,6 @@ function openEditor(handle: string) {
     name: 'Editor',
     params: { handle }
   });
-  console.log('handle from params: ', handle)
-  console.log('handle from getCurrentHandle:', bioStore.getCurrentHandle())
 }
 
 const emit = defineEmits(['bioDeleted']);

@@ -162,7 +162,6 @@ const selectShade = (shade: number) => {
   selectedShade.value = shade;
   const hsvValues = tailwindClassToHsla(baseColor.value, shade, opacity.value);
   emit('color-selected', baseColor.value, shade, opacity.value, hsvValues);
-  console.log('color-selected', baseColor.value, shade, opacity.value, hsvValues);
 };
 
 const toggleColorPicker = (event: Event) => {
@@ -188,7 +187,6 @@ watch(opacity, (newOpacity) => {
   if (selectedShade.value !== null && baseColor.value) {
     const hsvValues = tailwindClassToHsla(baseColor.value, selectedShade.value, newOpacity);
     emit('color-selected', baseColor.value, selectedShade.value, newOpacity, hsvValues);
-    console.log('color-selected from opacity watch', baseColor.value, selectedShade.value, newOpacity, hsvValues);
   }
 });
 

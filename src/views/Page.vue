@@ -36,7 +36,6 @@ async function updateBackgroundStyle() {
 
 onMounted(async () => {
   pages.value = await bioStore.getBioPages(handle);
-  console.log('pages', pages.value);
   await updateBackgroundStyle();
 })
 

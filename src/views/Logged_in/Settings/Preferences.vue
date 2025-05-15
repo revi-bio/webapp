@@ -21,23 +21,14 @@ const isAdultContent = computed(() => {
 
 
 const handlePronounceChange = (value: string) => {
-  console.log('Pronounce change:', value);
   settingsStore.updateDraft('pronounce', value);
 };
 
 const handleAdultContentChange = (checked: boolean) => {
-  console.log('Adult content change:', checked);
   settingsStore.updateDraft('adultContent', checked);
 };
 
-
-watch(() => settingsStore.isDirty.preferences, (isDirty) => {
-  console.log('Preferences dirty state changed:', isDirty);
-});
-
 onMounted(() => {
-  console.log('Component mounted, current settings:', settingsStore.draft);
-
   settingsStore.loadSettings();
 });
 </script>
@@ -56,7 +47,7 @@ onMounted(() => {
       />
       <div class="text-xs text-zinc-500">Current value: {{ selectedPronounce }}</div>
     </div>
-    
+
     <div class="flex flex-col justify-center content-center items-start gap-2">
       <h3 class="text-lg text-zinc-300">Adult content</h3>
       <Checkbox
