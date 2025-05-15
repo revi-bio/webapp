@@ -23,6 +23,7 @@
     "echarts": "^5.6.0",
     "marked": "^15.0.8",
     "motion": "^12.3.1",
+    "murmurhash3js": "^3.0.1",
     "pinia": "^2.2.4",
     "tailwindcss-animated": "^1.1.2",
     "uuid": "^11.1.0",
