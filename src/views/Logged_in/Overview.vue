@@ -66,9 +66,21 @@ const linkData = computed(() => {
 });
 
 const scaleHeight = (value: number) => {
-  const maxValue = Math.max(...linkData.value.map((link) => link.value));
+  if (linkData.value.length === 0) return 0;
+
+  const values = linkData.value.map((link) => link.value);
+  const maxValue = Math.max(...values);
+  const minValue = Math.min(...values);
+
   if (maxValue === 0) return 0;
-  return (value / maxValue) * 85;
+  if (maxValue === minValue) return 50;
+
+  const normalizedValue = (value - minValue) / (maxValue - minValue);
+  const exponent = 2.5;
+  const scaledValue = Math.pow(normalizedValue, exponent);
+
+  const minHeight = 5;
+  return minHeight + scaledValue * (100 - minHeight);
 };
 
 const visitorData = computed(() => {
@@ -146,18 +158,34 @@ const generateBarData = (days: number) => {
 const barChartBars = computed(() => {
   if (!barViewsData.value.length) return [];
 
-  const maxValue = Math.max(...barViewsData.value.map(item => item.value));
+  const values = barViewsData.value.map(item => item.value);
+  const maxValue = Math.max(...values);
+  const minValue = Math.min(...values);
+  const valueRange = maxValue - minValue;
   const chartHeight = 200;
   const barWidth = 280 / barViewsData.value.length;
 
-  return barViewsData.value.map((item, index) => ({
-    x: index * barWidth + barWidth * 0.1,
-    y: chartHeight - (item.value / maxValue) * chartHeight,
-    width: barWidth * 0.8,
-    height: (item.value / maxValue) * chartHeight,
-    value: item.value,
-    date: item.date
-  }));
+  return barViewsData.value.map((item, index) => {
+    let heightPercentage;
+    if (valueRange === 0) {
+      heightPercentage = 0.5;
+    } else {
+      const normalizedValue = (item.value - minValue) / valueRange;
+      const exponent = 2.5;
+      heightPercentage = Math.pow(normalizedValue, exponent);
+
+      heightPercentage = Math.max(0.05, heightPercentage);
+    }
+
+    return {
+      x: index * barWidth + barWidth * 0.1,
+      y: chartHeight - (heightPercentage * chartHeight),
+      width: barWidth * 0.8,
+      height: heightPercentage * chartHeight,
+      value: item.value,
+      date: item.date
+    };
+  });
 });
 
 const handleDropdownSelect = (selected: string) => {
