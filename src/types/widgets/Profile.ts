@@ -39,7 +39,7 @@ export const ProfileSettingDefinitions: SettingDefinition[] = [
   },
   {
     name: 'text',
-    type: 'string',
+    type: 'text',
   },
   {
     name: 'textColor',
