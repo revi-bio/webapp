@@ -474,14 +474,34 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
 <template>
   <Modal @close="widgetToolboxOpened = false" :show="widgetToolboxOpened" title="Add widget">
     <div class="grid grid-cols-3 grid-rows-3 [&>*]:aspect-square">
-      <div @click="addWidget('profile')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Profile widget</div>
-      <div @click="addWidget('link')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Link widget</div>
-      <div @click="addWidget('youtube')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">YouTube widget</div>
-      <div @click="addWidget('markdown')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Markdown widget</div>
-      <div @click="addWidget('gallery')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Gallery widget</div>
-      <div @click="addWidget('linkContainer')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Link container
-        widget</div>
-      <div @click="addWidget('spotify')" class="cursor-pointer hover:bg-zinc-700 p-2 rounded">Spotify widget</div>
+      <div @click="addWidget('profile')" class="addWidget">
+         <h3>Profile widget</h3>
+         <Icon type="account_circle" size="6xl"></Icon>
+      </div>
+      <div @click="addWidget('link')" class="addWidget">
+        <h3>Link widget</h3>
+        <Icon type="link" size="6xl"></Icon>
+      </div>
+      <div @click="addWidget('youtube')" class="addWidget">
+        <h3>Youtube widget</h3>
+        <Icon type="play_circle" size="6xl"></Icon>
+      </div>
+      <div @click="addWidget('markdown')" class="addWidget">
+        <h3>Markdown widget</h3>
+        <Icon type="markdown" size="6xl"></Icon>
+      </div>
+      <div @click="addWidget('gallery')" class="addWidget">
+        <h3>Gallery widget</h3>
+        <Icon type="photo_library" size="6xl"></Icon>
+      </div>
+      <div @click="addWidget('linkContainer')" class="addWidget">
+        <h3>Link container widget</h3>
+        <Icon type="account_tree" size="6xl"></Icon>
+      </div>
+      <div @click="addWidget('spotify')" class="addWidget">
+        <h3>Spotify widget</h3>
+        <Icon type="library_music" size="6xl"></Icon>
+      </div>
     </div>
   </Modal>
   <div class="flex justify-center items-center h-full w-full relative rounded-2xl bg-cover bg-center"
@@ -528,7 +548,7 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
           <span class="text-zinc-400">{{ formatCamelCase(setting.name) }}</span>
           <Input v-if="setting.type === 'string'" type="text" v-model="globalGenericSettings[setting.name]"
             @input="updateAllWidgetsGenericSettings(setting.name, globalGenericSettings[setting.name])" />
-          <ColorPicker v-else-if="setting.type === 'color'" class="w-full" :type="setting.name" @color-selected="
+          <ColorPicker v-else-if="setting.type === 'color'" class="w-full" :type="formatCamelCase(setting.name)" @color-selected="
             (_baseColor, _shade, opacity, hslaValue) => {
               const newValue = {
                 hue: hslaValue.h,
@@ -707,5 +727,8 @@ function updateAllWidgetsGenericSettings(settingName: string, value: any) {
   >span {
     @apply mb-1;
   }
+}
+.addWidget{
+  @apply cursor-pointer hover:bg-zinc-700 p-2 rounded flex flex-col justify-start content-center items-center gap-4 text-center text-sm hover:ring-4 ring-zinc-700 transition-all duration-200
 }
 </style>
